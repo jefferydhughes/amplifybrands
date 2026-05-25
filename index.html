@@ -419,7 +419,7 @@ footer.site .fine{color:var(--text-2);font-size:var(--fs-sm)}
     <h2 class="reveal">Your team is already overworked.</h2>
     <p class="reveal">Adding more manual work isn't the answer. AI can help — but only if someone installs it properly. Drop your email and we'll show you exactly where the time's leaking.</p>
     <form class="field reveal" id="bookForm" novalidate>
-      <input class="input" type="email" id="email" placeholder="you@yourbusiness.com" aria-label="Your email" required>
+      <input class="input" type="email" id="email" name="email" placeholder="you@yourbusiness.com" aria-label="Your email" required>
       <button class="btn btn-primary" type="submit">Book An AI Breakdown</button>
     </form>
     <div class="form-note reveal">No spam. No 4-hour webinar. Just a straight conversation about your bottlenecks.</div>
@@ -488,7 +488,8 @@ footer.site .fine{color:var(--text-2);font-size:var(--fs-sm)}
     dot.animate([{transform:'scale(1)'},{transform:'scale(1.9)'},{transform:'scale(1)'}],{duration:420,easing:'cubic-bezier(.2,.7,.2,1)'});
   }); }
 
-  /* contact form — DEMO: no backend wired yet */
+  /* contact form — Formspree AJAX (delivers to jeff@amplifybrands.io) */
+  var FORMSPREE_ENDPOINT = 'https://formspree.io/f/xzdwjbbo'; /* Formspree → delivers to jeff@amplifybrands.io */
   var form = document.getElementById('bookForm');
   var success = document.getElementById('formSuccess');
   if(form){
@@ -496,9 +497,28 @@ footer.site .fine{color:var(--text-2);font-size:var(--fs-sm)}
       e.preventDefault();
       var email = document.getElementById('email');
       if(!email.value || email.value.indexOf('@')<1){ email.focus(); email.style.borderColor='#FF5C5C'; return; }
-      form.style.display='none';
-      success.classList.add('show');
-      /* TODO(handoff): POST email to your CRM / booking backend here. */
+      email.style.borderColor='';
+      var btn = form.querySelector('button[type="submit"]');
+      var label = btn ? btn.textContent : '';
+      if(btn){ btn.disabled = true; btn.textContent = 'Sending…'; }
+      fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: new FormData(form)
+      }).then(function(res){
+        if(res.ok){
+          form.style.display='none';
+          success.classList.add('show');
+        } else {
+          if(btn){ btn.disabled = false; btn.textContent = label; }
+          email.style.borderColor='#FF5C5C';
+          alert('Something went wrong sending that. Email jeff@amplifybrands.io directly and we’ll sort it.');
+        }
+      }).catch(function(){
+        if(btn){ btn.disabled = false; btn.textContent = label; }
+        email.style.borderColor='#FF5C5C';
+        alert('Network hiccup — please try again, or email jeff@amplifybrands.io directly.');
+      });
     });
   }
 })();
