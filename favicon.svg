@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Amplify Brands">
+  <!-- Self-contained dark tile so the light "A" stays legible on any browser theme. -->
+  <rect width="120" height="120" rx="24" fill="#0B0B0B"/>
+  <!-- Pulse A, favicon-optimised: the three ascending bars merge into one solid block for crispness below 24px. -->
+  <g transform="translate(60 60) scale(.86) translate(-60 -60)">
+    <path d="M 4 110 L 52 8 L 68 8 L 116 110 L 96 110 L 60 30 L 24 110 Z" fill="#F5F5F5"/>
+    <rect x="42" y="78" width="36" height="20" fill="#A3FF12"/>
+  </g>
+</svg>

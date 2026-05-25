@@ -5,6 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Amplify Brands — We Make AI Stupidly Easy</title>
 <meta name="description" content="We install practical AI systems into your business in 30 days or less. Less busywork. More business. No AI cosplay.">
+<link rel="canonical" href="https://amplifybrands.io/">
+
+<!-- Favicons & app icons (Amplify Brands — Pulse A) -->
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#0B0B0B">
+
+<!-- Open Graph / Twitter -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Amplify Brands">
+<meta property="og:title" content="Amplify Brands — We Make AI Stupidly Easy">
+<meta property="og:description" content="We install practical AI systems into your business in 30 days or less. Less busywork. More business.">
+<meta property="og:url" content="https://amplifybrands.io/">
+<meta property="og:image" content="https://amplifybrands.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Amplify Brands — We Make AI Stupidly Easy">
+<meta name="twitter:description" content="We install practical AI systems into your business in 30 days or less.">
+<meta name="twitter:image" content="https://amplifybrands.io/og-image.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -55,8 +78,8 @@ header.site{position:sticky;top:0;z-index:60;border-bottom:1px solid transparent
 header.site.scrolled{background:rgba(11,11,11,.78);backdrop-filter:blur(14px);border-bottom-color:var(--line)}
 header.site .wrap{display:flex;align-items:center;gap:var(--s6);height:72px}
 .logo{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:700;font-size:1.15rem;letter-spacing:-.02em}
-.logo .dot{width:12px;height:12px;border-radius:3px;background:var(--lime);box-shadow:0 0 14px var(--lime-glow);cursor:pointer;transition:transform var(--dur-fast) var(--ease-snap)}
-.logo .dot:active{transform:scale(.8)}
+.logo .logo-mark{height:26px;width:auto;display:block;flex-shrink:0;color:var(--text);cursor:pointer;filter:drop-shadow(0 0 10px var(--lime-glow));transition:transform var(--dur-fast) var(--ease-snap)}
+.logo .logo-mark:active{transform:scale(.88)}
 .nav-links{display:flex;gap:4px;margin-left:auto}
 .nav-links a{font-size:var(--fs-sm);color:var(--text-2);padding:8px 14px;border-radius:var(--r-pill);transition:color var(--dur-fast),background var(--dur-fast)}
 .nav-links a:hover{color:var(--text);background:var(--ink-800)}
@@ -194,17 +217,31 @@ section{padding:var(--section-y) 0}
 footer.site{border-top:1px solid var(--line);padding:var(--s8) 0;background:var(--ink-850)}
 footer.site .wrap{display:flex;flex-wrap:wrap;gap:var(--s5);align-items:center;justify-content:space-between}
 footer.site .brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:700;font-size:1.1rem}
-footer.site .brand .dot{width:11px;height:11px;border-radius:3px;background:var(--lime)}
+footer.site .brand .logo-mark{height:24px;width:auto;display:block;flex-shrink:0;color:var(--text)}
 footer.site .tag{color:var(--lime);font-family:var(--font-display);font-weight:600}
 footer.site .fine{color:var(--text-2);font-size:var(--fs-sm)}
 </style>
 </head>
 <body>
 
+<!-- ===== Brand mark — Pulse A (defined once, reused via <use>) ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="mark-a" viewBox="0 0 120 120">
+      <!-- Geometric "A"; inherits currentColor so it reads light on dark / dark on light -->
+      <path d="M 4 110 L 52 8 L 68 8 L 116 110 L 96 110 L 60 30 L 24 110 Z" fill="currentColor"/>
+      <!-- Crossbar swapped for three ascending lime pulse bars — always lime, never violet -->
+      <rect x="42" y="84" width="8" height="14" fill="#A3FF12"/>
+      <rect x="56" y="78" width="8" height="20" fill="#A3FF12"/>
+      <rect x="70" y="70" width="8" height="28" fill="#A3FF12"/>
+    </symbol>
+  </defs>
+</svg>
+
 <!-- ================= HEADER ================= -->
 <header class="site" id="header">
   <div class="wrap">
-    <a class="logo" href="#top"><span class="dot" id="dot" title="go on, poke it"></span>Amplify</a>
+    <a class="logo" href="#top"><svg class="logo-mark" id="dot" viewBox="0 0 120 120" title="go on, poke it" aria-hidden="true" focusable="false"><use href="#mark-a"/></svg>Amplify</a>
     <nav class="nav-links">
       <a href="#what-we-do">What we do</a>
       <a href="#different">Why us</a>
@@ -430,7 +467,7 @@ footer.site .fine{color:var(--text-2);font-size:var(--fs-sm)}
 <!-- ================= FOOTER ================= -->
 <footer class="site">
   <div class="wrap">
-    <div class="brand"><span class="dot"></span>Amplify Brands</div>
+    <div class="brand"><svg class="logo-mark" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><use href="#mark-a"/></svg>Amplify Brands</div>
     <div class="tag">Less busywork. More business.</div>
     <div class="fine">© 2026 Amplify Brands · AI implementation, minus the buzzword bingo.</div>
   </div>
