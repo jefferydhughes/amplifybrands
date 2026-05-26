@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Amplify Brands — Intro Film</title>
+
+<!-- Brand fonts (same stack as the live site) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<!-- React + Babel, pinned + integrity (per skill react-setup.md) -->
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<style>
+  html, body { margin: 0; padding: 0; background: #000; overflow: hidden; }
+  * { box-sizing: border-box; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     ENGINE — Stage + Sprite (inlined from huashu-design animations.jsx)
+     + dev hooks (window.__t / __seekStage / __pause) for keyframe QA.
+     Inlined (not src=) so the file works over file:// without CORS.
+     ════════════════════════════════════════════════════════════════ -->
+<script type="text/babel">
+(function () {
+  const { createContext, useContext, useState, useEffect, useRef, useCallback } = React;
+
+  const TimeContext = createContext({ time: 0, duration: 10, playing: false });
+  const SpriteContext = createContext(null);
+
+  const Easing = {
+    linear: t => t,
+    easeIn: t => t * t,
+    easeOut: t => 1 - (1 - t) * (1 - t),
+    easeInOut: t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
+    expoOut: t => t === 1 ? 1 : 1 - Math.pow(2, -10 * t),
+    expoIn: t => t === 0 ? 0 : Math.pow(2, 10 * t - 10),
+    overshoot: t => {
+      const c1 = 1.70158, c3 = c1 + 1;
+      return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+    },
+    spring: t => {
+      const c = (2 * Math.PI) / 3;
+      return t === 0 ? 0 : t === 1 ? 1 : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c) + 1;
+    },
+  };
+
+  function interpolate(t, input, output, easing) {
+    const [inStart, inEnd] = input;
+    const [outStart, outEnd] = output;
+    if (t <= inStart) return outStart;
+    if (t >= inEnd) return outEnd;
+    let p = (t - inStart) / (inEnd - inStart);
+    if (easing) p = easing(p);
+    return outStart + (outEnd - outStart) * p;
+  }
+
+  function useTime() { return useContext(TimeContext).time; }
+  function useSprite() {
+    const s = useContext(SpriteContext);
+    return s || { t: 0, elapsed: 0, duration: 0 };
+  }
+
+  const stageStyles = {
+    wrapper: { position: 'fixed', inset: 0, background: '#000', display: 'flex', flexDirection: 'column', fontFamily: 'Inter, -apple-system, sans-serif' },
+    stageHolder: { flex: 1, position: 'relative', overflow: 'hidden' },
+    canvas: { position: 'absolute', top: '50%', left: '50%', transformOrigin: 'center center', overflow: 'hidden' },
+    controls: { position: 'fixed', bottom: 0, left: 0, right: 0, background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(10px)', padding: '12px 20px', display: 'flex', alignItems: 'center', gap: 16, color: '#fff', fontSize: 12, zIndex: 100 },
+    button: { background: 'none', border: '1px solid rgba(255,255,255,0.3)', color: '#fff', padding: '6px 14px', borderRadius: 4, cursor: 'pointer', fontSize: 12 },
+    timeDisplay: { fontFamily: 'ui-monospace, monospace', fontVariantNumeric: 'tabular-nums', minWidth: 100 },
+    scrubber: { flex: 1, height: 4, background: 'rgba(255,255,255,0.2)', borderRadius: 2, position: 'relative', cursor: 'pointer' },
+    scrubberFill: { position: 'absolute', top: 0, left: 0, height: '100%', background: '#A3FF12', borderRadius: 2, pointerEvents: 'none' },
+    scrubberHandle: { position: 'absolute', top: '50%', width: 12, height: 12, background: '#fff', borderRadius: '50%', transform: 'translate(-50%, -50%)', pointerEvents: 'none' },
+  };
+
+  function Stage({ duration = 10, width = 1920, height = 1080, loop = true, children, bgColor = '#fff' }) {
+    const [time, setTime] = useState(0);
+    const [playing, setPlaying] = useState(true);
+    const [scale, setScale] = useState(1);
+    const rafRef = useRef(null);
+    const effectiveLoop = (typeof window !== 'undefined' && window.__recording) ? false : loop;
+
+    useEffect(() => {
+      function updateScale() {
+        const s = Math.min(window.innerWidth / width, (window.innerHeight - 56) / height);
+        setScale(s);
+      }
+      updateScale();
+      window.addEventListener('resize', updateScale);
+      return () => window.removeEventListener('resize', updateScale);
+    }, [width, height]);
+
+    // dev hooks for keyframe QA (no effect on recording)
+    useEffect(() => {
+      window.__seekStage = (tt) => setTime(Math.max(0, Math.min(duration, tt)));
+      window.__pause = () => setPlaying(false);
+      window.__play = () => setPlaying(true);
+    }, [duration]);
+
+    useEffect(() => {
+      if (!playing) return;
+      let cancelled = false;
+      let last = null;
+      function tick(now) {
+        if (cancelled) return;
+        if (last === null) { last = now; if (typeof window !== 'undefined') window.__ready = true; }
+        const delta = (now - last) / 1000;
+        last = now;
+        setTime(prev => {
+          const next = prev + delta;
+          if (next >= duration) return effectiveLoop ? 0 : duration - 0.001;
+          return next;
+        });
+        rafRef.current = requestAnimationFrame(tick);
+      }
+      const startAfterFonts = () => { if (!cancelled) rafRef.current = requestAnimationFrame(tick); };
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(startAfterFonts);
+      else startAfterFonts();
+      return () => { cancelled = true; cancelAnimationFrame(rafRef.current); };
+    }, [playing, duration, effectiveLoop]);
+
+    const handleSeek = useCallback((e) => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const ratio = (e.clientX - rect.left) / rect.width;
+      setTime(Math.max(0, Math.min(duration, ratio * duration)));
+      setPlaying(false);
+    }, [duration]);
+
+    if (typeof window !== 'undefined') window.__t = time;
+    const progress = time / duration;
+    const ctx = { time, duration, playing, setPlaying, setTime };
+    const canvasStyle = { ...stageStyles.canvas, width, height, background: bgColor, transform: `translate(-50%, -50%) scale(${scale})` };
+
+    return (
+      <TimeContext.Provider value={ctx}>
+        <div style={stageStyles.wrapper}>
+          <div style={stageStyles.stageHolder}>
+            <div style={canvasStyle}>{children}</div>
+          </div>
+          <div className="no-record" style={stageStyles.controls}>
+            <button style={stageStyles.button} onClick={() => setPlaying(p => !p)}>{playing ? '⏸' : '▶'}</button>
+            <button style={stageStyles.button} onClick={() => setTime(0)}>⏮</button>
+            <div style={stageStyles.timeDisplay}>{time.toFixed(2)}s / {duration.toFixed(2)}s</div>
+            <div style={stageStyles.scrubber} onMouseDown={handleSeek}>
+              <div style={{ ...stageStyles.scrubberFill, width: `${progress * 100}%` }} />
+              <div style={{ ...stageStyles.scrubberHandle, left: `${progress * 100}%` }} />
+            </div>
+          </div>
+        </div>
+      </TimeContext.Provider>
+    );
+  }
+
+  function Sprite({ start = 0, end, children, style }) {
+    const { time } = useContext(TimeContext);
+    const actualEnd = end == null ? Infinity : end;
+    if (time < start || time >= actualEnd) return null;
+    const duration = actualEnd - start;
+    const elapsed = time - start;
+    const t = duration === 0 ? 1 : Math.max(0, Math.min(1, elapsed / duration));
+    return (
+      <SpriteContext.Provider value={{ t, elapsed, duration, start, end: actualEnd }}>
+        <div style={{ position: 'absolute', inset: 0, ...style }}>{children}</div>
+      </SpriteContext.Provider>
+    );
+  }
+
+  window.Animations = { Stage, Sprite, useTime, useSprite, Easing, interpolate };
+})();
+</script>
+
+<!-- ════════════════════════════════════════════════════════════════
+     FILM — Amplify Brands intro (kinetic typography, no VO)
+     7 scenes · continuous narrative · Pulse-A bars = recurring hero
+     ════════════════════════════════════════════════════════════════ -->
+<script type="text/babel">
+const { Stage, Sprite, useSprite, Easing: E, interpolate: I } = window.Animations;
+
+/* ── brand tokens (frozen in brand-spec.md) ── */
+const C = {
+  bg: '#0B0B0B', ink: '#F5F5F5', lime: '#A3FF12', limeHi: '#C6FF6B', limeLo: '#6f8f1e',
+  coral: '#FF5C5C', violet: '#6B5BFF', violet2: '#9A8FFF',
+  g1: '#1C1C1C', g2: '#2A2A2A', g3: '#555', g4: '#888',
+};
+const DISPLAY = "'Space Grotesk', ui-sans-serif, system-ui, sans-serif";
+const MONO = "'JetBrains Mono', ui-monospace, monospace";
+const BODY = "'Inter', ui-sans-serif, system-ui, sans-serif";
+const DUR = 85;
+
+/* tiny deterministic noise for jitter / handmade motion */
+function noise(x) { const s = Math.sin(x * 127.1) * 43758.5453; return s - Math.floor(s); }
+
+/* ───────── persistent hero: the three ascending pulse bars ───────── */
+function PulseBars({ size = 1, color = C.lime, gap = 1, grow = 1, glow = true }) {
+  // base geometry mirrors favicon: heights 14/20/28 px in a 120 box
+  const heights = [14, 20, 28].map(h => h * grow);
+  const w = 8 * size, sp = 6 * size * gap;
+  return (
+    <div style={{ display: 'flex', alignItems: 'flex-end', gap: sp, height: 28 * size * grow }}>
+      {heights.map((h, i) => (
+        <div key={i} style={{
+          width: w, height: h * size, background: color, borderRadius: 1 * size,
+          boxShadow: glow ? `0 0 ${10 * size}px ${color}88` : 'none',
+        }} />
+      ))}
+    </div>
+  );
+}
+
+/* full Pulse-A wordmark lockup */
+function PulseA({ px = 120, withWord = false, ink = C.ink }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: px * 0.18 }}>
+      <svg width={px} height={px} viewBox="0 0 120 120" style={{ display: 'block', color: ink, filter: `drop-shadow(0 0 ${px*0.12}px ${C.lime}55)` }}>
+        <path d="M 4 110 L 52 8 L 68 8 L 116 110 L 96 110 L 60 30 L 24 110 Z" fill="currentColor" />
+        <rect x="42" y="84" width="8" height="14" fill={C.lime} />
+        <rect x="56" y="78" width="8" height="20" fill={C.lime} />
+        <rect x="70" y="70" width="8" height="28" fill={C.lime} />
+      </svg>
+      {withWord && (
+        <span style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: px * 0.62, color: ink, letterSpacing: '-0.03em' }}>
+          Amplify <span style={{ color: C.g4, fontWeight: 500 }}>Brands</span>
+        </span>
+      )}
+    </div>
+  );
+}
+
+/* faint dot-grid that lives across the whole film = connective tissue */
+function GridFloor({ opacity = 0.05, color = '#ffffff', skew = 0 }) {
+  return (
+    <div style={{
+      position: 'absolute', inset: -200, opacity, pointerEvents: 'none',
+      backgroundImage: `linear-gradient(${color}22 1px, transparent 1px), linear-gradient(90deg, ${color}22 1px, transparent 1px)`,
+      backgroundSize: '64px 64px',
+      transform: `perspective(1400px) rotateX(${skew}deg)`,
+    }} />
+  );
+}
+
+/* kinetic word that slams up into place */
+function SlamLine({ text, t, t0, color = C.ink, size = 150, weight = 700, ls = '-0.04em', from = 70, font = DISPLAY }) {
+  const local = Math.max(0, t - t0);
+  const op = I(local, [0, 0.18], [0, 1], E.expoOut);
+  const y = I(local, [0, 0.42], [from, 0], E.expoOut);
+  const sc = I(local, [0, 0.5], [1.14, 1], E.expoOut);
+  const bl = I(local, [0, 0.22], [14, 0], E.expoOut);
+  return (
+    <div style={{
+      fontFamily: font, fontWeight: weight, fontSize: size, lineHeight: 0.98, color,
+      letterSpacing: ls, opacity: op, transform: `translateY(${y}px) scale(${sc})`,
+      filter: `blur(${bl}px)`, transformOrigin: 'left center', whiteSpace: 'nowrap',
+    }}>{text}</div>
+  );
+}
+
+/* RGB-split glitch wrapper, keyed on coarse time so it strobes */
+function Glitch({ children, amt = 0, seed = 0 }) {
+  const k = Math.floor((seed) * 18);
+  const dx = amt ? (noise(k) - 0.5) * 18 * amt : 0;
+  const dy = amt ? (noise(k + 9) - 0.5) * 6 * amt : 0;
+  const slice = amt > 0.3 && noise(k + 3) > 0.6;
+  return (
+    <div style={{ position: 'relative', transform: `translate(${dx}px,${dy}px)` }}>
+      {amt > 0 && <div style={{ position: 'absolute', inset: 0, transform: `translate(${-6*amt}px,0)`, mixBlendMode: 'screen', color: C.coral, clipPath: slice ? 'inset(30% 0 40% 0)' : 'none', opacity: 0.8 }}>{children}</div>}
+      {amt > 0 && <div style={{ position: 'absolute', inset: 0, transform: `translate(${6*amt}px,0)`, mixBlendMode: 'screen', color: C.violet2, clipPath: slice ? 'inset(55% 0 10% 0)' : 'none', opacity: 0.8 }}>{children}</div>}
+      <div style={{ position: 'relative' }}>{children}</div>
+    </div>
+  );
+}
+
+const center = { position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center' };
+
+/* ══════════ SCENE 1 · OPENING CHAOS (0–7.5) ══════════ */
+const NOISE_MSGS = [
+  { x: 120, y: 90, txt: 'Use AI!', c: C.coral, r: -4 },
+  { x: 1320, y: 130, txt: 'AI will replace your business!', c: C.violet2, r: 3 },
+  { x: 250, y: 760, txt: 'Top 100 AI tools!', c: C.ink, r: -2 },
+  { x: 1180, y: 820, txt: '10x productivity!', c: C.coral, r: 5 },
+  { x: 760, y: 60, txt: 'Prompt engineering course!', c: C.violet2, r: -3 },
+  { x: 60, y: 430, txt: 'AGENTS ARE HERE', c: C.ink, r: 2 },
+  { x: 1380, y: 470, txt: 'Don\'t get left behind', c: C.coral, r: -5 },
+  { x: 980, y: 930, txt: 'Buy my GPT', c: C.violet2, r: 4 },
+  { x: 430, y: 980, txt: 'AI changes EVERYTHING', c: C.ink, r: -2 },
+  { x: 1480, y: 690, txt: 'New model dropped!', c: C.coral, r: 3 },
+];
+function SceneChaos() {
+  const { elapsed: e } = useSprite();
+  const shake = e < 6 ? Math.min(1, e / 1.2) * (1 - I(e, [5, 6.6], [0, 1], E.easeIn)) : 0;
+  const sx = (noise(e * 22) - 0.5) * 10 * shake;
+  const sy = (noise(e * 22 + 5) - 0.5) * 10 * shake;
+  const words = ['EVERYBODY.', 'KEEPS.', 'SCREAMING.', 'ABOUT AI.'];
+  return (
+    <div style={{ position: 'absolute', inset: 0, background: C.bg, transform: `translate(${sx}px,${sy}px)` }}>
+      {/* multiplying notification noise */}
+      {NOISE_MSGS.map((m, i) => {
+        const appear = 0.15 + i * 0.16;
+        const local = Math.max(0, e - appear);
+        if (e < appear) return null;
+        const op = I(local, [0, 0.12], [0, 1], E.expoOut) * (1 - I(e, [5.4, 6.8], [0, 1], E.easeIn));
+        const pop = I(local, [0, 0.3], [0.6, 1], E.overshoot);
+        const j = (noise(e * 8 + i) - 0.5) * 4;
+        return (
+          <div key={i} style={{
+            position: 'absolute', left: m.x, top: m.y + j, transform: `rotate(${m.r}deg) scale(${pop})`,
+            opacity: op, fontFamily: BODY, fontWeight: 600, fontSize: 30, color: m.c,
+            background: 'rgba(255,255,255,0.04)', border: `1px solid ${m.c}55`, borderRadius: 12,
+            padding: '14px 22px', boxShadow: `0 8px 40px ${m.c}22`, backdropFilter: 'blur(2px)', whiteSpace: 'nowrap',
+          }}>
+            <span style={{ color: m.c, marginRight: 10 }}>●</span>{m.txt}
+          </div>
+        );
+      })}
+      {/* word slam */}
+      <div style={{ ...center, paddingLeft: 130, gap: 6 }}>
+        {words.map((w, i) => (
+          <Glitch key={i} amt={e > 5.2 ? I(e, [5.2, 6.4], [0, 0.5]) : 0} seed={e}>
+            <SlamLine text={w} t={e} t0={2.4 + i * 0.55} size={148}
+              color={i === 3 ? C.coral : C.ink} />
+          </Glitch>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ══════════ SCENE 2 · BUSINESS OWNER PAIN (7.5–19) ══════════ */
+const PAIN_WORDS = ['INVOICES', 'EMAILS', 'FOLLOW-UPS', 'MISSED LEADS', 'MANUAL WORK', 'REPETITIVE TASKS', 'PAYROLL', 'SCHEDULING', 'REPORTS'];
+function ScenePain() {
+  const { elapsed: e } = useSprite();
+  const showJustUseAI = e > 7.4;
+  const showWhen = e > 9.2;
+  return (
+    <div style={{ position: 'absolute', inset: 0, background: C.bg, overflow: 'hidden' }}>
+      <GridFloor opacity={0.045} />
+      {/* fake browser tab bar overflowing */}
+      <div style={{ position: 'absolute', top: 70, left: 80, right: 80, display: 'flex', gap: 4, opacity: I(e, [0.2, 0.8], [0, 1], E.expoOut) }}>
+        {Array.from({ length: 27 }).map((_, i) => {
+          const app = I(e, [0.2 + i * 0.06, 0.6 + i * 0.06], [0, 1], E.expoOut);
+          return <div key={i} style={{
+            flex: app, minWidth: app * 6, height: 34, background: i % 3 === 0 ? '#161616' : '#121212',
+            borderTop: `2px solid ${i % 4 === 0 ? C.coral : C.g2}`, borderRadius: '6px 6px 0 0', opacity: app,
+          }} />;
+        })}
+      </div>
+      <div style={{ position: 'absolute', top: 116, left: 80, fontFamily: MONO, fontSize: 16, color: C.g3, opacity: I(e, [1.6, 2.2], [0, 1]) }}>27 tabs · held together by caffeine + blind optimism</div>
+
+      {/* cascading admin words (left column) */}
+      <div style={{ position: 'absolute', left: 90, top: 220, display: 'flex', flexDirection: 'column', gap: 4 }}>
+        {PAIN_WORDS.map((w, i) => {
+          const t0 = 1.0 + i * 0.42;
+          const local = Math.max(0, e - t0);
+          if (e < t0) return null;
+          const op = I(local, [0, 0.18], [0, 1], E.expoOut) * (e > 7.2 ? I(e, [7.2, 8.0], [1, 0.18]) : 1);
+          const x = I(local, [0, 0.4], [-50, 0], E.expoOut);
+          return <div key={i} style={{
+            fontFamily: DISPLAY, fontWeight: 700, fontSize: 64, lineHeight: 1.02, color: C.ink,
+            letterSpacing: '-0.03em', opacity: op, transform: `translateX(${x}px)`,
+          }}><span style={{ color: C.coral, fontSize: 28, verticalAlign: 'middle', marginRight: 14 }}>✕</span>{w}</div>;
+        })}
+      </div>
+
+      {/* "JUST USE AI" hype pill, then deadpan reply */}
+      {showJustUseAI && (
+        <div style={{ position: 'absolute', right: 140, top: 360, textAlign: 'right' }}>
+          <div style={{
+            display: 'inline-block', fontFamily: DISPLAY, fontWeight: 700, fontSize: 92, color: C.violet2,
+            letterSpacing: '-0.03em', opacity: I(e - 7.4, [0, 0.2], [0, 1], E.expoOut),
+            transform: `scale(${I(e - 7.4, [0, 0.3], [0.7, 1], E.overshoot)})`,
+            border: `2px dashed ${C.violet}88`, borderRadius: 18, padding: '10px 28px',
+          }}>“JUST USE AI”</div>
+          {showWhen && (
+            <div style={{ marginTop: 40, opacity: I(e - 9.2, [0, 0.25], [0, 1], E.expoOut) }}>
+              <div style={{ fontFamily: BODY, fontSize: 46, color: C.g4 }}>…cool.</div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 22, marginTop: 8 }}>
+                <SlamLine text="WHEN?" t={e} t0={9.7} size={150} color={C.ink} ls="-0.03em" from={40} />
+                {/* sarcastic spinner = the pulse bars, but gray + struggling */}
+                {e > 10.0 && <div style={{ transform: `rotate(${(e - 10) * 220}deg)`, opacity: 0.6 }}><PulseBars size={1.5} color={C.g3} glow={false} grow={0.8} /></div>}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ══════════ SCENE 3 · AI SPAGHETTI (19–32) ══════════ */
+const NODES = [
+  { x: 300, y: 300, label: 'Zapier' }, { x: 720, y: 200, label: 'ChatGPT' },
+  { x: 1180, y: 280, label: 'CRM' }, { x: 1560, y: 360, label: 'Dashboard' },
+  { x: 420, y: 640, label: 'Sheets' }, { x: 860, y: 720, label: 'Email bot' },
+  { x: 1280, y: 660, label: 'Webhook' }, { x: 1600, y: 720, label: 'Notion' },
+  { x: 640, y: 460, label: 'Make.com' }, { x: 1040, y: 480, label: 'Slack app' },
+];
+function SceneSpaghetti() {
+  const { elapsed: e } = useSprite();
+  // tangle grows in, then a freeze/glitch near the end (handing off to S4)
+  const tangle = I(e, [0.4, 3.5], [0, 1], E.easeOut);
+  const glitchAmt = e > 11.4 ? I(e, [11.4, 12.9], [0, 0.7]) : (noise(Math.floor(e * 3)) > 0.85 ? 0.2 : 0);
+  // build messy bezier paths between random node pairs
+  const paths = [];
+  const pairs = [[0,8],[8,1],[1,9],[9,2],[2,6],[6,3],[4,8],[5,9],[5,6],[7,3],[0,4],[1,2],[8,5],[9,7],[4,5],[0,1]];
+  pairs.forEach((p, i) => {
+    const a = NODES[p[0]], b = NODES[p[1]];
+    const grow = I(e, [0.4 + i * 0.12, 1.6 + i * 0.12], [0, 1], E.expoOut);
+    const wob = 220 * tangle;
+    const c1x = (a.x + b.x) / 2 + (noise(i) - 0.5) * wob, c1y = (a.y + b.y) / 2 + (noise(i + 5) - 0.5) * wob;
+    paths.push({ d: `M ${a.x} ${a.y} Q ${c1x} ${c1y} ${b.x} ${b.y}`, grow, c: i % 3 === 0 ? C.coral : i % 3 === 1 ? C.violet : C.g4 });
+  });
+  return (
+    <div style={{ position: 'absolute', inset: 0, background: C.bg }}>
+      <GridFloor opacity={0.04} />
+      <Glitch amt={glitchAmt} seed={e}>
+        <svg width="1920" height="1080" style={{ position: 'absolute', inset: 0 }}>
+          {paths.map((p, i) => (
+            <path key={i} d={p.d} fill="none" stroke={p.c} strokeWidth={2.5}
+              strokeOpacity={0.55 * p.grow} strokeDasharray="1600" strokeDashoffset={1600 * (1 - p.grow)} />
+          ))}
+        </svg>
+        {NODES.map((n, i) => {
+          const app = I(e, [0.2 + i * 0.1, 0.7 + i * 0.1], [0, 1], E.overshoot);
+          return <div key={i} style={{
+            position: 'absolute', left: n.x, top: n.y, transform: `translate(-50%,-50%) scale(${app})`, opacity: Math.max(0, app),
+            fontFamily: MONO, fontSize: 20, color: C.ink, background: '#15151b',
+            border: `1px solid ${C.g2}`, borderRadius: 10, padding: '10px 16px', whiteSpace: 'nowrap',
+          }}>{n.label}</div>;
+        })}
+      </Glitch>
+
+      {/* label slab */}
+      <div style={{ position: 'absolute', left: 0, right: 0, bottom: 120, textAlign: 'center' }}>
+        <Glitch amt={glitchAmt * 0.8} seed={e + 3}>
+          <div style={{ display: 'inline-block', opacity: I(e, [4.2, 4.8], [0, 1], E.expoOut), transform: `scale(${I(e, [4.2, 4.9], [0.8, 1], E.overshoot)})` }}>
+            <span style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 130, color: C.coral, letterSpacing: '-0.04em' }}>AI&nbsp;SPAGHETTI</span>
+            <span style={{ fontFamily: BODY, fontSize: 40, color: C.g4, verticalAlign: 'super' }}>™</span>
+          </div>
+        </Glitch>
+        <div style={{ display: 'flex', gap: 44, justifyContent: 'center', marginTop: 18, fontFamily: MONO, fontSize: 30 }}>
+          {[['MESSY', 6.0], ['EXPENSIVE', 6.5], ['MILDLY TERRIFYING', 7.0]].map(([w, t0], i) => (
+            <span key={i} style={{ color: C.g4, opacity: I(e, [t0, t0 + 0.4], [0, 1], E.expoOut), transform: `translateY(${I(e, [t0, t0+0.4], [12,0], E.expoOut)}px)`, display: 'inline-block' }}>{w}</span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════ SCENE 4 · THE SHIFT (32–45) ══════════ */
+// the tangle untangles into clean orthogonal lanes; lime arrives for the first time
+function SceneShift() {
+  const { elapsed: e } = useSprite();
+  const order = I(e, [0.0, 2.6], [0, 1], E.expoOut);   // 0 = chaos remnant, 1 = clean grid
+  const limeIn = I(e, [1.4, 3.2], [0, 1], E.expoOut);
+  const lanes = [300, 460, 620, 780];
+  return (
+    <div style={{ position: 'absolute', inset: 0, background: C.bg }}>
+      <GridFloor opacity={0.04 + limeIn * 0.05} color={'#A3FF12'} />
+      <svg width="1920" height="1080" style={{ position: 'absolute', inset: 0 }}>
+        {lanes.map((y, i) => {
+          // start wobbly, resolve to straight horizontal lane
+          const wob = (1 - order) * (60 + i * 20);
+          const midY = y + Math.sin(i) * wob;
+          return <path key={i} d={`M 200 ${y} Q 960 ${midY} 1720 ${y}`} fill="none"
+            stroke={C.lime} strokeWidth={2 + limeIn * 1.5} strokeOpacity={0.18 + limeIn * 0.5 * (0.6 + 0.4 * Math.sin(e * 2 + i))}
+            style={{ filter: `drop-shadow(0 0 ${6 * limeIn}px ${C.lime})` }} />;
+        })}
+        {/* clean nodes snapping onto lanes */}
+        {lanes.map((y, i) => [360, 760, 1160, 1560].map((x, j) => {
+          const snap = I(e, [0.6 + (i + j) * 0.08, 1.6 + (i + j) * 0.08], [0, 1], E.spring);
+          return <rect key={`${i}-${j}`} x={x - 7} y={y - 7} width="14" height="14" rx="3"
+            fill={C.lime} opacity={snap * (0.4 + limeIn * 0.6)} transform={`scale(${snap})`} style={{ transformOrigin: `${x}px ${y}px` }} />;
+        }))}
+      </svg>
+
+      <div style={{ position: 'absolute', left: 130, top: 120 }}>
+        <div style={{ fontFamily: BODY, fontSize: 44, color: C.g4, opacity: I(e, [0.6, 1.2], [0, 1], E.expoOut), transform: `translateY(${I(e,[0.6,1.2],[20,0],E.expoOut)}px)` }}>
+          That’s where <span style={{ color: C.ink, fontWeight: 600 }}>Amplify</span> comes in.
+        </div>
+      </div>
+
+      <div style={{ position: 'absolute', left: 130, bottom: 150, display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <SlamLine text="AI." t={e} t0={3.0} size={150} color={C.ink} />
+        <SlamLine text="THAT ACTUALLY" t={e} t0={3.4} size={150} color={C.ink} />
+        <div style={{ display: 'inline-flex', alignItems: 'baseline' }}>
+          <SlamLine text="GETS USED." t={e} t0={3.85} size={150} color={C.lime} />
+        </div>
+        <div style={{ marginTop: 10, opacity: I(e, [5.2, 5.8], [0, 1]) }}>
+          <span style={{ fontFamily: MONO, fontSize: 24, color: C.g4 }}>not hype &nbsp;·&nbsp; not buzzwords &nbsp;·&nbsp; actual systems your team will use</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════ SCENE 5 · WHAT WE DO (45–63) ══════════ */
+const MODULES = [
+  { k: 'A', big: 'AUTOMATE\nREPETITIVE WORK', sub: 'Inbox auto-sorting · triage · zero copy-paste', glyph: 'inbox' },
+  { k: 'B', big: 'COMPANY KNOWLEDGE,\nNOW SEARCHABLE', sub: 'An internal assistant that answers SOP questions', glyph: 'brain' },
+  { k: 'C', big: 'RESPOND FASTER.\nCLOSE MORE.', sub: 'Lead follow-up that never sleeps', glyph: 'bolt' },
+  { k: 'D', big: 'REMOVE\nBOTTLENECKS', sub: 'Workflows that connect the systems you already run', glyph: 'flow' },
+];
+function ModuleGlyph({ kind, e, t0 }) {
+  const p = I(e, [t0 + 0.1, t0 + 0.9], [0, 1], E.expoOut);
+  const box = { width: 460, height: 300, borderRadius: 16, background: '#101410', border: `1px solid ${C.lime}33`, position: 'relative', overflow: 'hidden' };
+  return (
+    <div style={box}>
+      <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(70% 80% at 80% 0%, ${C.lime}18, transparent 60%)` }} />
+      {kind === 'inbox' && Array.from({ length: 5 }).map((_, i) => {
+        const sorted = I(e, [t0 + 0.4 + i * 0.12, t0 + 1.0 + i * 0.12], [0, 1], E.expoOut);
+        return <div key={i} style={{ position: 'absolute', left: 30 + sorted * 18, top: 40 + i * 44, width: 360, height: 30, borderRadius: 6, background: i < 3 ? `${C.lime}22` : '#1a1a1a', borderLeft: `3px solid ${i < 3 ? C.lime : C.g3}`, opacity: p, transform: `translateX(${(1-sorted)*40}px)` }} />;
+      })}
+      {kind === 'brain' && (
+        <div style={{ position: 'absolute', inset: 0, padding: 30, fontFamily: MONO, fontSize: 18, color: C.g4 }}>
+          <div style={{ color: C.lime, opacity: p }}>▸ "What's our refund policy?"</div>
+          <div style={{ marginTop: 14, color: C.ink, opacity: I(e, [t0 + 0.7, t0 + 1.6], [0, 1]) }}>
+            {('Net-30, full refund within 14 days — see SOP §4.2').slice(0, Math.floor(I(e, [t0+0.7, t0+1.8],[0,46]))) }<span style={{ color: C.lime }}>▍</span>
+          </div>
+        </div>
+      )}
+      {kind === 'bolt' && (
+        <div style={{ position: 'absolute', inset: 0, padding: 30, fontFamily: MONO, fontSize: 18 }}>
+          <div style={{ color: C.g4, opacity: p }}>New lead · 0:00</div>
+          <div style={{ color: C.lime, opacity: I(e, [t0 + 0.6, t0 + 1.1], [0, 1]), marginTop: 12 }}>↳ auto-reply sent · 0:04</div>
+          <div style={{ color: C.lime, opacity: I(e, [t0 + 1.0, t0 + 1.5], [0, 1]), marginTop: 8 }}>↳ meeting booked · 0:31</div>
+          <div style={{ marginTop: 18, fontFamily: DISPLAY, fontWeight: 700, fontSize: 64, color: C.ink, opacity: I(e, [t0 + 1.3, t0 + 1.8], [0, 1]) }}>×9 faster</div>
+        </div>
+      )}
+      {kind === 'flow' && (
+        <svg width="460" height="300" style={{ position: 'absolute', inset: 0 }}>
+          {[[60,90],[60,210]].map((s,i)=>(
+            <g key={i}>
+              <rect x={s[0]-30} y={s[1]-18} width="90" height="36" rx="6" fill="#1a1a1a" stroke={C.g3} opacity={p}/>
+              <path d={`M ${s[0]+60} ${s[1]} C 200 ${s[1]} 240 150 320 150`} fill="none" stroke={C.lime} strokeWidth="2.5" strokeDasharray="400" strokeDashoffset={400*(1-I(e,[t0+0.5+i*0.2,t0+1.4+i*0.2],[0,1],E.expoOut))} style={{filter:`drop-shadow(0 0 5px ${C.lime})`}}/>
+            </g>
+          ))}
+          <rect x="320" y="120" width="100" height="60" rx="8" fill={`${C.lime}22`} stroke={C.lime} opacity={I(e,[t0+1.2,t0+1.7],[0,1])}/>
+        </svg>
+      )}
+    </div>
+  );
+}
+function SceneWhatWeDo() {
+  const { elapsed: e } = useSprite();
+  // each module gets a ~3.6s window, sliding the focused card to center
+  const seg = 3.7;
+  const idx = Math.min(3, Math.floor(e / seg));
+  const m = MODULES[idx];
+  const localStart = idx * seg;
+  const slideIn = I(e, [localStart, localStart + 0.5], [0, 1], E.expoOut);
+  const slideOut = idx < 3 ? I(e, [localStart + seg - 0.45, localStart + seg], [0, 1], E.expoIn) : 0;
+  const x = (1 - slideIn) * 120 - slideOut * 120;
+  return (
+    <div style={{ position: 'absolute', inset: 0, background: C.bg }}>
+      <GridFloor opacity={0.05} color={'#A3FF12'} />
+      <div style={{ position: 'absolute', top: 90, left: 130, fontFamily: MONO, fontSize: 24, color: C.lime, letterSpacing: '0.2em' }}>WHAT WE INSTALL</div>
+      {/* progress ticks */}
+      <div style={{ position: 'absolute', top: 96, right: 130, display: 'flex', gap: 10 }}>
+        {MODULES.map((mm, i) => <div key={i} style={{ width: 40, height: 5, borderRadius: 3, background: i === idx ? C.lime : i < idx ? `${C.lime}66` : C.g2 }} />)}
+      </div>
+
+      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', gap: 80, paddingLeft: 130, paddingRight: 130, opacity: 1 - slideOut, transform: `translateX(${x}px)` }}>
+        <div style={{ flex: '0 0 auto' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 24, marginBottom: 26 }}>
+            <div style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 40, color: C.bg, background: C.lime, borderRadius: 12, width: 64, height: 64, display: 'grid', placeItems: 'center' }}>{m.k}</div>
+            <PulseBars size={1.1} grow={0.9} />
+          </div>
+          {m.big.split('\n').map((line, i) => (
+            <SlamLine key={i} text={line} t={e} t0={localStart + 0.15 + i * 0.18} size={104} color={i === 1 ? C.lime : C.ink} ls="-0.035em" from={50} />
+          ))}
+          <div style={{ marginTop: 26, fontFamily: BODY, fontSize: 32, color: C.g4, opacity: I(e, [localStart + 0.6, localStart + 1.1], [0, 1]) }}>{m.sub}</div>
+        </div>
+        <div style={{ flex: '0 0 auto', marginLeft: 'auto' }}>
+          <ModuleGlyph kind={m.glyph} e={e} t0={localStart} />
+        </div>
+      </div>
+
+      {/* closing line of the section */}
+      {e > seg * 4 - 0.4 && (
+        <div style={{ position: 'absolute', left: 130, bottom: 110, opacity: I(e, [seg*4-0.4, seg*4+0.2], [0,1]) }}>
+          <span style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 54, color: C.ink }}>Give your team their </span>
+          <span style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 54, color: C.lime }}>damn time back.</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ══════════ SCENE 6 · DIFFERENTIATOR (63–75) ══════════ */
+function SceneDiff() {
+  const { elapsed: e } = useSprite();
+  // 0–2.4s: gaudy guru-slop flashes (isolated "THE HYPE" bad-sample). smash cut at ~2.6
+  const guruPhase = e < 2.6;
+  const flash = guruPhase ? (noise(Math.floor(e * 9)) > 0.4 ? 1 : 0.55) : 0;
+  return (
+    <div style={{ position: 'absolute', inset: 0, background: guruPhase ? '#120a1f' : C.bg, transition: 'none' }}>
+      {guruPhase ? (
+        <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center' }}>
+          <div style={{ position: 'absolute', top: 60, left: 80, fontFamily: MONO, fontSize: 22, color: C.violet2, border: `1px dashed ${C.violet}`, padding: '6px 14px', borderRadius: 8 }}>⚠ THE HYPE — don't be this</div>
+          <div style={{ textAlign: 'center', transform: `scale(${flash})`, filter: `saturate(1.6)` }}>
+            <div style={{ fontSize: 120 }}>🚀💰📈</div>
+            <div style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 110, letterSpacing: '-0.03em',
+              background: `linear-gradient(90deg, ${C.violet2}, #ff7adf, #ffd24a)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              AI&nbsp;GURU&nbsp;SECRETS
+            </div>
+            <div style={{ fontFamily: BODY, fontWeight: 600, fontSize: 40, color: C.violet2 }}>"10X your agency overnight 🤯"</div>
+          </div>
+          {/* strobe overlay */}
+          <div style={{ position: 'absolute', inset: 0, background: C.violet, opacity: noise(Math.floor(e*12)) > 0.7 ? 0.12 : 0, mixBlendMode: 'screen' }} />
+        </div>
+      ) : (
+        <div style={{ ...center, paddingLeft: 130 }}>
+          <GridFloor opacity={0.04} />
+          <div style={{ fontFamily: BODY, fontSize: 44, color: C.g4, marginBottom: 28, opacity: I(e, [2.8, 3.3], [0, 1], E.expoOut), transform: `translateY(${I(e,[2.8,3.3],[20,0],E.expoOut)}px)` }}>
+            Anybody can <span style={{ color: C.violet2 }}>sell</span> AI hype.<br/>Very few can <span style={{ color: C.ink, fontWeight: 600 }}>implement</span> it properly.
+          </div>
+          <div style={{ marginTop: 20 }}>
+            <SlamLine text='LESS “AI GURU”' t={e} t0={4.0} size={120} color={C.g4} from={50} />
+            <div style={{ height: 18 }} />
+            <SlamLine text="MORE" t={e} t0={4.5} size={120} color={C.ink} from={50} />
+            <SlamLine text="“THIS SAVES US" t={e} t0={4.9} size={120} color={C.lime} from={50} />
+            <SlamLine text="20 HOURS A WEEK”" t={e} t0={5.25} size={120} color={C.lime} from={50} />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ══════════ SCENE 7 · CLOSE (75–85) — bars converge into Pulse A ══════════ */
+function SceneClose() {
+  const { elapsed: e } = useSprite();
+  // 0–2.6 kinetic lines · 2.6–4.4 bars converge + A draws · 4.4+ lockup + CTA, hold
+  const lineOut = I(e, [2.2, 2.7], [0, 1], E.easeIn);
+  const converge = I(e, [2.7, 4.2], [0, 1], E.expoOut);
+  const logoUp = I(e, [4.0, 4.9], [0, 1], E.overshoot);
+  const ctaUp = I(e, [5.6, 6.2], [0, 1], E.expoOut);
+  const obsolete = e > 1.0;
+  return (
+    <div style={{ position: 'absolute', inset: 0, background: C.bg }}>
+      <GridFloor opacity={0.045} color={'#A3FF12'} />
+
+      {/* opening kinetic lines */}
+      {e < 2.9 && (
+        <div style={{ ...center, paddingLeft: 130, opacity: 1 - lineOut, transform: `translateY(${-lineOut * 40}px)`, filter: `blur(${lineOut * 8}px)` }}>
+          <div style={{ fontFamily: BODY, fontSize: 40, color: C.g4 }}>Your competitors are already experimenting with AI.</div>
+          <div style={{ display: 'flex', gap: 28, marginTop: 14 }}>
+            <span style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 70, color: C.coral, opacity: I(e, [0.4, 0.8], [0, 1], E.expoOut) }}>Some badly.</span>
+            <span style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 70, color: C.lime, opacity: I(e, [0.8, 1.2], [0, 1], E.expoOut) }}>Some dangerously well.</span>
+          </div>
+          {obsolete && (
+            <div style={{ marginTop: 50, fontFamily: DISPLAY, fontWeight: 700, fontSize: 96, letterSpacing: '-0.04em', lineHeight: 1.0 }}>
+              <span style={{ color: C.ink }}>MORE EFFICIENT</span><br/>
+              <span style={{ color: C.g4 }}>or </span><span style={{ color: C.coral, opacity: I(e, [1.5, 1.9], [0, 1], E.expoOut) }}>MORE OBSOLETE.</span>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* converge: three bars fly to center, then the A draws around them */}
+      {e >= 2.4 && (
+        <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center' }}>
+          <div style={{ position: 'relative', display: 'grid', placeItems: 'center', transform: `scale(${0.9 + logoUp * 0.1})` }}>
+            {/* the A outline draws in via stroke-dashoffset as bars converge */}
+            <svg width="320" height="320" viewBox="0 0 120 120" style={{ position: 'absolute', color: C.ink, filter: `drop-shadow(0 0 30px ${C.lime}55)`, opacity: logoUp }}>
+              <path d="M 4 110 L 52 8 L 68 8 L 116 110 L 96 110 L 60 30 L 24 110 Z" fill="none" stroke={C.ink} strokeWidth="2"
+                strokeDasharray="520" strokeDashoffset={520 * (1 - I(e, [3.4, 4.6], [0, 1], E.expoOut))} />
+              <path d="M 4 110 L 52 8 L 68 8 L 116 110 L 96 110 L 60 30 L 24 110 Z" fill={C.ink} opacity={I(e, [4.4, 5.0], [0, 1], E.expoOut)} />
+            </svg>
+            {/* the converging bars — start spread (from prior scenes' motif), snap to crossbar */}
+            <svg width="320" height="320" viewBox="0 0 120 120" style={{ position: 'absolute' }}>
+              {[{x:42,y:84,h:14},{x:56,y:78,h:20},{x:70,y:70,h:28}].map((b, i) => {
+                const spreadX = (b.x - 56) * (1 - converge) * 6;
+                const spreadY = (1 - converge) * (120 + i * 40);
+                return <rect key={i} x={b.x + spreadX} y={b.y - spreadY} width="8" height={b.h} fill={C.lime}
+                  opacity={converge} style={{ filter: `drop-shadow(0 0 6px ${C.lime})` }} />;
+              })}
+            </svg>
+          </div>
+        </div>
+      )}
+
+      {/* lockup + CTA, holds on final frame (no fade-out) */}
+      {e >= 4.6 && (
+        <div style={{ position: 'absolute', left: 0, right: 0, bottom: 150, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 30 }}>
+          <div style={{ opacity: logoUp, transform: `translateY(${(1 - logoUp) * 24}px)` }}>
+            <span style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 92, letterSpacing: '-0.03em', color: C.ink }}>MAKE AI <span style={{ color: C.lime }}>USEFUL.</span></span>
+          </div>
+          <div style={{ opacity: I(e, [5.0, 5.5], [0, 1], E.expoOut) }}>
+            <span style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: 36, letterSpacing: '0.04em', color: C.g4 }}>AMPLIFY <span style={{ color: C.ink }}>BRANDS</span></span>
+          </div>
+          <div style={{ opacity: ctaUp, transform: `translateY(${(1 - ctaUp) * 20}px) scale(${0.96 + ctaUp * 0.04})`, marginTop: 6 }}>
+            <span style={{ fontFamily: BODY, fontWeight: 700, fontSize: 30, color: C.bg, background: C.lime, borderRadius: 12, padding: '16px 34px', boxShadow: `0 10px 50px ${C.lime}44` }}>Book your AI Breakdown →</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ───────── film assembly ───────── */
+function Film() {
+  return (
+    <Stage duration={DUR} width={1920} height={1080} bgColor={C.bg}>
+      <Sprite start={0}    end={7.5}>  <SceneChaos /></Sprite>
+      <Sprite start={7.5}  end={19}>   <ScenePain /></Sprite>
+      <Sprite start={19}   end={32}>   <SceneSpaghetti /></Sprite>
+      <Sprite start={32}   end={45}>   <SceneShift /></Sprite>
+      <Sprite start={45}   end={63}>   <SceneWhatWeDo /></Sprite>
+      <Sprite start={63}   end={75}>   <SceneDiff /></Sprite>
+      <Sprite start={75}   end={DUR}>  <SceneClose /></Sprite>
+
+      {/* skill promotion watermark (animation exports only; remove on request) */}
+      <div className="watermark" style={{ position: 'absolute', bottom: 22, right: 30, fontSize: 11, color: 'rgba(245,245,245,0.28)', letterSpacing: '0.15em', fontFamily: MONO, pointerEvents: 'none', zIndex: 100 }}>
+        Created by Huashu-Design
+      </div>
+    </Stage>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<Film />);
+</script>
+</body>
+</html>
