@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Cost Savings Analyzer — Amplify Brands AI</title>
+<meta name="description" content="See what manual, repetitive work is actually costing you. Pick your task categories, enter your numbers, get your annual salary-equivalent drag in 2 minutes.">
+<link rel="canonical" href="https://amplifybrands.io/analyzer">
+
+<!-- Favicons & app icons -->
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#0B0B0B">
+
+<!-- Open Graph / Twitter -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Amplify Brands">
+<meta property="og:title" content="AI Cost Savings Analyzer — Amplify Brands AI">
+<meta property="og:description" content="Your team is doing work AI already handles. Find out what it&#39;s costing you — your number, in 2 minutes.">
+<meta property="og:url" content="https://amplifybrands.io/analyzer">
+<meta property="og:image" content="https://amplifybrands.io/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AI Cost Savings Analyzer — Amplify Brands AI">
+<meta name="twitter:description" content="Your team is doing work AI already handles. Find out what it&#39;s costing you — your number, in 2 minutes.">
+<meta name="twitter:image" content="https://amplifybrands.io/assets/og-image.png">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap');
+
+  :root {
+    --bg: #0B0B0B;
+    --bg-2: #111111;
+    --bg-3: #161616;
+    --bg-4: #1E1E1E;
+    --border: #2A2A2A;
+    --border-bright: #3A3A3A;
+    --text: #F5F5F5;
+    --text-mid: #A0A0A0;
+    --text-muted: #5E5E5E;
+    --green: #A3FF12;
+    --green-dim: rgba(163,255,18,0.12);
+    --green-glow: rgba(163,255,18,0.06);
+    --violet: #6B5BFF;
+    --violet-dim: rgba(107,91,255,0.15);
+    --red: #FF4444;
+    --amber: #FFB800;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* GRAIN OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.4;
+  }
+
+  /* PROGRESS */
+  #progress-bar {
+    position: fixed; top: 0; left: 0; height: 2px;
+    background: var(--green); width: 0%;
+    z-index: 1000; transition: width 0.1s ease;
+    box-shadow: 0 0 12px var(--green);
+  }
+
+  /* HEADER */
+  .header {
+    border-bottom: 1px solid var(--border);
+    padding: 20px 40px;
+    position: sticky; top: 0;
+    background: rgba(11,11,11,0.95);
+    backdrop-filter: blur(12px);
+    z-index: 100;
+  }
+
+  .header-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .brand-mark {
+    width: 32px;
+    height: 32px;
+  }
+
+  .brand-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .header-center {
+    flex: 1;
+    text-align: center;
+  }
+
+  .header-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .header-cta {
+    background: var(--green);
+    color: var(--bg);
+    border: none;
+    padding: 10px 20px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-block;
+    transition: opacity 0.15s, box-shadow 0.15s;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .header-cta:hover {
+    opacity: 0.9;
+    box-shadow: 0 0 20px rgba(163,255,18,0.3);
+  }
+
+  /* TAB NAV */
+  .tab-nav {
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 73px;
+    background: rgba(11,11,11,0.95);
+    backdrop-filter: blur(12px);
+    z-index: 99;
+  }
+
+  .tab-nav-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 0 40px;
+  }
+
+  .tab-nav-inner::-webkit-scrollbar { display: none; }
+
+  .tab-btn {
+    padding: 14px 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.15s;
+    margin-bottom: -1px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--green); border-bottom-color: var(--green); }
+
+  /* CONTENT */
+  .content {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 48px 40px 120px;
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* LABELS */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+  }
+
+  .section-label.tool::before { background: var(--violet); }
+  .section-label.bench::before { background: var(--amber); }
+  .section-label.next::before { background: var(--red); }
+
+  /* HERO HEADLINE */
+  .hero-headline {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1.05;
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-headline .accent { color: var(--green); }
+
+  h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1.1;
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+  }
+
+  h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+
+  p {
+    color: var(--text-mid);
+    margin-bottom: 20px;
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  /* META STATS */
+  .meta-strip {
+    display: flex;
+    gap: 0;
+    margin: 36px 0;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .meta-item {
+    flex: 1;
+    padding: 20px 24px;
+    border-right: 1px solid var(--border);
+  }
+
+  .meta-item:last-child { border-right: none; }
+
+  .meta-item .num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--green);
+    line-height: 1;
+    margin-bottom: 4px;
+    letter-spacing: -0.02em;
+  }
+
+  .meta-item .label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 28px 0;
+  }
+
+  .card {
+    background: var(--bg-3);
+    padding: 28px;
+    transition: background 0.2s;
+  }
+
+  .card:hover { background: var(--bg-4); }
+
+  .card-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--green);
+    margin-bottom: 10px;
+  }
+
+  .card h4 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+
+  .card p { font-size: 13px; margin-bottom: 0; color: var(--text-mid); line-height: 1.6; }
+
+  /* CALLOUT */
+  .callout {
+    border: 1px solid var(--border-bright);
+    border-left: 3px solid var(--green);
+    background: var(--green-glow);
+    border-radius: 0 10px 10px 0;
+    padding: 24px 28px;
+    margin: 32px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .callout-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--green);
+    line-height: 1;
+    white-space: nowrap;
+    letter-spacing: -0.03em;
+  }
+
+  .callout-body { flex: 1; }
+
+  .callout-body strong {
+    display: block;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+
+  .callout-body p { font-size: 14px; margin: 0; }
+
+  /* CALCULATOR */
+  .calc-shell {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 28px 0;
+  }
+
+  .calc-topbar {
+    background: var(--bg-3);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .topbar-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .topbar-dot.red { background: #FF5F57; }
+  .topbar-dot.yellow { background: #FEBC2E; }
+  .topbar-dot.green { background: var(--green); }
+  .topbar-label {
+    margin-left: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+  }
+
+  .calc-body { padding: 32px; }
+
+  /* TASK ROWS */
+  .task-section { margin-bottom: 32px; }
+
+  .task-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .task-section-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+  }
+
+  .task-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .task-card {
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+
+  .task-card:hover { border-color: var(--border-bright); background: var(--bg-4); }
+
+  .task-card.selected {
+    border-color: var(--green);
+    background: var(--green-dim);
+  }
+
+  .task-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .task-name {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .task-check {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 1px solid var(--border-bright);
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+
+  .task-card.selected .task-check {
+    background: var(--green);
+    border-color: var(--green);
+  }
+
+  .task-check svg { display: none; }
+  .task-card.selected .task-check svg { display: block; }
+
+  .task-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .task-input-group label {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  .task-input-wrap { position: relative; }
+
+  .task-input-wrap input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 6px 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text);
+    -webkit-appearance: none;
+    transition: border-color 0.15s;
+  }
+
+  .task-input-wrap input:focus {
+    outline: none;
+    border-color: var(--green);
+  }
+
+  .task-input-suffix {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+
+  /* SALARY INPUT */
+  .salary-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .salary-group label {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .salary-input-wrap { position: relative; }
+
+  .salary-prefix {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+
+  .salary-group input {
+    width: 100%;
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px 12px 30px;
+    font-family: 'DM Mono', monospace;
+    font-size: 16px;
+    color: var(--text);
+    -webkit-appearance: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  .salary-group input:focus {
+    outline: none;
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(163,255,18,0.08);
+  }
+
+  .salary-hint { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
+
+  /* OUTPUTS */
+  .output-section {
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .output-primary {
+    padding: 32px;
+    background: var(--bg-4);
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .output-primary-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+
+  .output-primary-val {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(40px, 8vw, 64px);
+    font-weight: 800;
+    color: var(--green);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    text-shadow: 0 0 40px rgba(163,255,18,0.3);
+    transition: all 0.4s ease;
+    margin-bottom: 8px;
+  }
+
+  .output-primary-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .output-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .output-cell {
+    padding: 20px 24px;
+    border-right: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .output-cell:last-child { border-right: none; }
+
+  .output-cell .val {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+    transition: all 0.3s;
+  }
+
+  .output-cell .lbl {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+  }
+
+  /* RANKED LIST */
+  .ranked-list {
+    margin-top: 28px;
+  }
+
+  .ranked-header {
+    display: grid;
+    grid-template-columns: 32px 1fr 100px 100px 80px;
+    gap: 12px;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ranked-header span {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+  }
+
+  .ranked-row {
+    display: grid;
+    grid-template-columns: 32px 1fr 100px 100px 80px;
+    gap: 12px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+    transition: background 0.15s;
+  }
+
+  .ranked-row:last-child { border-bottom: none; }
+  .ranked-row:hover { background: var(--bg-4); }
+
+  .rank-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    font-weight: 500;
+  }
+
+  .rank-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .rank-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text-mid);
+  }
+
+  .rank-roi {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+  }
+
+  .rank-roi.high { color: var(--green); }
+  .rank-roi.mid { color: var(--amber); }
+  .rank-roi.low { color: var(--text-muted); }
+
+  .roi-bar-cell { }
+  .roi-bar-track { height: 4px; background: var(--border); border-radius: 99px; overflow: hidden; }
+  .roi-bar-fill { height: 100%; border-radius: 99px; background: var(--green); transition: width 0.6s ease; }
+
+  .empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+  }
+
+  /* INTERP */
+  .interp {
+    margin-top: 20px;
+    padding: 16px 20px;
+    background: var(--green-glow);
+    border: 1px solid rgba(163,255,18,0.15);
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.7;
+  }
+
+  .interp strong { color: var(--green); }
+
+  /* BENCH BARS */
+  .bench-row { margin-bottom: 20px; }
+  .bench-row-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+  .bench-row-label { font-size: 13px; font-weight: 500; color: var(--text); }
+  .bench-row-val { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text-muted); }
+  .bench-track { height: 6px; background: var(--bg-4); border-radius: 99px; overflow: hidden; }
+  .bench-fill { height: 100%; border-radius: 99px; background: var(--green); transition: width 1s ease; }
+  .bench-fill.violet { background: var(--violet); }
+  .bench-fill.amber { background: var(--amber); }
+  .bench-fill.red { background: var(--red); opacity: 0.6; }
+
+  /* QUOTE */
+  .pull-quote {
+    border-left: 3px solid var(--green);
+    padding: 20px 28px;
+    margin: 32px 0;
+    background: var(--green-glow);
+    border-radius: 0 8px 8px 0;
+  }
+
+  .pull-quote p {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.4;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  /* CTA BLOCK */
+  .cta-block {
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 40px;
+    margin: 40px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-block::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 180px; height: 180px;
+    background: radial-gradient(circle, rgba(163,255,18,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-block h3 { font-size: 24px; margin-bottom: 8px; color: var(--text); }
+  .cta-block p { color: var(--text-muted); margin: 0; font-size: 14px; max-width: 400px; }
+
+  .cta-btn {
+    background: var(--green);
+    color: var(--bg);
+    border: none;
+    padding: 14px 28px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-block;
+    white-space: nowrap;
+    transition: opacity 0.15s, box-shadow 0.15s;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .cta-btn:hover {
+    opacity: 0.9;
+    box-shadow: 0 0 24px rgba(163,255,18,0.3);
+  }
+
+  .cta-btn.outline {
+    background: transparent;
+    border: 1px solid var(--border-bright);
+    color: var(--text-mid);
+  }
+
+  .cta-btn.outline:hover {
+    border-color: var(--green);
+    color: var(--green);
+    box-shadow: none;
+    opacity: 1;
+  }
+
+  /* STEP LIST */
+  .step-list { margin: 28px 0; }
+  .step-item { display: flex; gap: 20px; padding: 24px 0; border-bottom: 1px solid var(--border); }
+  .step-item:last-child { border-bottom: none; }
+  .step-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--border-bright);
+    line-height: 1;
+    min-width: 40px;
+    letter-spacing: -0.03em;
+  }
+  .step-body h4 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .step-body p { font-size: 14px; margin: 0; color: var(--text-muted); line-height: 1.6; }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+  /* STICKY BAR */
+  .sticky-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(17,17,17,0.97);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border);
+    padding: 14px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 200;
+  }
+
+  .sticky-left { font-size: 13px; color: var(--text-muted); }
+  .sticky-left strong { color: var(--text); font-weight: 600; }
+
+  .sticky-right { display: flex; gap: 12px; align-items: center; }
+
+  .sticky-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+
+  @media (max-width: 700px) {
+    .header { padding: 16px 20px; }
+    .header-center { display: none; }
+    .tab-nav-inner { padding: 0 20px; }
+    .content { padding: 28px 20px 100px; }
+    .meta-strip { flex-direction: column; }
+    .meta-item { border-right: none; border-bottom: 1px solid var(--border); }
+    .meta-item:last-child { border-bottom: none; }
+    .card-grid { grid-template-columns: 1fr; }
+    .task-grid { grid-template-columns: 1fr; }
+    .task-inputs { grid-template-columns: 1fr 1fr; }
+    .output-grid { grid-template-columns: 1fr; }
+    .output-cell { border-right: none; border-bottom: 1px solid var(--border); }
+    .output-cell:last-child { border-bottom: none; }
+    .ranked-header, .ranked-row { grid-template-columns: 24px 1fr 80px; }
+    .ranked-header span:nth-child(4), .ranked-row .rank-val,
+    .ranked-header span:nth-child(5), .ranked-row .roi-bar-cell { display: none; }
+    .salary-row { grid-template-columns: 1fr; }
+    .cta-block { flex-direction: column; gap: 20px; }
+    .callout { flex-direction: column; gap: 12px; }
+    .callout-num { font-size: 36px; }
+    h2 { font-size: 28px; }
+    .sticky-bar { padding: 12px 20px; }
+    .sticky-left, .sticky-badge { display: none; }
+    .tab-nav { top: 57px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <a class="brand" href="/" style="text-decoration:none;color:inherit;" title="Amplify Brands home">
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none">
+        <rect width="32" height="32" rx="6" fill="#0B0B0B"/>
+        <polygon points="16,4 6,26 10,26 16,12 22,26 26,26" fill="#F5F5F5"/>
+        <rect x="11" y="20" width="3" height="6" fill="#A3FF12"/>
+        <rect x="15.5" y="16" width="3" height="10" fill="#A3FF12"/>
+        <rect x="20" y="13" width="3" height="13" fill="#A3FF12"/>
+      </svg>
+      <span class="brand-name">Amplify Brands AI</span>
+    </a>
+    <div class="header-center">
+      <div class="header-title">AI Cost Savings Analyzer</div>
+    </div>
+    <a href="#" class="header-cta">Book AI Breakdown</a>
+  </div>
+</header>
+
+<!-- TAB NAV -->
+<nav class="tab-nav">
+  <div class="tab-nav-inner">
+    <button class="tab-btn active" onclick="switchTab('problem',this)">The Problem</button>
+    <button class="tab-btn" onclick="switchTab('calculator',this)">Your Analyzer</button>
+    <button class="tab-btn" onclick="switchTab('benchmarks',this)">Benchmarks</button>
+    <button class="tab-btn" onclick="switchTab('next',this)">Fix It</button>
+  </div>
+</nav>
+
+<!-- CONTENT -->
+<main class="content">
+
+  <!-- TAB 1 -->
+  <div id="tab-problem" class="tab-panel active">
+    <span class="section-label">Reality check</span>
+    <div class="hero-headline">Your team is doing work<br>that <span class="accent">AI already handles.</span></div>
+    <p>Not hypothetically. Right now. Today. Somewhere in your business, people with real salaries are copying data between tools, writing the same email for the sixth time this week, chasing approvals, and reformatting reports that could generate themselves.</p>
+    <p>Nobody planned for this. It just accumulated — one manual workaround at a time, until it became the operating system of the business.</p>
+
+    <div class="meta-strip">
+      <div class="meta-item">
+        <div class="num">47%</div>
+        <div class="label">of work tasks are automatable today</div>
+      </div>
+      <div class="meta-item">
+        <div class="num">11 hrs</div>
+        <div class="label">avg wasted per employee per week</div>
+      </div>
+      <div class="meta-item">
+        <div class="num">$28K</div>
+        <div class="label">average annual drag per knowledge worker</div>
+      </div>
+      <div class="meta-item">
+        <div class="num">~0</div>
+        <div class="label">businesses that have actually fixed this</div>
+      </div>
+    </div>
+
+    <h3>Where the time actually goes</h3>
+    <p>It's not big dramatic failures. It's the boring stuff that adds up.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-tag">High drag</div>
+        <h4>Data entry & transfers</h4>
+        <p>Moving information from one system to another. Manually. Every day. Because the integration doesn't exist or nobody set it up.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">High drag</div>
+        <h4>Repetitive communication</h4>
+        <p>Following up on the same things. Answering the same questions. Writing slightly different versions of the same message, every single week.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">Medium drag</div>
+        <h4>Report generation</h4>
+        <p>Pulling numbers from multiple places, formatting them, adding commentary, and emailing the result. Manually. On a schedule.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">Medium drag</div>
+        <h4>Approval workflows</h4>
+        <p>Chasing people for sign-offs. Sending reminders. Tracking where something is in a process by asking the person in charge of the process.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">Low drag — high volume</div>
+        <h4>Content & copy tasks</h4>
+        <p>First drafts, summaries, descriptions, responses. Work that requires a person to start it from scratch every time, even when it's the same type of thing.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">Low drag — high volume</div>
+        <h4>Research & data gathering</h4>
+        <p>Pulling information, comparing options, summarizing findings. Work that takes an hour and delivers four sentences of actual value.</p>
+      </div>
+    </div>
+
+    <div class="pull-quote">
+      <p>"The average employee spends 40% of their time on work that has nothing to do with the actual job they were hired to do."</p>
+    </div>
+
+    <p>The analyzer in Tab 2 puts a dollar figure on this — based on your headcount, your task categories, and your salary data. Not a generic estimate. Your number.</p>
+
+    <div class="cta-block">
+      <div>
+        <h3>Find out what it's actually costing you.</h3>
+        <p>Select your task categories. Enter your real numbers. Get a ranked output in 2 minutes.</p>
+      </div>
+      <button class="cta-btn" onclick="switchTab('calculator',document.querySelectorAll('.tab-btn')[1])">Run the Analyzer →</button>
+    </div>
+  </div>
+
+  <!-- TAB 2: CALCULATOR -->
+  <div id="tab-calculator" class="tab-panel">
+    <span class="section-label tool">Analyzer</span>
+    <h2>AI Cost Savings Analyzer</h2>
+    <p>Select every task category your team does manually. Enter honest numbers. Everything updates in real time.</p>
+
+    <div class="calc-shell">
+      <div class="calc-topbar">
+        <div class="topbar-dot red"></div>
+        <div class="topbar-dot yellow"></div>
+        <div class="topbar-dot green"></div>
+        <div class="topbar-label">cost_savings_analyzer.exe</div>
+      </div>
+      <div class="calc-body">
+
+        <!-- SALARY INPUTS -->
+        <div class="salary-row">
+          <div class="salary-group">
+            <label>Team size (people doing manual work)</label>
+            <div class="salary-input-wrap">
+              <input type="number" id="headcount" value="8" min="1" oninput="calculate()" placeholder="8">
+            </div>
+            <div class="salary-hint">Include anyone doing the task types below</div>
+          </div>
+          <div class="salary-group">
+            <label>Average annual salary</label>
+            <div class="salary-input-wrap">
+              <span class="salary-prefix">$</span>
+              <input type="number" id="avg-salary" value="65000" oninput="calculate()" placeholder="65000">
+            </div>
+            <div class="salary-hint">Blended across roles in scope</div>
+          </div>
+        </div>
+
+        <!-- TASK CATEGORIES -->
+        <div class="task-section">
+          <div class="task-section-header">
+            <div class="task-section-title">Select task categories — enter weekly hours per person</div>
+          </div>
+          <div class="task-grid" id="task-grid">
+            <!-- tasks injected by JS -->
+          </div>
+        </div>
+
+        <!-- OUTPUTS -->
+        <div class="output-section">
+          <div class="output-primary">
+            <div class="output-primary-label">Annual salary-equivalent recoverable</div>
+            <div class="output-primary-val" id="out-annual">$0</div>
+            <div class="output-primary-sub" id="out-sub">Select task categories above to see your number</div>
+          </div>
+          <div class="output-grid">
+            <div class="output-cell">
+              <div class="val" id="out-hours-week">0</div>
+              <div class="lbl">Hours/week recoverable</div>
+            </div>
+            <div class="output-cell">
+              <div class="val" id="out-hours-year">0</div>
+              <div class="lbl">Hours/year recoverable</div>
+            </div>
+            <div class="output-cell">
+              <div class="val" id="out-fte">0.0</div>
+              <div class="lbl">FTE-equivalent freed</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;font-family:'DM Mono',monospace;font-size:10px;line-height:1.6;color:var(--text-muted);letter-spacing:0.02em;">
+          How this is calculated: weekly hours you enter × people × a category automation rate (the share of that task typically automatable today), valued at your blended salary ÷ 2,080 work hours. It&#39;s a directional estimate to start a conversation — not a quote.
+        </div>
+
+        <div class="interp" id="interpretation" style="display:none;"></div>
+
+        <!-- RANKED LIST -->
+        <div class="ranked-list" id="ranked-section" style="display:none;">
+          <h3 style="margin-top:28px;margin-bottom:16px;">Highest-ROI automation opportunities — ranked</h3>
+          <div style="background:var(--bg-3);border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+            <div class="ranked-header">
+              <span>#</span>
+              <span>Task Category</span>
+              <span>Hrs/wk</span>
+              <span>Annual Cost</span>
+              <span>ROI</span>
+            </div>
+            <div id="ranked-rows"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="cta-block">
+      <div>
+        <h3>That number is recoverable.</h3>
+        <p>Not all of it. But most of it. An AI Breakdown session maps exactly which tasks get automated first, which tools do it, and what the implementation actually looks like.</p>
+      </div>
+      <a href="#" class="cta-btn">Book AI Breakdown →</a>
+    </div>
+  </div>
+
+  <!-- TAB 3: BENCHMARKS -->
+  <div id="tab-benchmarks" class="tab-panel">
+    <span class="section-label bench">Benchmarks</span>
+    <h2>What operators actually find<br>when they run this audit.</h2>
+    <p>Here's what the data looks like across businesses that have gone through an AI audit. Not the optimistic version. The actual one.</p>
+
+    <div class="callout">
+      <div class="callout-num">11.3</div>
+      <div class="callout-body">
+        <strong>Average hours wasted per employee per week on automatable tasks.</strong>
+        <p>Across SMBs with 5–50 employees. That's not rounding errors — it's more than a full working day, every week, per person. And it's almost entirely invisible because nobody tracks it.</p>
+      </div>
+    </div>
+
+    <h3>Waste by task category</h3>
+    <p>Where operational drag concentrates, by percentage of recoverable time.</p>
+
+    <div class="bench-row">
+      <div class="bench-row-header">
+        <span class="bench-row-label">Data entry & transfers</span>
+        <span class="bench-row-val">avg 3.2 hrs/person/week</span>
+      </div>
+      <div class="bench-track"><div class="bench-fill" style="width:82%"></div></div>
+    </div>
+    <div class="bench-row">
+      <div class="bench-row-header">
+        <span class="bench-row-label">Email drafting & follow-up</span>
+        <span class="bench-row-val">avg 2.8 hrs/person/week</span>
+      </div>
+      <div class="bench-track"><div class="bench-fill violet" style="width:72%"></div></div>
+    </div>
+    <div class="bench-row">
+      <div class="bench-row-header">
+        <span class="bench-row-label">Report generation</span>
+        <span class="bench-row-val">avg 1.9 hrs/person/week</span>
+      </div>
+      <div class="bench-track"><div class="bench-fill amber" style="width:49%"></div></div>
+    </div>
+    <div class="bench-row">
+      <div class="bench-row-header">
+        <span class="bench-row-label">Research & summarisation</span>
+        <span class="bench-row-val">avg 1.7 hrs/person/week</span>
+      </div>
+      <div class="bench-track"><div class="bench-fill violet" style="width:43%"></div></div>
+    </div>
+    <div class="bench-row">
+      <div class="bench-row-header">
+        <span class="bench-row-label">Approval chasing & status updates</span>
+        <span class="bench-row-val">avg 1.4 hrs/person/week</span>
+      </div>
+      <div class="bench-track"><div class="bench-fill amber" style="width:36%"></div></div>
+    </div>
+    <div class="bench-row">
+      <div class="bench-row-header">
+        <span class="bench-row-label">Content & copy first drafts</span>
+        <span class="bench-row-val">avg 0.9 hrs/person/week</span>
+      </div>
+      <div class="bench-track"><div class="bench-fill" style="width:23%"></div></div>
+    </div>
+    <div class="bench-row">
+      <div class="bench-row-header">
+        <span class="bench-row-label">Scheduling & calendar management</span>
+        <span class="bench-row-val">avg 0.7 hrs/person/week</span>
+      </div>
+      <div class="bench-track"><div class="bench-fill red" style="width:18%"></div></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <h3>What happens when businesses actually fix it</h3>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-tag">Common outcome</div>
+        <h4>1.5–2.5 FTE recovered</h4>
+        <p>A 12-person business with average task load typically frees the equivalent of 1.5–2.5 full-time roles. Not from firing people — from redirecting hours toward work that actually matters.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">Common outcome</div>
+        <h4>6–10 week implementation</h4>
+        <p>Full AI workflow implementation across the highest-ROI categories. Not a 6-month transformation project. Not a new ERP. Six weeks to running systems.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">Common outcome</div>
+        <h4>3–5× ROI in year one</h4>
+        <p>Implementation cost vs. recovered salary-equivalent time. Most businesses see this in months, not years — because the drag is already there. You're not building value, you're stopping the bleed.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">What surprises people most</div>
+        <h4>The morale impact</h4>
+        <p>Nobody went into their career to copy-paste data between spreadsheets. When you remove that work, people actually like their jobs more. This one's harder to put in a calculator but it's real.</p>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <span class="section-label bench">Sources &amp; method</span>
+    <p style="font-size:13px;color:var(--text-muted);line-height:1.7;">These benchmark ranges are directional — drawn from published automation and workplace-productivity research and from Amplify Brands AI audit observations across small and mid-sized teams. They&#39;re a starting reference, not a promise. Your real numbers depend on your tools, team, and workflows, which is exactly what the AI Breakdown maps. The analyzer in Tab&nbsp;2 is an estimate based on the inputs you provide.</p>
+
+    <div class="cta-block">
+      <div>
+        <h3>Your number is in Tab 2.</h3>
+        <p>If you haven't run the analyzer yet — go do it. Then come back here and book a session. We'll show you exactly which items on your ranked list get fixed first.</p>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <a href="#" class="cta-btn">Book AI Breakdown →</a>
+        <button class="cta-btn outline" onclick="switchTab('calculator',document.querySelectorAll('.tab-btn')[1])">Run the Analyzer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: FIX IT -->
+  <div id="tab-next" class="tab-panel">
+    <span class="section-label next">Fix it</span>
+    <h2>You have the number.<br>Here's what to do with it.</h2>
+    <p>Most businesses who run this analyzer are sitting on $80K–$300K in recoverable salary time. The next question isn't whether to fix it. It's which pile to dig into first.</p>
+
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <h4>Don't automate the wrong things first</h4>
+          <p>The ranked list in the analyzer shows you highest ROI by hours and cost. That's your implementation sequence. Starting with low-volume, high-complexity tasks is how AI projects fail. Start with the boring, repetitive, high-volume stuff. That's where the real numbers are.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <h4>Tool-first thinking is the wrong approach</h4>
+          <p>Most businesses buy an AI tool and then figure out how to use it. Backwards. The right sequence: identify the task, define the workflow, then find the tool that fits. We do this as an audit before recommending a single piece of software.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <h4>Expect 4–6 weeks to first automation running</h4>
+          <p>Not a proof of concept. An actual running system — integrated into your existing tools, tested with real workload, handed off to the team. If someone quotes you 6 months for basic AI workflow implementation, they're not implementing AI. They're selling a project.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">04</div>
+        <div class="step-body">
+          <h4>Track recovered hours, not just implementation cost</h4>
+          <p>Most businesses track what they spent on implementation. Almost none track what they recovered. Set up a simple time audit before you start, and measure 60 days later. The number will be higher than the analyzer estimated — because it can't account for the secondary effects of removing bottlenecks.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="callout">
+      <div class="callout-num">60</div>
+      <div class="callout-body">
+        <strong>Minutes. That's the AI Breakdown session.</strong>
+        <p>We look at your analyzer output, your current tool stack, and your team structure. You leave with a ranked implementation plan, specific tool recommendations, and a realistic timeline. No pitch deck. No vague roadmap. Just the actual next steps.</p>
+      </div>
+    </div>
+
+    <div class="cta-block">
+      <div>
+        <h3>Less manual work.<br>Fewer bottlenecks.<br>More getting shit done.</h3>
+        <p>Book the AI Breakdown. 60 minutes. We bring the plan.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;">
+        <a href="#" class="cta-btn">Book AI Breakdown →</a>
+        <a href="#" class="cta-btn outline">See How It Works First</a>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- STICKY BAR -->
+<div class="sticky-bar">
+  <div class="sticky-left"><strong>Amplify Brands AI</strong> — We use AI to eliminate the work your team secretly hates.</div>
+  <div class="sticky-right">
+    <span class="sticky-badge">Free 60-min session</span>
+    <a href="#" class="cta-btn">Book AI Breakdown →</a>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   LAUNCH SETTINGS — edit these two lines, then the tool is live.
+   ============================================================ */
+const BOOKING_URL = "/#contact"; // homepage Formspree booking form (delivers to jeff@amplifybrands.io)
+const HOW_IT_WORKS_URL = "/#what-we-do";  // homepage "what we do" section
+
+const TASKS = [
+  { id: 'data-entry',    name: 'Data entry & transfers',       defaultHrs: 3.2, autoRate: 0.80, roiMulti: 1.0 },
+  { id: 'email',         name: 'Email drafting & follow-up',   defaultHrs: 2.8, autoRate: 0.70, roiMulti: 0.9 },
+  { id: 'reporting',     name: 'Report generation',            defaultHrs: 1.9, autoRate: 0.85, roiMulti: 1.0 },
+  { id: 'research',      name: 'Research & summarisation',     defaultHrs: 1.7, autoRate: 0.65, roiMulti: 0.8 },
+  { id: 'approvals',     name: 'Approval chasing & status',    defaultHrs: 1.4, autoRate: 0.75, roiMulti: 0.9 },
+  { id: 'content',       name: 'Content & copy drafting',      defaultHrs: 0.9, autoRate: 0.60, roiMulti: 0.7 },
+  { id: 'scheduling',    name: 'Scheduling & calendar',        defaultHrs: 0.7, autoRate: 0.80, roiMulti: 1.0 },
+  { id: 'onboarding',    name: 'Client onboarding tasks',      defaultHrs: 1.2, autoRate: 0.70, roiMulti: 0.9 },
+  { id: 'invoicing',     name: 'Invoicing & billing follow-up',defaultHrs: 1.0, autoRate: 0.75, roiMulti: 1.0 },
+  { id: 'social',        name: 'Social media & content posting',defaultHrs: 0.8, autoRate: 0.55, roiMulti: 0.7 },
+  { id: 'crm',           name: 'CRM updates & data hygiene',   defaultHrs: 1.5, autoRate: 0.80, roiMulti: 1.0 },
+  { id: 'customer-qs',   name: 'Answering repeat customer Qs', defaultHrs: 2.0, autoRate: 0.70, roiMulti: 0.9 },
+];
+
+const selectedTasks = new Set();
+
+function buildTaskGrid() {
+  const grid = document.getElementById('task-grid');
+  grid.innerHTML = TASKS.map(t => `
+    <div class="task-card" id="tc-${t.id}" onclick="toggleTask('${t.id}')">
+      <div class="task-card-top">
+        <span class="task-name">${t.name}</span>
+        <div class="task-check">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+            <path d="M1 4L3.5 6.5L9 1" stroke="#0B0B0B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+      <div class="task-inputs" style="display:none;" id="inputs-${t.id}">
+        <div class="task-input-group">
+          <label>Hrs/person/week</label>
+          <div class="task-input-wrap">
+            <input type="number" id="hrs-${t.id}" value="${t.defaultHrs}" step="0.5" min="0" oninput="calculate()" onclick="event.stopPropagation()">
+          </div>
+        </div>
+        <div class="task-input-group">
+          <label>People doing this</label>
+          <div class="task-input-wrap">
+            <input type="number" id="ppl-${t.id}" value="" placeholder="all" step="1" min="0" oninput="calculate()" onclick="event.stopPropagation()">
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleTask(id) {
+  const card = document.getElementById(`tc-${id}`);
+  const inputs = document.getElementById(`inputs-${id}`);
+  if (selectedTasks.has(id)) {
+    selectedTasks.delete(id);
+    card.classList.remove('selected');
+    inputs.style.display = 'none';
+  } else {
+    selectedTasks.add(id);
+    card.classList.add('selected');
+    inputs.style.display = 'grid';
+  }
+  calculate();
+}
+
+function calculate() {
+  const headcount = parseFloat(document.getElementById('headcount').value) || 0;
+  const avgSalary = parseFloat(document.getElementById('avg-salary').value) || 0;
+  const hourlyRate = avgSalary / 2080; // standard annual hours
+
+  if (selectedTasks.size === 0 || headcount === 0) {
+    document.getElementById('out-annual').textContent = '$0';
+    document.getElementById('out-hours-week').textContent = '0';
+    document.getElementById('out-hours-year').textContent = '0';
+    document.getElementById('out-fte').textContent = '0.0';
+    document.getElementById('out-sub').textContent = 'Select task categories above to see your number';
+    document.getElementById('interpretation').style.display = 'none';
+    document.getElementById('ranked-section').style.display = 'none';
+    return;
+  }
+
+  const results = [];
+  let totalHrsWeek = 0;
+
+  for (const id of selectedTasks) {
+    const task = TASKS.find(t => t.id === id);
+    const hrs = parseFloat(document.getElementById(`hrs-${id}`).value) || task.defaultHrs;
+    const pplInput = parseFloat(document.getElementById(`ppl-${id}`).value);
+    const ppl = isNaN(pplInput) || pplInput === 0 ? headcount : pplInput;
+    const recoverableHrsWeek = hrs * ppl * task.autoRate;
+    const annualCost = recoverableHrsWeek * 52 * hourlyRate;
+    totalHrsWeek += recoverableHrsWeek;
+    results.push({ ...task, hrs, ppl, recoverableHrsWeek, annualCost });
+  }
+
+  results.sort((a, b) => b.annualCost - a.annualCost);
+
+  const totalHrsYear = totalHrsWeek * 52;
+  const totalAnnual = results.reduce((s, r) => s + r.annualCost, 0);
+  const fte = totalHrsYear / 2080;
+
+  document.getElementById('out-annual').textContent = '$' + Math.round(totalAnnual).toLocaleString();
+  document.getElementById('out-hours-week').textContent = Math.round(totalHrsWeek).toLocaleString();
+  document.getElementById('out-hours-year').textContent = Math.round(totalHrsYear).toLocaleString();
+  document.getElementById('out-fte').textContent = fte.toFixed(1);
+  document.getElementById('out-sub').textContent = `Across ${selectedTasks.size} task categories · ${headcount} people · $${Math.round(avgSalary/1000)}K avg salary`;
+
+  // interp
+  const interp = document.getElementById('interpretation');
+  interp.style.display = 'block';
+  let msg = '';
+  if (totalAnnual < 50000) {
+    msg = `<strong>$${Math.round(totalAnnual).toLocaleString()}/year</strong> in recoverable time. Modest — but that's before accounting for error rates, context-switching costs, and the tasks you didn't select. The real number is usually higher once we look under the hood.`;
+  } else if (totalAnnual < 150000) {
+    msg = `<strong>$${Math.round(totalAnnual).toLocaleString()}/year</strong> in salary-equivalent drag. That's real money. Most of it is concentrated in the top 2–3 items on the ranked list below — which is also where the fastest implementation wins are.`;
+  } else if (totalAnnual < 400000) {
+    msg = `<strong>$${Math.round(totalAnnual).toLocaleString()}/year.</strong> You have a serious operational drag problem. The good news: it's almost entirely solvable with existing tools in 6–10 weeks. The bad news: it's been quietly compounding for a while.`;
+  } else {
+    msg = `<strong>$${Math.round(totalAnnual).toLocaleString()}/year.</strong> That's not a rounding error — that's a structural problem. At this scale, you're not just losing time. You're losing competitive ground. This needs to be a Q1 priority.`;
+  }
+  interp.innerHTML = msg;
+
+  // ranked rows
+  const maxCost = results[0]?.annualCost || 1;
+  document.getElementById('ranked-section').style.display = 'block';
+  document.getElementById('ranked-rows').innerHTML = results.map((r, i) => {
+    const roiPct = Math.round((r.annualCost / maxCost) * 100);
+    const roiClass = roiPct >= 70 ? 'high' : roiPct >= 40 ? 'mid' : 'low';
+    const roiLabel = roiPct >= 70 ? 'HIGH' : roiPct >= 40 ? 'MED' : 'LOW';
+    return `
+      <div class="ranked-row">
+        <span class="rank-num">${String(i+1).padStart(2,'0')}</span>
+        <span class="rank-name">${r.name}</span>
+        <span class="rank-val">${r.recoverableHrsWeek.toFixed(1)} hrs</span>
+        <span class="rank-val">$${Math.round(r.annualCost).toLocaleString()}</span>
+        <div class="roi-bar-cell">
+          <div class="roi-bar-track">
+            <div class="roi-bar-fill" style="width:${roiPct}%"></div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function switchTab(tabId, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tabId).classList.add('active');
+  if (btn) btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+window.addEventListener('scroll', () => {
+  const doc = document.documentElement;
+  document.getElementById('progress-bar').style.width = (doc.scrollTop / (doc.scrollHeight - doc.clientHeight) * 100) + '%';
+});
+
+function applyLink(a, url) {
+  a.href = url;
+  // Internal links (same site) open in the same tab; external links open in a new tab.
+  const external = /^https?:\/\//i.test(url);
+  if (external) { a.target = '_blank'; a.rel = 'noopener'; }
+  else { a.removeAttribute('target'); a.removeAttribute('rel'); }
+}
+
+function wireCTAs() {
+  // Point every "Book AI Breakdown" CTA at the single BOOKING_URL above.
+  document.querySelectorAll('a.header-cta, a.cta-btn').forEach(a => {
+    const text = a.textContent.toLowerCase();
+    if (text.includes('book ai breakdown')) {
+      applyLink(a, BOOKING_URL);
+    } else if (text.includes('see how it works')) {
+      if (HOW_IT_WORKS_URL) {
+        applyLink(a, HOW_IT_WORKS_URL);
+      } else {
+        a.href = '#';
+        a.addEventListener('click', (e) => {
+          e.preventDefault();
+          switchTab('problem', document.querySelectorAll('.tab-btn')[0]);
+        });
+      }
+    }
+  });
+}
+
+buildTaskGrid();
+wireCTAs();
+</script>
+</body>
+</html>
