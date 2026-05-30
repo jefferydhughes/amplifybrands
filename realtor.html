@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amplify Brands for Realtors — Stop Running Your Business On Memory</title>
+<meta name="description" content="We help Realtors stop losing deals to missed follow-ups, dropped conversations, and 'I'll call them tomorrow.' No new dashboard. No assistant. No AI nerdery.">
+<link rel="canonical" href="https://realtor.amplifybrands.io/">
+
+<!-- Favicons & app icons (Amplify Brands — Pulse A) -->
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#0B0B0B">
+
+<!-- Open Graph / Twitter -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Amplify Brands">
+<meta property="og:title" content="Stop Running Your Real Estate Business On Memory">
+<meta property="og:description" content="We help Realtors stop losing deals to missed follow-ups and dropped conversations. Without another dashboard. Without hiring an assistant.">
+<meta property="og:url" content="https://realtor.amplifybrands.io/">
+<meta property="og:image" content="https://amplifybrands.io/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Stop Running Your Real Estate Business On Memory">
+<meta name="twitter:description" content="We help Realtors stop losing deals to missed follow-ups and dropped conversations.">
+<meta name="twitter:image" content="https://amplifybrands.io/assets/og-image.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===================================================================
+   AMPLIFY BRANDS — REALTOR LANDING  (built on Design System v1.0)
+   =================================================================== */
+:root{
+  --ink-900:#0B0B0B; --ink-850:#101010; --ink-800:#161616; --ink-750:#1C1C1C; --ink-700:#242424;
+  --line:rgba(245,245,245,.08); --line-strong:rgba(245,245,245,.16);
+  --text:#F5F5F5; --text-2:#A1A1A1; --text-muted:#5E5E5E;
+  --lime:#A3FF12; --lime-600:#8FE000; --lime-300:#C6FF6B; --lime-glow:rgba(163,255,18,.22);
+  --violet:#6B5BFF; --violet-300:#9A8FFF; --violet-glow:rgba(107,91,255,.30);
+  --loss:#FF5C5C; --loss-glow:rgba(255,92,92,.16);
+  --grad-accent:linear-gradient(120deg,#A3FF12 0%,#6B5BFF 100%);
+  --grad-soft:linear-gradient(180deg,rgba(163,255,18,.06),rgba(107,91,255,.04));
+  --font-display:'Space Grotesk',ui-sans-serif,system-ui,sans-serif;
+  --font-body:'Inter',ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --fs-display:clamp(3rem,8.5vw,7rem); --fs-h1:clamp(2.4rem,5.5vw,4.4rem);
+  --fs-h2:clamp(1.9rem,4vw,3.1rem); --fs-h3:1.5rem; --fs-h4:1.25rem;
+  --fs-body-lg:1.15rem; --fs-body:1rem; --fs-sm:.875rem; --fs-eyebrow:.75rem;
+  --s1:.25rem;--s2:.5rem;--s3:.75rem;--s4:1rem;--s5:1.5rem;--s6:2rem;--s7:3rem;--s8:4rem;--s9:6rem;--s10:8rem;
+  --r-sm:6px;--r-md:10px;--r-lg:16px;--r-xl:24px;--r-pill:999px;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.5);
+  --shadow-card:0 24px 48px -28px rgba(0,0,0,.8);
+  --glow-lime:0 0 0 1px rgba(163,255,18,.4),0 10px 34px rgba(163,255,18,.16);
+  --dur-fast:120ms;--dur-base:200ms;--dur-slow:420ms;
+  --ease-snap:cubic-bezier(.2,.7,.2,1);--ease-out:cubic-bezier(.16,1,.3,1);
+  --container:1180px; --section-y:clamp(4.5rem,9vw,9rem);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:80px;-webkit-text-size-adjust:100%}
+body{background:var(--ink-900);color:var(--text);font-family:var(--font-body);font-size:var(--fs-body);line-height:1.65;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+::selection{background:var(--lime);color:var(--ink-900)}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4,.display{font-family:var(--font-display);font-weight:700;line-height:1.03;letter-spacing:-.02em}
+.wrap{max-width:var(--container);margin:0 auto;padding:0 var(--s5)}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-body);font-weight:600;font-size:var(--fs-eyebrow);letter-spacing:.16em;text-transform:uppercase;color:var(--lime);border:1px solid var(--line-strong);padding:7px 14px;border-radius:var(--r-pill);background:var(--ink-850)}
+.accent{color:var(--lime)}
+.muted{color:var(--text-2)}
+
+/* ---- reduced motion ---- */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity var(--dur-slow) var(--ease-out),transform var(--dur-slow) var(--ease-out)}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}*{animation:none!important}html{scroll-behavior:auto}}
+
+/* ---- header ---- */
+header.site{position:sticky;top:0;z-index:60;border-bottom:1px solid transparent;transition:background var(--dur-base),border-color var(--dur-base)}
+header.site.scrolled{background:rgba(11,11,11,.78);backdrop-filter:blur(14px);border-bottom-color:var(--line)}
+header.site .wrap{display:flex;align-items:center;gap:var(--s6);height:72px}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:700;font-size:1.15rem;letter-spacing:-.02em}
+.logo .logo-mark{height:26px;width:auto;display:block;flex-shrink:0;color:var(--text);cursor:pointer;filter:drop-shadow(0 0 10px var(--lime-glow));transition:transform var(--dur-fast) var(--ease-snap)}
+.logo .logo-mark:active{transform:scale(.88)}
+.logo .sub{font-family:var(--font-body);font-weight:600;font-size:var(--fs-sm);color:var(--text-2);letter-spacing:0}
+.nav-links{display:flex;gap:4px;margin-left:auto}
+.nav-links a{font-size:var(--fs-sm);color:var(--text-2);padding:8px 14px;border-radius:var(--r-pill);transition:color var(--dur-fast),background var(--dur-fast)}
+.nav-links a:hover{color:var(--text);background:var(--ink-800)}
+.nav-cta{margin-left:8px}
+@media(max-width:860px){.nav-links{display:none}.nav-cta{margin-left:auto}.logo .sub{display:none}}
+
+/* ---- buttons ---- */
+.btn{font-family:var(--font-body);font-weight:600;font-size:var(--fs-body);border:none;cursor:pointer;display:inline-flex;align-items:center;gap:9px;padding:14px 24px;border-radius:var(--r-md);transition:transform var(--dur-fast) var(--ease-snap),box-shadow var(--dur-base),background var(--dur-base),color var(--dur-base),border-color var(--dur-base);line-height:1}
+.btn:active{transform:translateY(1px) scale(.985)}
+.btn-primary{background:var(--lime);color:var(--ink-900)}
+.btn-primary:hover{box-shadow:var(--glow-lime);background:var(--lime-300)}
+.btn-secondary{background:var(--ink-800);color:var(--text);border:1px solid var(--line-strong)}
+.btn-secondary:hover{border-color:var(--lime);color:var(--lime)}
+.btn-ghost{background:transparent;color:var(--text-2);padding-left:4px;padding-right:4px}
+.btn-ghost:hover{color:var(--lime)}
+.btn-ghost .arrow{transition:transform var(--dur-base) var(--ease-snap)}
+.btn-ghost:hover .arrow{transform:translateX(4px)}
+.btn-sm{padding:9px 16px;font-size:var(--fs-sm)}
+.btn-lg{padding:17px 30px;font-size:var(--fs-body-lg)}
+
+/* ---- hero ---- */
+.hero{position:relative;padding:clamp(3.5rem,9vw,7.5rem) 0 clamp(3rem,7vw,6rem);overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:
+  radial-gradient(55% 50% at 82% -8%,rgba(107,91,255,.18),transparent 60%),
+  radial-gradient(48% 45% at -5% 0%,rgba(163,255,18,.10),transparent 55%);pointer-events:none}
+.hero::after{content:"";position:absolute;inset:0;opacity:.5;pointer-events:none;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:64px 64px;mask-image:radial-gradient(70% 60% at 50% 0%,#000,transparent 75%);-webkit-mask-image:radial-gradient(70% 60% at 50% 0%,#000,transparent 75%)}
+.hero .wrap{position:relative}
+.hero h1{font-size:var(--fs-h1);margin:var(--s5) 0 var(--s4);max-width:20ch}
+.hero .hero-sub{font-family:var(--font-display);font-weight:700;font-size:var(--fs-h2);letter-spacing:-.02em;line-height:1.08;margin-bottom:var(--s5);max-width:22ch}
+.hero .hero-sub .swap{color:var(--lime);white-space:nowrap}
+.hero .hero-sub .cursor{color:var(--lime);font-weight:400;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.hero .lede{font-size:var(--fs-body-lg);color:var(--text-2);max-width:58ch;margin-bottom:var(--s5)}
+.hero .lede b{color:var(--text);font-weight:600}
+.hero .withouts{display:flex;flex-direction:column;gap:6px;margin-bottom:var(--s7);color:var(--text);font-weight:500}
+.hero .withouts span{display:flex;align-items:center;gap:10px}
+.hero .withouts span::before{content:"✕";color:var(--text-muted);font-size:.85rem}
+.hero-cta{display:flex;gap:var(--s4);flex-wrap:wrap;align-items:center}
+
+/* ---- proof bar ---- */
+.proofbar{border-block:1px solid var(--line);background:var(--ink-850)}
+.proofbar .wrap{display:flex;flex-wrap:wrap;gap:14px 34px;align-items:center;padding:20px 0}
+.proofbar span{font-size:var(--fs-sm);color:var(--text-2);display:inline-flex;gap:9px;align-items:center}
+.proofbar span::before{content:"✓";color:var(--lime);font-weight:700}
+
+/* ---- section scaffold ---- */
+section{padding:var(--section-y) 0}
+.kicker{font-family:var(--font-body);font-weight:600;font-size:var(--fs-eyebrow);letter-spacing:.16em;text-transform:uppercase;color:var(--lime)}
+.sec-head{max-width:64ch;margin-bottom:var(--s8)}
+.sec-head.center{margin-inline:auto;text-align:center}
+.sec-head h2{font-size:var(--fs-h2);margin:var(--s3) 0 var(--s4)}
+.sec-head p{color:var(--text-2);font-size:var(--fs-body-lg)}
+.divider{border:none;border-top:1px solid var(--line)}
+
+/* ---- letter / narrative ---- */
+.letter{background:var(--ink-850);border-block:1px solid var(--line)}
+.letter .col{max-width:740px;margin:0 auto}
+.letter p{font-size:var(--fs-body-lg);margin-bottom:var(--s5);color:var(--text)}
+.letter p.tight{margin-bottom:var(--s3)}
+.letter .lead{font-family:var(--font-display);font-weight:700;font-size:var(--fs-h3);letter-spacing:-.02em;margin-bottom:var(--s5)}
+.letter ul{list-style:none;display:grid;gap:10px;margin:0 0 var(--s6) 0}
+.letter li{position:relative;padding-left:26px;color:var(--text-2);font-size:var(--fs-body-lg)}
+.letter li::before{content:"";position:absolute;left:0;top:.7em;width:7px;height:7px;border-radius:2px;background:var(--lime)}
+/* staccato one-line beats */
+.beats{display:grid;gap:var(--s2);margin:var(--s5) 0}
+.beats span{font-family:var(--font-display);font-weight:600;font-size:var(--fs-h4);letter-spacing:-.01em;color:var(--text-2)}
+.beats span.hit{color:var(--text)}
+.spaghetti{font-family:var(--font-display);font-weight:700;font-size:clamp(2rem,5vw,3.2rem);text-align:center;margin:var(--s7) 0;line-height:1.1}
+.spaghetti .big{display:block;background:var(--grad-accent);-webkit-background-clip:text;background-clip:text;color:transparent}
+.spaghetti small{display:block;font-family:var(--font-body);font-weight:400;font-size:var(--fs-body);color:var(--text-2);margin-top:var(--s4);letter-spacing:0}
+.truth{border-left:3px solid var(--lime);background:var(--grad-soft);padding:18px 24px;border-radius:0 var(--r-md) var(--r-md) 0;margin-bottom:var(--s6)}
+.truth b{color:var(--text)}
+.closer{font-family:var(--font-display);font-weight:700;font-size:var(--fs-h3);letter-spacing:-.02em;text-align:center;margin-top:var(--s6)}
+.closer .nope{color:var(--text-2);font-weight:500;font-size:var(--fs-body);font-family:var(--font-body);display:block;margin-top:var(--s4)}
+
+/* ---- stats / cost ---- */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s4)}
+@media(max-width:680px){.stats{grid-template-columns:1fr}}
+.stat{border:1px solid var(--line);border-radius:var(--r-lg);padding:26px;background:var(--ink-800)}
+.stat .n{font-family:var(--font-display);font-weight:700;font-size:clamp(2.4rem,5vw,3.4rem);color:var(--lime);line-height:1}
+.stat .l{color:var(--text-2);font-size:var(--fs-sm);margin-top:10px}
+.stat.loss{border-color:rgba(255,92,92,.28)}
+.stat.loss .n{color:var(--loss)}
+
+/* ---- cards ---- */
+.cols-3{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s5)}
+@media(max-width:820px){.cols-3{grid-template-columns:1fr}}
+.card{background:var(--ink-800);border:1px solid var(--line);border-radius:var(--r-lg);padding:30px;transition:transform var(--dur-base) var(--ease-snap),border-color var(--dur-base),box-shadow var(--dur-base)}
+.card:hover{transform:translateY(-5px);border-color:var(--line-strong);box-shadow:var(--shadow-card)}
+.card .ic{width:46px;height:46px;border-radius:var(--r-md);background:var(--grad-soft);border:1px solid var(--line-strong);display:flex;align-items:center;justify-content:center;color:var(--lime);font-size:22px;margin-bottom:18px}
+.card h4{font-size:var(--fs-h4);margin-bottom:10px}
+.card p{color:var(--text-2);font-size:var(--fs-body)}
+
+/* ---- different / process ---- */
+.diff{background:var(--ink-850);border-block:1px solid var(--line)}
+.split{display:grid;grid-template-columns:1.1fr .9fr;gap:var(--s8);align-items:center}
+@media(max-width:880px){.split{grid-template-columns:1fr;gap:var(--s7)}}
+.anybody{list-style:none;display:grid;gap:10px;margin-top:var(--s5)}
+.anybody li{position:relative;padding-left:26px;color:var(--text-2)}
+.anybody li::before{content:"✕";position:absolute;left:0;color:var(--text-muted);font-weight:700}
+.process{display:grid;gap:12px}
+.step{display:flex;align-items:center;gap:16px;border:1px solid var(--line);border-radius:var(--r-md);padding:16px 18px;background:var(--ink-800);transition:border-color var(--dur-base),transform var(--dur-base) var(--ease-snap)}
+.step:hover{border-color:var(--lime);transform:translateX(4px)}
+.step .num{font-family:var(--font-display);font-weight:700;color:var(--lime);font-size:1.1rem;min-width:32px}
+.step .t{font-weight:600}
+.step .d{color:var(--text-2);font-size:var(--fs-sm)}
+
+/* ---- what we do list ---- */
+.gets{list-style:none;display:grid;gap:11px}
+.gets.two{grid-template-columns:1fr 1fr;gap:11px var(--s6)}
+@media(max-width:640px){.gets.two{grid-template-columns:1fr}}
+.gets li{position:relative;padding-left:28px;font-weight:500}
+.gets li::before{content:"✓";position:absolute;left:0;color:var(--lime);font-weight:700}
+
+/* ---- offer / imagine card ---- */
+.offer-card{border:1px solid var(--line-strong);border-radius:var(--r-xl);background:var(--grad-soft);padding:clamp(28px,5vw,56px);position:relative;overflow:hidden}
+.offer-card::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 90% at 100% 0%,rgba(107,91,255,.12),transparent 60%);pointer-events:none}
+.imagine{position:relative}
+.imagine .beats span.hit{color:var(--lime)}
+
+/* ---- final CTA / contact ---- */
+.final{position:relative;overflow:hidden}
+.final::before{content:"";position:absolute;inset:0;background:radial-gradient(50% 80% at 50% 120%,rgba(163,255,18,.12),transparent);pointer-events:none}
+.final .wrap{position:relative;text-align:center}
+.final h2{font-size:var(--fs-h1);max-width:20ch;margin:var(--s4) auto var(--s4)}
+.final p{color:var(--text-2);font-size:var(--fs-body-lg);max-width:54ch;margin:0 auto var(--s7)}
+.field{display:flex;flex-wrap:wrap;gap:10px;max-width:540px;margin:0 auto}
+.input{flex:1;min-width:240px;background:var(--ink-850);border:1px solid var(--line-strong);color:var(--text);font-family:var(--font-body);font-size:var(--fs-body);padding:15px 16px;border-radius:var(--r-md);transition:border-color var(--dur-base),box-shadow var(--dur-base)}
+.input::placeholder{color:var(--text-muted)}
+.input:focus{outline:none;border-color:var(--lime);box-shadow:0 0 0 3px rgba(163,255,18,.18)}
+.form-note{font-size:var(--fs-sm);color:var(--text-2);margin-top:var(--s4)}
+.no-list{list-style:none;display:flex;flex-wrap:wrap;gap:10px 22px;justify-content:center;margin-top:var(--s5)}
+.no-list li{position:relative;padding-left:24px;color:var(--text-2);font-size:var(--fs-sm)}
+.no-list li::before{content:"✕";position:absolute;left:0;color:var(--text-muted);font-weight:700}
+.form-success{display:none;margin-top:var(--s5);font-family:var(--font-display);font-weight:600;font-size:var(--fs-h4);color:var(--lime)}
+.form-success.show{display:block;animation:pop var(--dur-slow) var(--ease-out)}
+@keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+
+/* ---- footer ---- */
+footer.site{border-top:1px solid var(--line);padding:var(--s8) 0;background:var(--ink-850)}
+footer.site .wrap{display:flex;flex-wrap:wrap;gap:var(--s5);align-items:center;justify-content:space-between}
+footer.site .brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:700;font-size:1.1rem}
+footer.site .brand .logo-mark{height:24px;width:auto;display:block;flex-shrink:0;color:var(--text)}
+footer.site .tag{color:var(--lime);font-family:var(--font-display);font-weight:600}
+footer.site .fine{color:var(--text-2);font-size:var(--fs-sm)}
+</style>
+</head>
+<body>
+
+<!-- ===== Brand mark — Pulse A (defined once, reused via <use>) ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="mark-a" viewBox="0 0 120 120">
+      <path d="M 4 110 L 52 8 L 68 8 L 116 110 L 96 110 L 60 30 L 24 110 Z" fill="currentColor"/>
+      <rect x="42" y="84" width="8" height="14" fill="#A3FF12"/>
+      <rect x="56" y="78" width="8" height="20" fill="#A3FF12"/>
+      <rect x="70" y="70" width="8" height="28" fill="#A3FF12"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ================= HEADER ================= -->
+<header class="site" id="header">
+  <div class="wrap">
+    <a class="logo" href="#top"><svg class="logo-mark" id="dot" viewBox="0 0 120 120" title="go on, poke it" aria-hidden="true" focusable="false"><use href="#mark-a"/></svg>Amplify <span class="sub">for Realtors</span></a>
+    <nav class="nav-links">
+      <a href="#sound-familiar">Sound familiar?</a>
+      <a href="#cost">The real cost</a>
+      <a href="#what-we-do">What we do</a>
+      <a href="#who">Is this you?</a>
+    </nav>
+    <a class="btn btn-primary btn-sm nav-cta" href="#contact">Book An AI Workflow Review</a>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="top">
+  <div class="wrap">
+    <span class="eyebrow reveal">● AI Systems for Realtors</span>
+    <h1 class="reveal">You Didn't Lose That Deal Because You're Bad At Sales.</h1>
+    <p class="hero-sub reveal">You Lost It Because You Were <span class="swap" id="swap">Driving.</span><span class="cursor">_</span></p>
+    <p class="lede reveal">The problem isn't that you forgot. <b>The problem is that your business still depends on you remembering everything.</b> We help Realtors stop losing deals to missed follow-ups, dropped conversations, and "I'll call them tomorrow."</p>
+    <div class="withouts reveal">
+      <span>Without adding another dashboard.</span>
+      <span>Without hiring an assistant.</span>
+      <span>Without becoming an AI nerd.</span>
+    </div>
+    <div class="hero-cta reveal">
+      <a class="btn btn-primary btn-lg" href="#contact">Book An AI Workflow Review</a>
+      <a class="btn btn-ghost" href="#what-we-do">Show me how it works <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROOF BAR ================= -->
+<div class="proofbar">
+  <div class="wrap">
+    <span>Built for agents who live in their car</span>
+    <span>No new dashboard to learn</span>
+    <span>No AI buzzwords</span>
+    <span>Just fewer dropped follow-ups</span>
+  </div>
+</div>
+
+<!-- ================= SOUND FAMILIAR? ================= -->
+<section class="letter" id="sound-familiar">
+  <div class="wrap">
+    <div class="col">
+      <span class="kicker reveal">A day you've lived</span>
+      <p class="lead reveal" style="margin-top:var(--s4)">Sound familiar?</p>
+      <p class="tight reveal">You wake up.</p>
+      <p class="tight reveal">Check your phone.</p>
+      <p class="tight reveal">See three CRM notifications.</p>
+      <p class="reveal">Ignore them — because you've got a showing in 45 minutes.</p>
+      <p class="reveal">Then the day starts.</p>
+
+      <div class="beats reveal">
+        <span>Showings.</span>
+        <span>Calls.</span>
+        <span>Texts.</span>
+        <span>Lockboxes.</span>
+        <span>Listing appointments.</span>
+        <span>Coffee.</span>
+        <span class="hit">More calls.</span>
+      </div>
+
+      <p class="reveal">By 8:47pm you're sitting on the couch thinking:</p>
+      <p class="reveal" style="font-family:var(--font-display);font-weight:600;font-size:var(--fs-h4)">"Damn. I never called that buyer back."</p>
+      <p class="tight reveal" style="color:var(--text-2)">Again.</p>
+
+      <div class="truth reveal">
+        <p style="margin:0">You don't need another motivational speech. <b>You need a system.</b></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOLLOW-UP PROBLEM ================= -->
+<section id="problem">
+  <div class="wrap">
+    <div class="split">
+      <div class="reveal">
+        <span class="kicker">The honest diagnosis</span>
+        <h2 style="font-size:var(--fs-h2);margin:var(--s3) 0 var(--s4)">Most Realtors don't have a lead problem.<br><span class="accent">They have a follow-up problem.</span></h2>
+        <p class="muted" style="font-size:var(--fs-body-lg)">Your CRM isn't broken. You just don't have time to use it the way the CRM company thinks you should — because they assume you're sitting at a desk.</p>
+        <p style="margin-top:var(--s5);font-size:var(--fs-body-lg)">You're not.</p>
+        <ul class="anybody">
+          <li>You're in your car</li>
+          <li>You're at showings</li>
+          <li>You're answering texts between appointments</li>
+          <li>You're running a business from your phone</li>
+        </ul>
+        <p style="margin-top:var(--s5);font-family:var(--font-display);font-weight:600;color:var(--text)">And every lead that doesn't get followed up becomes a donation to another Realtor's commission check.</p>
+      </div>
+      <div class="process reveal">
+        <div class="step"><span class="num">9a</span><div><div class="t">The lead comes in</div><div class="d">Mid-showing. You glance, you mean to reply.</div></div></div>
+        <div class="step"><span class="num">1p</span><div><div class="t">"I'll call them after this one"</div><div class="d">Three appointments stack up behind it.</div></div></div>
+        <div class="step"><span class="num">6p</span><div><div class="t">Buried under 37 other calls</div><div class="d">It slips to the bottom of the pile.</div></div></div>
+        <div class="step"><span class="num">9p</span><div><div class="t">"I'll get to it tomorrow"</div><div class="d">You won't. Tomorrow has its own chaos.</div></div></div>
+        <div class="step"><span class="num">✕</span><div><div class="t">They signed with someone else</div><div class="d">Someone who answered in four minutes.</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= THE REAL COST ================= -->
+<section class="diff" id="cost">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="kicker">The real cost</span>
+      <h2>One missed callback. One follow-up you meant to send tomorrow.</h2>
+      <p>It doesn't feel like much in the moment. Then you do the math on a single commission.</p>
+    </div>
+    <div class="stats">
+      <div class="stat loss reveal"><div class="n" data-count="8" data-prefix="$" data-suffix="k">$0</div><div class="l">A modest deal, quietly gone</div></div>
+      <div class="stat loss reveal"><div class="n" data-count="12" data-prefix="$" data-suffix="k">$0</div><div class="l">A solid one, donated to a competitor</div></div>
+      <div class="stat loss reveal"><div class="n" data-count="20" data-prefix="$" data-suffix="k+">$0</div><div class="l">The one you'll never even know you lost</div></div>
+    </div>
+    <p class="reveal" style="text-align:center;margin-top:var(--s7);font-family:var(--font-display);font-weight:600;font-size:var(--fs-h4);color:var(--text-2);max-width:48ch;margin-inline:auto">Meanwhile most agents spend more time comparing software than they spend following up.<br><span class="accent">Make that make sense.</span></p>
+  </div>
+</section>
+
+<!-- ================= WHAT WE ACTUALLY DO ================= -->
+<section id="what-we-do">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker">What we actually do</span>
+      <h2>We remove the repetitive work that keeps stealing your evenings.</h2>
+      <p>Not more AI. Fewer things you have to remember. Here's what quietly gets handled in the background:</p>
+    </div>
+    <ul class="gets two reveal" style="margin-bottom:var(--s8)">
+      <li>Lead follow-up</li>
+      <li>CRM updates</li>
+      <li>Contact logging</li>
+      <li>Appointment prep</li>
+      <li>Client communication</li>
+      <li>Market information requests</li>
+      <li>Listing workflows</li>
+      <li>Repetitive admin</li>
+    </ul>
+    <div class="cols-3">
+      <div class="card reveal">
+        <div class="ic">➤</div>
+        <h4>Follow-up that never sleeps</h4>
+        <p>New leads get a real reply in minutes — not whenever you finally surface from a showing.</p>
+      </div>
+      <div class="card reveal">
+        <div class="ic">⚙</div>
+        <h4>A CRM that updates itself</h4>
+        <p>Notes logged, contacts tagged, next steps queued. Without you opening a laptop at 10pm.</p>
+      </div>
+      <div class="card reveal">
+        <div class="ic">◈</div>
+        <h4>Admin that handles itself</h4>
+        <p>Prep, market info, listing busywork — the repetitive stuff that eats your week, off your plate.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= IMAGINE THIS ================= -->
+<section class="diff" id="imagine">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="kicker">Imagine this</span>
+      <h2>You finish your last appointment — and you're actually done.</h2>
+    </div>
+    <div class="offer-card imagine reveal">
+      <div class="beats" style="text-align:center;justify-items:center">
+        <span class="hit">Your notes are already organized.</span>
+        <span class="hit">Your follow-ups are already queued.</span>
+        <span class="hit">Your CRM is already updated.</span>
+      </div>
+      <p style="text-align:center;color:var(--text);font-size:var(--fs-body-lg);max-width:46ch;margin:var(--s6) auto 0">Nobody is waiting on you to spend two hours catching up at night.</p>
+      <div class="no-list" style="margin-top:var(--s6)">
+        <li style="list-style:none">No laptop at 10pm</li>
+        <li style="list-style:none">No guilt</li>
+        <li style="list-style:none">No "I'll get to it tomorrow"</li>
+      </div>
+      <div class="closer" style="margin-top:var(--s6)">Just a cleaner business.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WHO THIS IS FOR ================= -->
+<section id="who">
+  <div class="wrap">
+    <div class="split">
+      <div class="reveal">
+        <span class="kicker">Who this is for</span>
+        <h2 style="font-size:var(--fs-h2);margin:var(--s3) 0 var(--s4)">You're excellent at sales.<br><span class="accent">You're just buried in admin.</span></h2>
+        <p class="muted" style="font-size:var(--fs-body-lg)">This is for the agent who knows the follow-up matters — and keeps watching it slip anyway. If a few of these land a little too close to home, you're exactly who we built this for.</p>
+      </div>
+      <ul class="gets reveal">
+        <li>Knows they should follow up more</li>
+        <li>Is tired of leads slipping through the cracks</li>
+        <li>Lives inside their phone</li>
+        <li>Works evenings more than they want to admit</li>
+        <li>Has bought software they never fully used</li>
+        <li>Is excellent at sales but buried in admin</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= THE DIRTY SECRET ================= -->
+<section class="letter" id="secret">
+  <div class="wrap">
+    <div class="col" style="text-align:center">
+      <span class="kicker reveal">The dirty secret nobody talks about</span>
+      <div class="spaghetti reveal" style="margin-top:var(--s5)">
+        The younger agent isn't beating you
+        <span class="big">because they're better.</span>
+        <small>They're beating you because they have systems.</small>
+      </div>
+      <p class="reveal" style="color:var(--text-2)">While you're trying to remember who to call…</p>
+      <p class="reveal" style="font-family:var(--font-display);font-weight:600;font-size:var(--fs-h4)">…they're already following up.</p>
+      <div class="closer reveal">
+        The gap isn't talent.
+        <span class="nope" style="color:var(--lime);font-size:var(--fs-h4);font-family:var(--font-display)">It's leverage.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FINAL CTA / CONTACT ================= -->
+<section class="final" id="contact">
+  <div class="wrap">
+    <span class="eyebrow reveal">Book Your AI Workflow Review</span>
+    <h2 class="reveal">Stop running your business on memory.</h2>
+    <p class="reveal">You already know how to sell. Let's make sure the people who want to buy from you don't disappear while you're busy doing your job. Drop your email and we'll show you exactly where deals are slipping through the cracks.</p>
+    <form class="field reveal" id="bookForm" novalidate>
+      <input class="input" type="email" id="email" name="email" placeholder="you@yourbrokerage.com" aria-label="Your email" required>
+      <button class="btn btn-primary" type="submit">Book My Workflow Review</button>
+    </form>
+    <ul class="no-list reveal">
+      <li>No pressure</li>
+      <li>No AI buzzwords</li>
+      <li>No "digital transformation"</li>
+    </ul>
+    <div class="form-note reveal">Just practical ways to save time and close more business.</div>
+    <div class="form-success" id="formSuccess">Nice. Check your inbox — we'll be in touch to book your workflow review.</div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="site">
+  <div class="wrap">
+    <div class="brand"><svg class="logo-mark" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><use href="#mark-a"/></svg>Amplify Brands</div>
+    <div class="tag">Stop running your business on memory.</div>
+    <div class="fine">© 2026 Amplify Brands · AI systems for Realtors, minus the buzzword bingo.</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* sticky header state */
+  var header = document.getElementById('header');
+  function onScroll(){ if(window.scrollY > 12){ header.classList.add('scrolled'); } else { header.classList.remove('scrolled'); } }
+  onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
+
+  /* scroll reveal */
+  var reveals = document.querySelectorAll('.reveal');
+  if(reduce || !('IntersectionObserver' in window)){
+    reveals.forEach(function(el){el.classList.add('in');});
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    },{threshold:0.12});
+    reveals.forEach(function(el){io.observe(el);});
+  }
+
+  /* count-up (supports prefix + suffix) */
+  function runCount(el){
+    if(el.dataset.text){ el.textContent = el.dataset.text; return; }
+    var target = parseInt(el.dataset.count,10) || 0;
+    var prefix = el.dataset.prefix || '';
+    var suffix = el.dataset.suffix || '';
+    if(reduce){ el.textContent = prefix+target+suffix; return; }
+    var start=null, dur=950;
+    function step(ts){ if(!start)start=ts; var p=Math.min((ts-start)/dur,1); var e=1-Math.pow(1-p,3);
+      el.textContent = prefix+Math.round(target*e)+suffix; if(p<1) requestAnimationFrame(step); }
+    requestAnimationFrame(step);
+  }
+  var counters = document.querySelectorAll('[data-count],[data-text]');
+  if('IntersectionObserver' in window && !reduce){
+    var cio = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting){ runCount(e.target); cio.unobserve(e.target); } });
+    },{threshold:0.6});
+    counters.forEach(function(c){cio.observe(c);});
+  } else { counters.forEach(runCount); }
+
+  /* hero typed word — cycles through where you actually were */
+  var swap = document.getElementById('swap');
+  if(swap){
+    var words = ['Driving.','In a showing.','With your kids.','Returning 37 calls.'];
+    if(reduce){ swap.textContent = words[0]; }
+    else {
+      var wi = 0, ci = 0, deleting = false;
+      (function tick(){
+        var word = words[wi];
+        if(!deleting){
+          swap.textContent = word.slice(0, ci+1); ci++;
+          if(ci === word.length){ deleting = true; setTimeout(tick, 1500); return; }
+          setTimeout(tick, 70);
+        } else {
+          swap.textContent = word.slice(0, ci-1); ci--;
+          if(ci === 0){ deleting = false; wi = (wi+1) % words.length; setTimeout(tick, 240); return; }
+          setTimeout(tick, 38);
+        }
+      })();
+    }
+  }
+
+  /* easter egg: poke the dot */
+  var dot = document.getElementById('dot');
+  if(dot){ dot.addEventListener('click', function(ev){ ev.preventDefault(); if(reduce) return;
+    dot.animate([{transform:'scale(1)'},{transform:'scale(1.9)'},{transform:'scale(1)'}],{duration:420,easing:'cubic-bezier(.2,.7,.2,1)'});
+  }); }
+
+  /* contact form — Formspree AJAX (delivers to jeff@amplifybrands.io) */
+  var FORMSPREE_ENDPOINT = 'https://formspree.io/f/xzdwjbbo'; /* Formspree → delivers to jeff@amplifybrands.io */
+  var form = document.getElementById('bookForm');
+  var success = document.getElementById('formSuccess');
+  if(form){
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var email = document.getElementById('email');
+      if(!email.value || email.value.indexOf('@')<1){ email.focus(); email.style.borderColor='#FF5C5C'; return; }
+      email.style.borderColor='';
+      var btn = form.querySelector('button[type="submit"]');
+      var label = btn ? btn.textContent : '';
+      if(btn){ btn.disabled = true; btn.textContent = 'Sending…'; }
+      fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: new FormData(form)
+      }).then(function(res){
+        if(res.ok){
+          form.style.display='none';
+          success.classList.add('show');
+        } else {
+          if(btn){ btn.disabled = false; btn.textContent = label; }
+          email.style.borderColor='#FF5C5C';
+          alert('Something went wrong sending that. Email jeff@amplifybrands.io directly and we’ll sort it.');
+        }
+      }).catch(function(){
+        if(btn){ btn.disabled = false; btn.textContent = label; }
+        email.style.borderColor='#FF5C5C';
+        alert('Network hiccup — please try again, or email jeff@amplifybrands.io directly.');
+      });
+    });
+  }
+})();
+</script>
+</body>
+</html>

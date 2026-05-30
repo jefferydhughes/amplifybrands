@@ -14,3 +14,7 @@ Thumbs.db
 node_modules/
 npm-debug.log*
 yarn-error.log*
+
+# GTM working folder (content drafts + prospect research — not part of the site)
+gtm/
+.gstack/
