@@ -5,8 +5,8 @@
   "rewrites": [
     {
       "source": "/",
-      "has": [{ "type": "host", "value": "realtor.amplifybrands.io" }],
-      "destination": "/realtor.html"
+      "has": [{ "type": "host", "value": "realtors.amplifybrands.io" }],
+      "destination": "/realtors.html"
     }
   ],
   "headers": [
