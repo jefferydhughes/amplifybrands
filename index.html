@@ -248,7 +248,7 @@ footer.site .fine{color:var(--text-2);font-size:var(--fs-sm)}
       <a href="#offer">The sprint</a>
       <a href="#results">Results</a>
     </nav>
-    <a class="btn btn-primary btn-sm nav-cta" href="#contact">Book Your AI Assessment</a>
+    <a class="btn btn-primary btn-sm nav-cta" href="/assessment">Book Your AI Assessment</a>
   </div>
 </header>
 
@@ -264,7 +264,7 @@ footer.site .fine{color:var(--text-2);font-size:var(--fs-sm)}
       <span>Without the LinkedIn cringe.</span>
     </div>
     <div class="hero-cta reveal">
-      <a class="btn btn-primary btn-lg" href="#contact">Book Your Automation Assessment</a>
+      <a class="btn btn-primary btn-lg" href="/assessment">Book Your Automation Assessment</a>
       <a class="btn btn-ghost" href="#what-we-do">See how it works <span class="arrow">→</span></a>
     </div>
   </div>
@@ -453,12 +453,10 @@ footer.site .fine{color:var(--text-2);font-size:var(--fs-sm)}
     <span class="eyebrow reveal">Operational Diagnostic</span>
     <h2 class="reveal">Your business doesn't need more AI.<br>It needs <span class="accent">fewer bottlenecks.</span></h2>
     <p class="reveal">This isn't a sales call. It's an operational diagnostic. We'll uncover where work is getting stuck, what's costing you time and money, and whether AI can actually help — or if you've got a different problem entirely.</p>
-    <form class="field reveal" id="bookForm" novalidate>
-      <input class="input" type="email" id="email" name="email" placeholder="you@yourbusiness.com" aria-label="Your email" required>
-      <button class="btn btn-primary" type="submit">Book Your Automation Assessment</button>
-    </form>
-    <div class="form-note reveal">No spam. No 4-hour webinar. Just a straight conversation about your bottlenecks.</div>
-    <div class="form-success" id="formSuccess">Nice. Check your inbox — we'll be in touch to book your assessment.</div>
+    <div class="hero-cta reveal" style="justify-content:center">
+      <a class="btn btn-primary btn-lg" href="/assessment">Book Your Automation Assessment <span class="arrow">→</span></a>
+    </div>
+    <div class="form-note reveal">No spam. No 4-hour webinar. Just a few quick questions, then a straight conversation about your bottlenecks.</div>
   </div>
 </section>
 
@@ -523,39 +521,6 @@ footer.site .fine{color:var(--text-2);font-size:var(--fs-sm)}
     dot.animate([{transform:'scale(1)'},{transform:'scale(1.9)'},{transform:'scale(1)'}],{duration:420,easing:'cubic-bezier(.2,.7,.2,1)'});
   }); }
 
-  /* contact form — Formspree AJAX (delivers to jeff@amplifybrands.io) */
-  var FORMSPREE_ENDPOINT = 'https://formspree.io/f/xzdwjbbo'; /* Formspree → delivers to jeff@amplifybrands.io */
-  var form = document.getElementById('bookForm');
-  var success = document.getElementById('formSuccess');
-  if(form){
-    form.addEventListener('submit', function(e){
-      e.preventDefault();
-      var email = document.getElementById('email');
-      if(!email.value || email.value.indexOf('@')<1){ email.focus(); email.style.borderColor='#FF5C5C'; return; }
-      email.style.borderColor='';
-      var btn = form.querySelector('button[type="submit"]');
-      var label = btn ? btn.textContent : '';
-      if(btn){ btn.disabled = true; btn.textContent = 'Sending…'; }
-      fetch(FORMSPREE_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Accept': 'application/json' },
-        body: new FormData(form)
-      }).then(function(res){
-        if(res.ok){
-          form.style.display='none';
-          success.classList.add('show');
-        } else {
-          if(btn){ btn.disabled = false; btn.textContent = label; }
-          email.style.borderColor='#FF5C5C';
-          alert('Something went wrong sending that. Email jeff@amplifybrands.io directly and we’ll sort it.');
-        }
-      }).catch(function(){
-        if(btn){ btn.disabled = false; btn.textContent = label; }
-        email.style.borderColor='#FF5C5C';
-        alert('Network hiccup — please try again, or email jeff@amplifybrands.io directly.');
-      });
-    });
-  }
 })();
 </script>
 </body>

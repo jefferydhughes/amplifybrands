@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Assessment — Amplify Brands</title>
+<meta name="description" content="A few quick questions so we can understand your business and see whether AI can actually save you time.">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://amplifybrands.io/assessment">
+
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#FFFFFF">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===================================================================
+   AMPLIFY BRANDS — AI ASSESSMENT  (light theme: white / lime / grey)
+   =================================================================== */
+:root{
+  --bg:#FFFFFF;
+  --ink:#0B0B0B; --ink-2:#52525B; --ink-3:#A1A1AA;
+  --line:#E4E4E7; --line-strong:#D4D4D8;
+  --box:#F4F4F5; --box-hover:#ECECEE;
+  --lime:#A3FF12; --lime-600:#8FE000; --lime-ink:#3F6B00;
+  --lime-soft:rgba(163,255,18,.16); --lime-glow:rgba(163,255,18,.45);
+  --violet:#6B5BFF;
+  --font-display:'Space Grotesk',ui-sans-serif,system-ui,sans-serif;
+  --font-body:'Inter',ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --fs-h1:clamp(1.9rem,4.6vw,2.9rem); --fs-h2:clamp(1.45rem,3.4vw,2rem);
+  --fs-body-lg:1.12rem; --fs-body:1rem; --fs-sm:.875rem; --fs-eyebrow:.72rem;
+  --r-sm:8px; --r-md:12px; --r-lg:16px; --r-pill:999px;
+  --dur-fast:120ms; --dur-base:220ms; --dur-slow:420ms;
+  --ease-snap:cubic-bezier(.2,.7,.2,1); --ease-out:cubic-bezier(.16,1,.3,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:var(--fs-body);line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;min-height:100vh;display:flex;flex-direction:column}
+::selection{background:var(--lime);color:var(--ink)}
+h1,h2,h3,.display{font-family:var(--font-display);font-weight:700;line-height:1.08;letter-spacing:-.02em}
+a{color:inherit;text-decoration:none}
+.accent{color:var(--lime-ink)}
+
+/* ---- top bar: logo + progress ---- */
+.bar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.bar-inner{max-width:680px;margin:0 auto;padding:16px 22px;display:flex;align-items:center;gap:14px}
+.logo{display:flex;align-items:center;gap:9px;font-family:var(--font-display);font-weight:700;font-size:1.05rem;letter-spacing:-.02em;color:var(--ink)}
+.logo .logo-mark{height:24px;width:auto;display:block;flex-shrink:0;color:var(--ink);filter:drop-shadow(0 0 8px var(--lime-glow))}
+.logo .eyebrow{font-family:var(--font-body);font-weight:600;font-size:var(--fs-eyebrow);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);border-left:1px solid var(--line-strong);padding-left:12px;margin-left:4px}
+@media(max-width:520px){.logo .eyebrow{display:none}}
+.step-count{margin-left:auto;font-size:var(--fs-sm);color:var(--ink-2);font-weight:500;white-space:nowrap}
+.progress{height:4px;background:var(--box)}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--lime) 0%,var(--lime-600) 100%);border-radius:0 var(--r-pill) var(--r-pill) 0;transition:width var(--dur-slow) var(--ease-out)}
+
+/* ---- stage ---- */
+main{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:clamp(2rem,6vw,4.5rem) 22px}
+.stage{width:100%;max-width:600px}
+.step{display:none;animation:slide var(--dur-slow) var(--ease-out)}
+.step.active{display:block}
+@keyframes slide{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.step{animation:none}.progress-fill{transition:none}}
+
+.intro-eyebrow{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:var(--fs-eyebrow);letter-spacing:.16em;text-transform:uppercase;color:var(--lime-ink);background:var(--lime-soft);padding:7px 13px;border-radius:var(--r-pill);margin-bottom:18px}
+.q-label{font-family:var(--font-body);font-weight:600;font-size:var(--fs-sm);letter-spacing:.02em;color:var(--ink-2);margin-bottom:10px}
+h1.q{font-size:var(--fs-h1);margin-bottom:14px}
+h2.q{font-size:var(--fs-h2);margin-bottom:10px}
+.sub{color:var(--ink-2);font-size:var(--fs-body-lg);margin-bottom:26px;max-width:48ch}
+.sub.tight{margin-bottom:18px}
+.hint{color:var(--ink-3);font-size:var(--fs-sm);margin-top:12px}
+.hint code{background:var(--box);border:1px solid var(--line);border-radius:6px;padding:2px 7px;font-size:.85em;color:var(--ink-2)}
+
+/* ---- inputs ---- */
+.field{width:100%;background:var(--box);border:1.5px solid var(--line);color:var(--ink);font-family:var(--font-body);font-size:var(--fs-body-lg);padding:16px 18px;border-radius:var(--r-md);transition:border-color var(--dur-base),box-shadow var(--dur-base),background var(--dur-base)}
+.field::placeholder{color:var(--ink-3)}
+.field:focus{outline:none;border-color:var(--lime-600);background:#fff;box-shadow:0 0 0 4px var(--lime-soft)}
+textarea.field{min-height:150px;resize:vertical;line-height:1.55}
+select.field{appearance:none;-webkit-appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%2352525B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;padding-right:48px}
+
+/* ---- option cards (radio / checkbox) ---- */
+.opts{display:grid;gap:10px}
+.opts.two{grid-template-columns:1fr 1fr}
+@media(max-width:480px){.opts.two{grid-template-columns:1fr}}
+.opt{position:relative;display:flex;align-items:center;gap:13px;background:var(--box);border:1.5px solid var(--line);border-radius:var(--r-md);padding:15px 17px;cursor:pointer;transition:border-color var(--dur-fast),background var(--dur-fast),transform var(--dur-fast) var(--ease-snap);font-weight:500;user-select:none}
+.opt:hover{background:var(--box-hover);border-color:var(--line-strong)}
+.opt:active{transform:scale(.99)}
+.opt input{position:absolute;opacity:0;width:0;height:0}
+.opt .mark{flex-shrink:0;width:22px;height:22px;border:2px solid var(--line-strong);border-radius:6px;display:flex;align-items:center;justify-content:center;transition:border-color var(--dur-fast),background var(--dur-fast),color var(--dur-fast);color:transparent;font-size:13px;font-weight:700;line-height:1}
+.opt[data-type="radio"] .mark{border-radius:50%;font-size:11px}
+.opt.sel{border-color:var(--lime-600);background:var(--lime-soft)}
+.opt.sel .mark{background:var(--lime);border-color:var(--lime);color:var(--ink)}
+.opt .lbl{flex:1}
+.opt .other-in{flex:1;background:transparent;border:none;color:var(--ink);font-family:var(--font-body);font-size:var(--fs-body);padding:0}
+.opt .other-in:focus{outline:none}
+
+/* ---- nav buttons ---- */
+.actions{display:flex;align-items:center;gap:14px;margin-top:30px}
+.btn{font-family:var(--font-body);font-weight:600;font-size:var(--fs-body);border:none;cursor:pointer;display:inline-flex;align-items:center;gap:9px;padding:15px 28px;border-radius:var(--r-md);transition:transform var(--dur-fast) var(--ease-snap),box-shadow var(--dur-base),background var(--dur-base),color var(--dur-base);line-height:1}
+.btn:active{transform:translateY(1px) scale(.985)}
+.btn-primary{background:var(--lime);color:var(--ink)}
+.btn-primary:hover{box-shadow:0 0 0 1px var(--lime-600),0 10px 30px var(--lime-soft);background:var(--lime-600)}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+.btn .arrow{transition:transform var(--dur-base) var(--ease-snap)}
+.btn-primary:hover .arrow{transform:translateX(3px)}
+.btn-back{background:none;color:var(--ink-3);font-weight:500;padding:10px 6px}
+.btn-back:hover{color:var(--ink-2)}
+.btn-back .arrow{margin-right:2px}
+.err{color:#D92D20;font-size:var(--fs-sm);margin-top:12px;min-height:1em;font-weight:500}
+
+/* ---- thank you ---- */
+.done{text-align:center;max-width:540px;margin:0 auto}
+.done .check{width:68px;height:68px;border-radius:50%;background:var(--lime);display:flex;align-items:center;justify-content:center;margin:0 auto 26px;color:var(--ink);box-shadow:0 12px 40px var(--lime-soft)}
+.done h1{font-size:var(--fs-h1);margin-bottom:18px}
+.done p{color:var(--ink-2);font-size:var(--fs-body-lg);margin-bottom:16px}
+.done .strong{color:var(--ink);font-weight:600}
+.done .home{display:inline-flex;align-items:center;gap:8px;margin-top:14px;color:var(--lime-ink);font-weight:600}
+
+footer{text-align:center;padding:26px 22px;color:var(--ink-3);font-size:var(--fs-sm);border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+
+<!-- brand mark, reused via <use> -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="mark-a" viewBox="0 0 120 120">
+      <path d="M 4 110 L 52 8 L 68 8 L 116 110 L 96 110 L 60 30 L 24 110 Z" fill="currentColor"/>
+      <rect x="42" y="84" width="8" height="14" fill="#A3FF12"/>
+      <rect x="56" y="78" width="8" height="20" fill="#A3FF12"/>
+      <rect x="70" y="70" width="8" height="28" fill="#A3FF12"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="bar">
+  <div class="bar-inner">
+    <a class="logo" href="/"><svg class="logo-mark" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><use href="#mark-a"/></svg>Amplify<span class="eyebrow">AI Assessment</span></a>
+    <span class="step-count" id="stepCount">Step 1 of 10</span>
+  </div>
+  <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+
+<main>
+  <div class="stage">
+    <form id="assess" novalidate>
+
+      <!-- STEP 1 — first name -->
+      <section class="step active" data-step="1">
+        <span class="intro-eyebrow">● Let's see if AI can save you some time</span>
+        <h1 class="q">First things first.</h1>
+        <p class="sub">We'll keep this as painless as possible (pinky promise). A few quick questions so we understand your business and whether we're a good fit to help.</p>
+        <label class="q-label" for="first_name">What's your first name?</label>
+        <input class="field" type="text" id="first_name" name="first_name" autocomplete="given-name" placeholder="Alex" required>
+        <div class="actions">
+          <button type="button" class="btn btn-primary" data-next>Continue <span class="arrow">→</span></button>
+        </div>
+        <div class="err" data-err></div>
+      </section>
+
+      <!-- STEP 2 — email -->
+      <section class="step" data-step="2">
+        <h2 class="q">Nice to meet you, <span class="name-slot">there</span>.</h2>
+        <label class="q-label" for="email">What's the best email address to reach you?</label>
+        <input class="field" type="email" id="email" name="email" autocomplete="email" placeholder="you@yourbusiness.com" required>
+        <div class="actions">
+          <button type="button" class="btn-back" data-back><span class="arrow">←</span> Back</button>
+          <button type="button" class="btn btn-primary" data-next>Continue <span class="arrow">→</span></button>
+        </div>
+        <div class="err" data-err></div>
+      </section>
+
+      <!-- STEP 3 — website -->
+      <section class="step" data-step="3">
+        <h2 class="q">One more thing, <span class="name-slot">there</span>.</h2>
+        <label class="q-label" for="website">What's your company website?</label>
+        <input class="field" type="text" id="website" name="website" placeholder="https://yourcompany.com" required>
+        <p class="hint">Don't have one? Just type <code>I don't have a website</code>.</p>
+        <div class="actions">
+          <button type="button" class="btn-back" data-back><span class="arrow">←</span> Back</button>
+          <button type="button" class="btn btn-primary" data-next>Continue <span class="arrow">→</span></button>
+        </div>
+        <div class="err" data-err></div>
+      </section>
+
+      <!-- STEP 4 — industry -->
+      <section class="step" data-step="4">
+        <h2 class="q">Perfect.</h2>
+        <p class="sub tight">Now let's figure out whether automation and AI can create real value for your business.</p>
+        <label class="q-label" for="industry">What industry are you in?</label>
+        <select class="field" id="industry" name="industry" required>
+          <option value="" disabled selected>Select your industry…</option>
+          <option>Real Estate Agent</option>
+          <option>Real Estate Brokerage</option>
+          <option>Property Management</option>
+          <option>Mortgage Broker</option>
+          <option>Insurance</option>
+          <option>Construction</option>
+          <option>Professional Services</option>
+          <option>Healthcare</option>
+          <option>E-commerce</option>
+          <option>Other</option>
+        </select>
+        <div class="actions">
+          <button type="button" class="btn-back" data-back><span class="arrow">←</span> Back</button>
+          <button type="button" class="btn btn-primary" data-next>Continue <span class="arrow">→</span></button>
+        </div>
+        <div class="err" data-err></div>
+      </section>
+
+      <!-- STEP 5 — AI tools used -->
+      <section class="step" data-step="5">
+        <h2 class="q">Have you experimented with AI yet?</h2>
+        <p class="sub tight">Select all the tools you've used. No wrong answers.</p>
+        <div class="opts two" data-group="ai_tools" data-multi>
+          <label class="opt" data-type="checkbox"><input type="checkbox" value="ChatGPT"><span class="mark">✓</span><span class="lbl">ChatGPT</span></label>
+          <label class="opt" data-type="checkbox"><input type="checkbox" value="Claude"><span class="mark">✓</span><span class="lbl">Claude</span></label>
+          <label class="opt" data-type="checkbox"><input type="checkbox" value="Gemini"><span class="mark">✓</span><span class="lbl">Gemini</span></label>
+          <label class="opt" data-type="checkbox"><input type="checkbox" value="Microsoft Copilot"><span class="mark">✓</span><span class="lbl">Microsoft Copilot</span></label>
+          <label class="opt" data-type="checkbox"><input type="checkbox" value="Perplexity"><span class="mark">✓</span><span class="lbl">Perplexity</span></label>
+          <label class="opt" data-type="checkbox"><input type="checkbox" value="OpenClaw"><span class="mark">✓</span><span class="lbl">OpenClaw</span></label>
+          <label class="opt" data-type="checkbox"><input type="checkbox" value="Zapier AI"><span class="mark">✓</span><span class="lbl">Zapier AI</span></label>
+          <label class="opt" data-type="checkbox"><input type="checkbox" value="Make.com"><span class="mark">✓</span><span class="lbl">Make.com</span></label>
+          <label class="opt" data-type="checkbox"><input type="checkbox" value="HubSpot AI"><span class="mark">✓</span><span class="lbl">HubSpot AI</span></label>
+          <label class="opt" data-type="checkbox"><input type="checkbox" value="Salesforce AI"><span class="mark">✓</span><span class="lbl">Salesforce AI</span></label>
+          <label class="opt" data-type="checkbox" data-exclusive><input type="checkbox" value="None yet"><span class="mark">✓</span><span class="lbl">None yet</span></label>
+          <label class="opt" data-type="checkbox" data-other><input type="checkbox" value="Other"><span class="mark">✓</span><input class="other-in" type="text" placeholder="Other…" aria-label="Other tool"></label>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn-back" data-back><span class="arrow">←</span> Back</button>
+          <button type="button" class="btn btn-primary" data-next>Continue <span class="arrow">→</span></button>
+        </div>
+        <div class="err" data-err></div>
+      </section>
+
+      <!-- STEP 6 — what to help with -->
+      <section class="step" data-step="6">
+        <h2 class="q">What would you like help with?</h2>
+        <p class="sub tight">Check all that apply.</p>
+        <div class="opts two" data-group="help_with" data-multi>
+          <label class="opt" data-type="checkbox"><input type="checkbox" value="Workflow Automation"><span class="mark">✓</span><span class="lbl">Workflow Automation</span></label>
+          <label class="opt" data-type="checkbox"><input type="checkbox" value="AI Agents"><span class="mark">✓</span><span class="lbl">AI Agents</span></label>
+          <label class="opt" data-type="checkbox"><input type="checkbox" value="Lead Generation & Follow-Up"><span class="mark">✓</span><span class="lbl">Lead Gen & Follow-Up</span></label>
+          <label class="opt" data-type="checkbox"><input type="checkbox" value="CRM Automation"><span class="mark">✓</span><span class="lbl">CRM Automation</span></label>
+          <label class="opt" data-type="checkbox"><input type="checkbox" value="Custom Applications"><span class="mark">✓</span><span class="lbl">Custom Applications</span></label>
+          <label class="opt" data-type="checkbox"><input type="checkbox" value="Analytics & Dashboards"><span class="mark">✓</span><span class="lbl">Analytics & Dashboards</span></label>
+          <label class="opt" data-type="checkbox"><input type="checkbox" value="Data & Reporting"><span class="mark">✓</span><span class="lbl">Data & Reporting</span></label>
+          <label class="opt" data-type="checkbox"><input type="checkbox" value="Marketing Automation"><span class="mark">✓</span><span class="lbl">Marketing Automation</span></label>
+          <label class="opt" data-type="checkbox"><input type="checkbox" value="Complete Business Transformation"><span class="mark">✓</span><span class="lbl">Complete Business Overhaul</span></label>
+          <label class="opt" data-type="checkbox" data-exclusive><input type="checkbox" value="Not Sure Yet"><span class="mark">✓</span><span class="lbl">Not Sure Yet</span></label>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn-back" data-back><span class="arrow">←</span> Back</button>
+          <button type="button" class="btn btn-primary" data-next>Continue <span class="arrow">→</span></button>
+        </div>
+        <div class="err" data-err></div>
+      </section>
+
+      <!-- STEP 7 — timeline -->
+      <section class="step" data-step="7">
+        <h2 class="q">What's your timeline?</h2>
+        <p class="sub tight">When would you ideally like to start?</p>
+        <div class="opts" data-group="timeline">
+          <label class="opt" data-type="radio"><input type="radio" name="timeline_r" value="ASAP (within 30 days)"><span class="mark">●</span><span class="lbl">ASAP — within 30 days</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="timeline_r" value="1–3 Months"><span class="mark">●</span><span class="lbl">1–3 months</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="timeline_r" value="3–6 Months"><span class="mark">●</span><span class="lbl">3–6 months</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="timeline_r" value="6+ Months"><span class="mark">●</span><span class="lbl">6+ months</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="timeline_r" value="Just Exploring"><span class="mark">●</span><span class="lbl">Just exploring</span></label>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn-back" data-back><span class="arrow">←</span> Back</button>
+          <button type="button" class="btn btn-primary" data-next>Continue <span class="arrow">→</span></button>
+        </div>
+        <div class="err" data-err></div>
+      </section>
+
+      <!-- STEP 8 — budget -->
+      <section class="step" data-step="8">
+        <h2 class="q">What's your budget range?</h2>
+        <p class="sub tight">This helps us recommend solutions that actually make sense for your business.</p>
+        <div class="opts" data-group="budget">
+          <label class="opt" data-type="radio"><input type="radio" name="budget_r" value="Under $10,000"><span class="mark">●</span><span class="lbl">Under $10,000</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="budget_r" value="$10,000 – $25,000"><span class="mark">●</span><span class="lbl">$10,000 – $25,000</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="budget_r" value="$25,000 – $50,000"><span class="mark">●</span><span class="lbl">$25,000 – $50,000</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="budget_r" value="$50,000 – $100,000"><span class="mark">●</span><span class="lbl">$50,000 – $100,000</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="budget_r" value="$100,000+"><span class="mark">●</span><span class="lbl">$100,000+</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="budget_r" value="Not Sure Yet"><span class="mark">●</span><span class="lbl">Not sure yet</span></label>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn-back" data-back><span class="arrow">←</span> Back</button>
+          <button type="button" class="btn btn-primary" data-next>Continue <span class="arrow">→</span></button>
+        </div>
+        <div class="err" data-err></div>
+      </section>
+
+      <!-- STEP 9 — business details -->
+      <section class="step" data-step="9">
+        <h2 class="q">Tell us about your business.</h2>
+        <p class="sub tight">What's slowing your team down right now? Which repetitive tasks, bottlenecks, or inefficiencies would you love to eliminate?</p>
+        <textarea class="field" id="business_details" name="business_details" placeholder="We spend hours every week following up with leads…&#10;or&#10;Our team manually enters data into multiple systems…" required></textarea>
+        <div class="actions">
+          <button type="button" class="btn-back" data-back><span class="arrow">←</span> Back</button>
+          <button type="button" class="btn btn-primary" data-next>Continue <span class="arrow">→</span></button>
+        </div>
+        <div class="err" data-err></div>
+      </section>
+
+      <!-- STEP 10 — country / submit -->
+      <section class="step" data-step="10">
+        <h2 class="q">Almost done.</h2>
+        <label class="q-label" for="country">What country are you located in?</label>
+        <select class="field" id="country" name="country" required>
+          <option value="" disabled selected>Select your country…</option>
+          <option>United States</option>
+          <option>Canada</option>
+          <option>United Kingdom</option>
+          <option>Australia</option>
+          <option>New Zealand</option>
+          <option>Ireland</option>
+          <option>United Arab Emirates</option>
+          <option>South Africa</option>
+          <option>Singapore</option>
+          <option>India</option>
+          <option>Germany</option>
+          <option>France</option>
+          <option>Netherlands</option>
+          <option>Spain</option>
+          <option>Italy</option>
+          <option>Mexico</option>
+          <option>Brazil</option>
+          <option>Other</option>
+        </select>
+        <p class="hint">This helps us connect you with the right expert and make sure recommendations fit your region.</p>
+        <div class="actions">
+          <button type="button" class="btn-back" data-back><span class="arrow">←</span> Back</button>
+          <button type="submit" class="btn btn-primary" id="submitBtn">Submit Assessment <span class="arrow">→</span></button>
+        </div>
+        <div class="err" data-err></div>
+      </section>
+
+      <!-- THANK YOU -->
+      <section class="step" data-step="done">
+        <div class="done">
+          <div class="check">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h1>Thanks, <span class="name-slot">there</span>.</h1>
+          <p>We've received your assessment. Our team will review your answers and figure out whether we're a good fit to help.</p>
+          <p>If we think we can create <span class="strong">meaningful value</span> for your business, we'll send you a booking link to talk next steps.</p>
+          <p>No pressure. No sales circus. Just a practical conversation about what AI can actually do for you.</p>
+          <a class="home" href="/">Back to amplifybrands.io →</a>
+        </div>
+      </section>
+
+    </form>
+  </div>
+</main>
+
+<footer>© 2026 Amplify Brands · Less busywork. More business.</footer>
+
+<script>
+(function(){
+  var FORMSPREE_ENDPOINT = 'https://formspree.io/f/xzdwjbbo'; /* delivers to jeff@amplifybrands.io */
+  var form = document.getElementById('assess');
+  var steps = Array.prototype.slice.call(form.querySelectorAll('.step[data-step]'))
+                .filter(function(s){ return s.dataset.step !== 'done'; });
+  var doneStep = form.querySelector('.step[data-step="done"]');
+  var TOTAL = steps.length;
+  var idx = 0;
+  var fill = document.getElementById('progressFill');
+  var counter = document.getElementById('stepCount');
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function show(i){
+    steps.forEach(function(s,n){ s.classList.toggle('active', n===i); });
+    idx = i;
+    fill.style.width = ((i+1)/TOTAL*100) + '%';
+    counter.textContent = 'Step ' + (i+1) + ' of ' + TOTAL;
+    var first = steps[i].querySelector('input:not([type=radio]):not([type=checkbox]),textarea,select');
+    if(first && !reduce){ setTimeout(function(){ try{first.focus();}catch(e){} }, 80); }
+    clearErr();
+  }
+  function clearErr(){ var e = steps[idx].querySelector('[data-err]'); if(e) e.textContent=''; }
+  function setErr(msg){ var e = steps[idx].querySelector('[data-err]'); if(e) e.textContent = msg; }
+
+  /* ---- option card selection ---- */
+  form.querySelectorAll('.opt').forEach(function(opt){
+    var input = opt.querySelector('input');
+    function sync(){
+      if(input.type === 'radio'){
+        var grp = opt.closest('[data-group]');
+        grp.querySelectorAll('.opt').forEach(function(o){ o.classList.toggle('sel', o.querySelector('input').checked); });
+      } else {
+        opt.classList.toggle('sel', input.checked);
+      }
+    }
+    opt.addEventListener('click', function(e){
+      if(e.target.classList.contains('other-in')) return; /* let them type */
+      if(e.target !== input){ e.preventDefault(); input.checked = (input.type==='radio') ? true : !input.checked; }
+      handleExclusive(opt, input);
+      sync();
+    });
+    input.addEventListener('change', function(){ handleExclusive(opt, input); sync(); });
+    var other = opt.querySelector('.other-in');
+    if(other){ other.addEventListener('input', function(){ input.checked = other.value.trim().length>0; sync(); }); }
+  });
+
+  /* "None yet" / "Not Sure Yet" clear the rest, and vice-versa */
+  function handleExclusive(opt, input){
+    var grp = opt.closest('[data-group][data-multi]');
+    if(!grp) return;
+    var isExclusive = opt.hasAttribute('data-exclusive');
+    if(isExclusive && input.checked){
+      grp.querySelectorAll('.opt').forEach(function(o){
+        if(o!==opt){ var ci=o.querySelector('input'); ci.checked=false; o.classList.remove('sel'); var oi=o.querySelector('.other-in'); if(oi) oi.value=''; }
+      });
+    } else if(!isExclusive && input.checked){
+      var ex = grp.querySelector('.opt[data-exclusive] input');
+      if(ex && ex.checked){ ex.checked=false; ex.closest('.opt').classList.remove('sel'); }
+    }
+  }
+
+  /* ---- validation per step ---- */
+  function validate(i){
+    var s = steps[i];
+    var step = s.dataset.step;
+    if(step==='1'){ if(!val('first_name')){ return 'A first name helps — what should we call you?'; } }
+    if(step==='2'){ var e=val('email'); if(!e || e.indexOf('@')<1 || e.indexOf('.')<2){ return 'Pop in a valid email so we can reach you.'; } }
+    if(step==='3'){ if(!val('website')){ return 'Drop your website — or "I don’t have a website".'; } }
+    if(step==='4'){ if(!val('industry')){ return 'Pick the closest industry.'; } }
+    if(step==='5'){ if(!groupHasSelection(s)){ return 'Select at least one — "None yet" counts.'; } }
+    if(step==='6'){ if(!groupHasSelection(s)){ return 'Check at least one thing we can help with.'; } }
+    if(step==='7'){ if(!groupHasSelection(s)){ return 'Give us a rough timeline.'; } }
+    if(step==='8'){ if(!groupHasSelection(s)){ return 'A budget range helps us scope it right.'; } }
+    if(step==='9'){ if(!val('business_details')){ return 'A sentence or two is plenty — what’s slowing you down?'; } }
+    if(step==='10'){ if(!val('country')){ return 'Pick your country so we route you correctly.'; } }
+    return null;
+  }
+  function val(id){ var el=document.getElementById(id); return el ? el.value.trim() : ''; }
+  function groupHasSelection(s){ var g=s.querySelector('[data-group]'); return g && g.querySelectorAll('input:checked').length>0; }
+
+  /* interpolate first name into {First Name} slots */
+  function syncName(){
+    var n = val('first_name');
+    document.querySelectorAll('.name-slot').forEach(function(el){ el.textContent = n || 'there'; });
+  }
+
+  function next(){
+    var err = validate(idx);
+    if(err){ setErr(err); return; }
+    if(idx===0) syncName();
+    if(idx < TOTAL-1) show(idx+1);
+  }
+  function back(){ if(idx>0) show(idx-1); }
+
+  form.querySelectorAll('[data-next]').forEach(function(b){ b.addEventListener('click', next); });
+  form.querySelectorAll('[data-back]').forEach(function(b){ b.addEventListener('click', back); });
+
+  /* Enter advances on single-line text/select steps */
+  form.addEventListener('keydown', function(e){
+    if(e.key==='Enter' && e.target.tagName!=='TEXTAREA'){
+      e.preventDefault();
+      if(steps[idx].dataset.step==='10'){ form.requestSubmit ? form.requestSubmit(document.getElementById('submitBtn')) : submit(); }
+      else next();
+    }
+  });
+
+  /* ---- collect + submit ---- */
+  function collectGroup(group){
+    var vals=[];
+    group.querySelectorAll('input:checked').forEach(function(ci){
+      if(ci.value==='Other'){ var oi=ci.closest('.opt').querySelector('.other-in'); vals.push(oi && oi.value.trim() ? 'Other: '+oi.value.trim() : 'Other'); }
+      else vals.push(ci.value);
+    });
+    return vals.join(', ');
+  }
+  function payload(){
+    var name = val('first_name');
+    return {
+      first_name: name,
+      email: val('email'),
+      website: val('website'),
+      industry: val('industry'),
+      ai_tools: collectGroup(form.querySelector('[data-group="ai_tools"]')),
+      help_with: collectGroup(form.querySelector('[data-group="help_with"]')),
+      timeline: collectGroup(form.querySelector('[data-group="timeline"]')),
+      budget: collectGroup(form.querySelector('[data-group="budget"]')),
+      business_details: val('business_details'),
+      country: val('country'),
+      _subject: 'New AI Assessment — ' + (name || 'Unknown') + ' (' + (val('industry')||'—') + ')'
+    };
+  }
+
+  function submit(){
+    var err = validate(idx);
+    if(err){ setErr(err); return; }
+    var btn = document.getElementById('submitBtn');
+    btn.disabled = true; btn.textContent = 'Sending…';
+    fetch(FORMSPREE_ENDPOINT, {
+      method:'POST',
+      headers:{ 'Accept':'application/json', 'Content-Type':'application/json' },
+      body: JSON.stringify(payload())
+    }).then(function(res){
+      if(res.ok){
+        syncName();
+        steps.forEach(function(s){ s.classList.remove('active'); });
+        doneStep.classList.add('active');
+        fill.style.width='100%';
+        counter.textContent='Done';
+        window.scrollTo({top:0, behavior: reduce ? 'auto' : 'smooth'});
+      } else {
+        btn.disabled=false; btn.innerHTML='Submit Assessment <span class="arrow">→</span>';
+        setErr('Something went wrong sending that. Email jeff@amplifybrands.io directly and we’ll sort it.');
+      }
+    }).catch(function(){
+      btn.disabled=false; btn.innerHTML='Submit Assessment <span class="arrow">→</span>';
+      setErr('Network hiccup — try again, or email jeff@amplifybrands.io directly.');
+    });
+  }
+  form.addEventListener('submit', function(e){ e.preventDefault(); submit(); });
+
+  show(0);
+})();
+</script>
+</body>
+</html>
