@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revenue Leak Assessment™ for Brokerages — Amplify Brands</title>
+<meta name="description" content="A 3-minute diagnostic that quantifies where leads, commissions, and agent hours are leaking from your brokerage — and what to fix first.">
+<link rel="canonical" href="https://amplifybrands.io/brokerage-assessment">
+
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#FFFFFF">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===================================================================
+   AMPLIFY BRANDS — REVENUE LEAK ASSESSMENT  (interactive)
+   Shares the design language of /assessment.
+   =================================================================== */
+:root{
+  --bg:#FFFFFF;
+  --ink:#0B0B0B; --ink-2:#52525B; --ink-3:#A1A1AA;
+  --line:#E4E4E7; --line-strong:#D4D4D8;
+  --box:#F4F4F5; --box-hover:#ECECEE;
+  --lime:#A3FF12; --lime-600:#8FE000; --lime-ink:#3F6B00;
+  --lime-soft:rgba(163,255,18,.16); --lime-glow:rgba(163,255,18,.45);
+  --violet:#6B5BFF;
+  --loss:#D92D20; --loss-soft:rgba(217,45,32,.08);
+  --font-display:'Space Grotesk',ui-sans-serif,system-ui,sans-serif;
+  --font-body:'Inter',ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --fs-display:clamp(2.6rem,6.4vw,4.4rem);
+  --fs-h1:clamp(1.9rem,4.6vw,2.9rem); --fs-h2:clamp(1.45rem,3.4vw,2rem); --fs-h3:1.35rem; --fs-h4:1.18rem;
+  --fs-body-lg:1.12rem; --fs-body:1rem; --fs-sm:.875rem; --fs-eyebrow:.72rem;
+  --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:24px; --r-pill:999px;
+  --s2:.5rem;--s3:.75rem;--s4:1rem;--s5:1.5rem;--s6:2rem;--s7:3rem;--s8:4rem;
+  --container:1080px; --section-y:clamp(3.5rem,7vw,6rem);
+  --dur-fast:120ms; --dur-base:220ms; --dur-slow:420ms;
+  --ease-snap:cubic-bezier(.2,.7,.2,1); --ease-out:cubic-bezier(.16,1,.3,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:78px;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:var(--fs-body);line-height:1.65;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden;min-height:100vh;display:flex;flex-direction:column}
+::selection{background:var(--lime);color:var(--ink)}
+h1,h2,h3,h4,.display{font-family:var(--font-display);font-weight:700;line-height:1.08;letter-spacing:-.02em}
+a{color:inherit;text-decoration:none}
+.accent{color:var(--lime-ink)}
+.muted{color:var(--ink-2)}
+.wrap{max-width:var(--container);margin:0 auto;padding:0 22px}
+
+/* ---- reveal on scroll ---- */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity var(--dur-slow) var(--ease-out),transform var(--dur-slow) var(--ease-out)}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}*{animation:none!important}html{scroll-behavior:auto}}
+
+/* ---- top bar ---- */
+.bar{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.bar-inner{max-width:var(--container);margin:0 auto;padding:14px 22px;display:flex;align-items:center;gap:14px}
+.logo{display:flex;align-items:center;gap:9px;font-family:var(--font-display);font-weight:700;font-size:1.05rem;letter-spacing:-.02em;color:var(--ink)}
+.logo .logo-mark{height:24px;width:auto;display:block;flex-shrink:0;color:var(--ink);filter:drop-shadow(0 0 8px var(--lime-glow))}
+.logo .eyebrow{font-family:var(--font-body);font-weight:600;font-size:var(--fs-eyebrow);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);border-left:1px solid var(--line-strong);padding-left:12px;margin-left:4px}
+@media(max-width:560px){.logo .eyebrow{display:none}}
+.bar .nav-cta{margin-left:auto}
+
+/* ---- buttons ---- */
+.btn{font-family:var(--font-body);font-weight:600;font-size:var(--fs-body);border:none;cursor:pointer;display:inline-flex;align-items:center;gap:9px;padding:15px 28px;border-radius:var(--r-md);transition:transform var(--dur-fast) var(--ease-snap),box-shadow var(--dur-base),background var(--dur-base),color var(--dur-base);line-height:1}
+.btn:active{transform:translateY(1px) scale(.985)}
+.btn-primary{background:var(--lime);color:var(--ink)}
+.btn-primary:hover{box-shadow:0 0 0 1px var(--lime-600),0 10px 30px var(--lime-soft);background:var(--lime-600)}
+.btn-ghost{background:transparent;color:var(--ink-2);border:1.5px solid var(--line-strong)}
+.btn-ghost:hover{color:var(--ink);border-color:var(--ink)}
+.btn .arrow{transition:transform var(--dur-base) var(--ease-snap)}
+.btn-primary:hover .arrow{transform:translateX(3px)}
+.btn-sm{padding:9px 16px;font-size:var(--fs-sm)}
+.btn-lg{padding:17px 32px;font-size:var(--fs-body-lg)}
+.btn-xl{padding:21px 40px;font-size:var(--fs-body-lg);font-weight:700}
+
+/* ---- shared section scaffold ---- */
+section{padding:var(--section-y) 0}
+.eyebrow-pill{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:var(--fs-eyebrow);letter-spacing:.16em;text-transform:uppercase;color:var(--lime-ink);background:var(--lime-soft);padding:7px 13px;border-radius:var(--r-pill);margin-bottom:18px}
+.kicker{font-family:var(--font-body);font-weight:600;font-size:var(--fs-eyebrow);letter-spacing:.16em;text-transform:uppercase;color:var(--lime-ink)}
+.sec-head{max-width:62ch;margin-bottom:var(--s7)}
+.sec-head.center{margin-inline:auto;text-align:center}
+.sec-head h2{font-size:var(--fs-h2);margin:var(--s3) 0 var(--s4)}
+.sec-head p{color:var(--ink-2);font-size:var(--fs-body-lg)}
+.band{background:var(--box);border-block:1px solid var(--line)}
+
+/* ---- hero ---- */
+.hero{position:relative;overflow:hidden;padding:clamp(3rem,7vw,5.5rem) 0 clamp(2.5rem,5vw,4rem)}
+.hero::after{content:"";position:absolute;inset:0;opacity:.6;pointer-events:none;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:60px 60px;mask-image:radial-gradient(70% 60% at 50% 0%,#000,transparent 72%);-webkit-mask-image:radial-gradient(70% 60% at 50% 0%,#000,transparent 72%)}
+.hero .wrap{position:relative;max-width:780px}
+.hero h1{font-size:var(--fs-display);margin-bottom:var(--s5);letter-spacing:-.03em}
+.hero h1 .leak{color:var(--lime-ink)}
+.hero .lede{font-size:var(--fs-body-lg);color:var(--ink-2);max-width:60ch;margin-bottom:var(--s5)}
+.hero .lede b{color:var(--ink);font-weight:600}
+.hero-cta{display:flex;gap:var(--s5);flex-wrap:wrap;align-items:center;margin-top:var(--s6)}
+.price-tag{display:inline-flex;flex-direction:column;line-height:1.1}
+.price-tag .amt{font-family:var(--font-display);font-weight:700;font-size:1.5rem;color:var(--ink)}
+.price-tag .note{font-size:var(--fs-sm);color:var(--ink-3)}
+.meta-chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:var(--s5)}
+.meta-chip{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:var(--r-pill);padding:7px 14px;font-size:var(--fs-sm);color:var(--ink-2);font-weight:500}
+.meta-chip .dot{width:6px;height:6px;border-radius:50%;background:var(--lime-600)}
+
+/* ---- contrarian truth callout ---- */
+.truth{border-left:3px solid var(--lime-600);background:var(--lime-soft);padding:18px 24px;border-radius:0 var(--r-md) var(--r-md) 0;margin-top:var(--s6)}
+.truth .small{font-size:var(--fs-sm);color:var(--ink-2);margin-bottom:6px}
+.truth .big{font-family:var(--font-display);font-weight:700;font-size:var(--fs-h3);letter-spacing:-.02em}
+.truth .big b{color:var(--lime-ink)}
+
+/* ---- narrative / beats ---- */
+.col-narrow{max-width:680px;margin:0 auto}
+.col-narrow p{font-size:var(--fs-body-lg);color:var(--ink-2);margin-bottom:var(--s5)}
+.col-narrow p .ink{color:var(--ink);font-weight:600}
+.beats{display:grid;gap:var(--s2);margin:var(--s6) 0}
+.beats span{font-family:var(--font-display);font-weight:600;font-size:var(--fs-h4);letter-spacing:-.01em;color:var(--ink-2)}
+.beats span.hit{color:var(--ink)}
+.tally{font-family:var(--font-display);font-weight:700;font-size:clamp(1.5rem,3.6vw,2.2rem);text-align:center;margin:var(--s7) auto 0;max-width:24ch;line-height:1.2}
+.tally .big{color:var(--lime-ink)}
+
+/* ---- check lists ---- */
+.checks{list-style:none;display:grid;gap:13px;max-width:640px}
+.checks li{position:relative;padding-left:34px;font-size:var(--fs-body-lg);font-weight:500}
+.checks li::before{content:"✓";position:absolute;left:0;top:0;display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--lime);color:var(--ink);font-size:13px;font-weight:700}
+.caveat{margin-top:var(--s6);color:var(--ink-2);font-size:var(--fs-body);max-width:60ch}
+.caveat b{color:var(--ink)}
+
+/* ---- deliverable cards ---- */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--s4)}
+.card{background:#fff;border:1.5px solid var(--line);border-radius:var(--r-lg);padding:26px;transition:transform var(--dur-base) var(--ease-snap),border-color var(--dur-base),box-shadow var(--dur-base)}
+.card:hover{transform:translateY(-4px);border-color:var(--line-strong);box-shadow:0 18px 40px -24px rgba(0,0,0,.25)}
+.card .ic{width:44px;height:44px;border-radius:var(--r-md);background:var(--lime-soft);display:flex;align-items:center;justify-content:center;color:var(--lime-ink);font-size:20px;margin-bottom:16px}
+.card h3{font-size:var(--fs-h4);margin-bottom:9px}
+.card p{color:var(--ink-2);font-size:var(--fs-body)}
+
+/* ---- why fail: technology vs economics ---- */
+.versus{display:grid;grid-template-columns:1fr 1fr;gap:var(--s4)}
+@media(max-width:680px){.versus{grid-template-columns:1fr}}
+.vs-card{border:1.5px solid var(--line);border-radius:var(--r-lg);padding:28px;background:#fff}
+.vs-card .tag{font-size:var(--fs-sm);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:12px}
+.vs-card.them{background:var(--loss-soft);border-color:rgba(217,45,32,.2)}
+.vs-card.them .tag{color:var(--loss)}
+.vs-card.us{background:var(--lime-soft);border-color:var(--lime-600)}
+.vs-card.us .tag{color:var(--lime-ink)}
+.vs-card .ask{font-family:var(--font-display);font-weight:700;font-size:var(--fs-h3);letter-spacing:-.02em;line-height:1.15}
+.fail-close{text-align:center;font-family:var(--font-display);font-weight:700;font-size:var(--fs-h3);letter-spacing:-.02em;margin-top:var(--s7)}
+.fail-close .sub{display:block;font-family:var(--font-body);font-weight:400;font-size:var(--fs-body);color:var(--ink-2);margin-top:var(--s3)}
+
+/* ---- guarantee ---- */
+.guarantee{border:1.5px solid var(--lime-600);background:var(--lime-soft);border-radius:var(--r-xl);padding:clamp(28px,5vw,48px);max-width:760px;margin:0 auto;text-align:center}
+.guarantee h2{font-size:var(--fs-h2);margin-bottom:var(--s4)}
+.guarantee p{color:var(--ink-2);font-size:var(--fs-body-lg);margin-bottom:var(--s5)}
+.guarantee .or{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:14px;margin:var(--s5) 0}
+.guarantee .or li{background:#fff;border:1.5px solid var(--line-strong);border-radius:var(--r-pill);padding:12px 22px;font-weight:600;font-family:var(--font-display)}
+.guarantee .or .word{border:none;background:none;color:var(--ink-3);font-family:var(--font-body);font-weight:600;text-transform:uppercase;letter-spacing:.12em;font-size:var(--fs-sm);padding:0}
+.guarantee .simple{font-family:var(--font-display);font-weight:700;font-size:var(--fs-h3)}
+
+/* ---- investment / price ---- */
+.invest{text-align:center}
+.price-card{border:1.5px solid var(--line-strong);border-radius:var(--r-xl);background:#fff;padding:clamp(30px,5vw,52px);max-width:560px;margin:0 auto;box-shadow:0 24px 60px -36px rgba(0,0,0,.3)}
+.price-card .name{font-family:var(--font-display);font-weight:700;font-size:var(--fs-h3);margin-bottom:var(--s4)}
+.price-card .price{font-family:var(--font-display);font-weight:700;font-size:clamp(3rem,8vw,4.5rem);line-height:1;color:var(--ink)}
+.price-card .incl{list-style:none;display:grid;gap:8px;margin:var(--s6) 0;color:var(--ink-2)}
+.price-card .incl li{font-size:var(--fs-body)}
+.price-card .incl li b{color:var(--ink);font-family:var(--font-display)}
+.price-card .clarity{color:var(--ink-2);font-size:var(--fs-body);margin:var(--s5) 0 var(--s6);max-width:42ch;margin-inline:auto}
+
+/* ---- final / contrarian close ---- */
+.final{position:relative;overflow:hidden;text-align:center}
+.final::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 80% at 50% 120%,var(--lime-soft),transparent);pointer-events:none}
+.final .wrap{position:relative}
+.final h2{font-size:var(--fs-h1);max-width:18ch;margin:var(--s4) auto var(--s5)}
+.final h2 .leak{color:var(--lime-ink)}
+.final p{color:var(--ink-2);font-size:var(--fs-body-lg);max-width:52ch;margin:0 auto var(--s5)}
+.final .beats{justify-items:center;text-align:center}
+
+/* ===================================================================
+   ASSESSMENT — INTERACTIVE FORM
+   =================================================================== */
+.assess-wrap{max-width:820px;margin:0 auto;padding:0 22px}
+.assess-intro{text-align:center;margin-bottom:var(--s7)}
+.assess-intro h2{font-size:var(--fs-h1);margin:var(--s3) 0 var(--s4)}
+.assess-intro p{color:var(--ink-2);font-size:var(--fs-body-lg);max-width:50ch;margin:0 auto}
+
+.q-form{display:grid;gap:var(--s5)}
+.q-section{background:#fff;border:1.5px solid var(--line);border-radius:var(--r-lg);padding:clamp(22px,3.5vw,32px);scroll-margin-top:100px;transition:border-color var(--dur-base),box-shadow var(--dur-base)}
+.q-section:hover{border-color:var(--line-strong)}
+.q-section.complete{border-color:var(--lime-600);box-shadow:0 0 0 1px var(--lime-600) inset}
+.q-section-head{display:flex;align-items:center;gap:14px;margin-bottom:var(--s5);padding-bottom:var(--s4);border-bottom:1px solid var(--line)}
+.q-num{flex-shrink:0;width:36px;height:36px;border-radius:var(--r-md);background:var(--box);color:var(--ink-2);font-family:var(--font-display);font-weight:700;font-size:1.05rem;display:flex;align-items:center;justify-content:center;transition:background var(--dur-base),color var(--dur-base)}
+.q-section.complete .q-num{background:var(--lime);color:var(--ink)}
+.q-section-head h3{font-size:var(--fs-h4);font-weight:700;letter-spacing:-.01em}
+.q-section-head .q-sub{display:block;margin-top:3px;font-family:var(--font-body);font-weight:400;font-size:var(--fs-sm);color:var(--ink-3);letter-spacing:0}
+
+.q-group{display:grid;gap:10px;margin-bottom:var(--s5)}
+.q-group:last-child{margin-bottom:0}
+.q-group label.q-label{font-weight:600;font-size:var(--fs-body);color:var(--ink);display:block}
+.q-group .q-hint{font-size:var(--fs-sm);color:var(--ink-3);line-height:1.5}
+
+/* numeric inputs */
+.num-wrap{position:relative;display:flex;align-items:center;background:var(--box);border:1.5px solid var(--line);border-radius:var(--r-md);transition:border-color var(--dur-base),background var(--dur-base)}
+.num-wrap:focus-within{border-color:var(--lime-600);background:#fff;box-shadow:0 0 0 3px var(--lime-soft)}
+.num-prefix{padding:0 0 0 18px;font-family:var(--font-display);font-weight:700;font-size:var(--fs-h4);color:var(--ink-3);user-select:none}
+.num-suffix{padding:0 18px 0 0;font-family:var(--font-body);font-weight:500;font-size:var(--fs-sm);color:var(--ink-3);user-select:none}
+.num-input{flex:1;padding:14px 18px;font-family:var(--font-display);font-weight:600;font-size:var(--fs-h4);background:transparent;border:none;color:var(--ink);outline:none;min-width:0;letter-spacing:-.01em}
+.num-input::placeholder{color:var(--ink-3);font-weight:500}
+.num-input::-webkit-outer-spin-button,.num-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.num-input[type=number]{-moz-appearance:textfield}
+
+/* radio cards */
+.radio-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.radio-card{position:relative;cursor:pointer;padding:14px 16px;border:1.5px solid var(--line);border-radius:var(--r-md);background:var(--box);font-weight:500;font-size:var(--fs-body);color:var(--ink-2);transition:transform var(--dur-fast) var(--ease-snap),background var(--dur-base),border-color var(--dur-base),color var(--dur-base);line-height:1.35;text-align:left;user-select:none;display:flex;align-items:flex-start;gap:10px}
+.radio-card:hover{border-color:var(--line-strong);background:var(--box-hover);color:var(--ink)}
+.radio-card input{position:absolute;opacity:0;pointer-events:none}
+.radio-card .rc-tick{flex-shrink:0;width:18px;height:18px;border:1.5px solid var(--line-strong);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-top:2px;transition:border-color var(--dur-base),background var(--dur-base)}
+.radio-card .rc-tick::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--ink);transform:scale(0);transition:transform var(--dur-base) var(--ease-snap)}
+.radio-card.checked{background:var(--lime-soft);border-color:var(--lime-600);color:var(--ink)}
+.radio-card.checked .rc-tick{border-color:var(--lime-ink);background:var(--lime)}
+.radio-card.checked .rc-tick::after{transform:scale(1);background:var(--lime-ink)}
+
+/* calculate cta */
+.calc-cta-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:var(--s7);text-align:center}
+.calc-cta-wrap .helper{color:var(--ink-3);font-size:var(--fs-sm)}
+.calc-err{color:var(--loss);font-size:var(--fs-sm);font-weight:500;display:none;background:var(--loss-soft);padding:10px 16px;border-radius:var(--r-md);border:1px solid rgba(217,45,32,.2)}
+.calc-err.show{display:block}
+
+/* ---- email modal ---- */
+.modal-overlay{position:fixed;inset:0;background:rgba(11,11,11,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:200;padding:20px;opacity:0;transition:opacity var(--dur-base)}
+.modal-overlay.open{display:flex;opacity:1}
+.modal{background:#fff;border-radius:var(--r-xl);padding:clamp(28px,5vw,44px);max-width:480px;width:100%;border:1.5px solid var(--line);box-shadow:0 30px 80px -20px rgba(0,0,0,.4);transform:scale(.96) translateY(8px);transition:transform var(--dur-slow) var(--ease-out)}
+.modal-overlay.open .modal{transform:none}
+.modal .badge{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:var(--fs-eyebrow);letter-spacing:.16em;text-transform:uppercase;color:var(--lime-ink);background:var(--lime-soft);padding:6px 12px;border-radius:var(--r-pill);margin-bottom:18px}
+.modal h3{font-size:var(--fs-h2);margin-bottom:12px;letter-spacing:-.02em}
+.modal h3 .leak{color:var(--lime-ink)}
+.modal p{color:var(--ink-2);font-size:var(--fs-body);margin-bottom:var(--s5)}
+.email-field{display:flex;flex-direction:column;gap:8px;margin-bottom:var(--s5)}
+.email-input{width:100%;padding:16px 18px;font-family:var(--font-body);font-size:var(--fs-body-lg);font-weight:500;border:1.5px solid var(--line-strong);border-radius:var(--r-md);background:var(--box);transition:border-color var(--dur-base),background var(--dur-base);color:var(--ink)}
+.email-input::placeholder{color:var(--ink-3)}
+.email-input:focus{outline:none;border-color:var(--lime-600);background:#fff;box-shadow:0 0 0 3px var(--lime-soft)}
+.email-err{color:var(--loss);font-size:var(--fs-sm);font-weight:500;display:none}
+.email-err.show{display:block}
+.modal-actions{display:flex;gap:10px;align-items:center}
+.modal-actions .btn{flex:1;justify-content:center}
+.modal .privacy{font-size:var(--fs-sm);color:var(--ink-3);margin-top:var(--s4);text-align:center;line-height:1.5}
+.modal .privacy a{text-decoration:underline;text-underline-offset:2px}
+
+/* ---- results ---- */
+.results-wrap{display:none}
+.results-wrap.shown{display:block}
+.results-anchor{scroll-margin-top:88px}
+.results-head{text-align:center;max-width:560px;margin:0 auto var(--s7)}
+.results-head .kicker{display:inline-block;margin-bottom:var(--s3)}
+.results-head h2{font-size:var(--fs-h1);margin-bottom:var(--s4)}
+.results-head p{color:var(--ink-2);font-size:var(--fs-body-lg)}
+.results-head .recalc{display:inline-block;margin-top:var(--s4);font-size:var(--fs-sm);color:var(--ink-3);text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-weight:500}
+.results-head .recalc:hover{color:var(--ink)}
+
+.leak-headline{position:relative;background:linear-gradient(180deg,#fff 0%,var(--lime-soft) 100%);border:1.5px solid var(--lime-600);border-radius:var(--r-xl);padding:clamp(32px,5vw,52px);text-align:center;margin-bottom:var(--s6);overflow:hidden}
+.leak-headline::before{content:"";position:absolute;inset:0;opacity:.5;pointer-events:none;background-image:linear-gradient(var(--lime-glow) 1px,transparent 1px),linear-gradient(90deg,var(--lime-glow) 1px,transparent 1px);background-size:40px 40px;mask-image:radial-gradient(50% 70% at 50% 50%,#000,transparent 75%);-webkit-mask-image:radial-gradient(50% 70% at 50% 50%,#000,transparent 75%)}
+.leak-headline > *{position:relative}
+.leak-headline .label{font-family:var(--font-body);font-weight:600;font-size:var(--fs-eyebrow);letter-spacing:.16em;text-transform:uppercase;color:var(--lime-ink);margin-bottom:18px}
+.leak-headline .number{font-family:var(--font-display);font-weight:700;font-size:clamp(3rem,9vw,5.2rem);letter-spacing:-.04em;line-height:1;color:var(--ink);margin-bottom:14px}
+.leak-headline .sub{font-size:var(--fs-body-lg);color:var(--ink-2);max-width:46ch;margin:0 auto}
+.leak-headline .sub b{color:var(--ink);font-weight:600}
+
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--s4);margin-bottom:var(--s7)}
+.stat{background:#fff;border:1.5px solid var(--line);border-radius:var(--r-lg);padding:24px}
+.stat .lbl{font-size:var(--fs-eyebrow);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin-bottom:10px}
+.stat .val{font-family:var(--font-display);font-weight:700;font-size:1.85rem;letter-spacing:-.02em;color:var(--ink);line-height:1.05}
+.stat .val .unit{font-size:1rem;color:var(--ink-3);font-weight:500;margin-left:4px}
+.stat .desc{font-size:var(--fs-sm);color:var(--ink-2);margin-top:6px}
+
+.opp-section{margin-bottom:var(--s7)}
+.opp-section h3{font-size:var(--fs-h3);margin-bottom:6px;letter-spacing:-.02em}
+.opp-section .opp-intro{color:var(--ink-2);font-size:var(--fs-body);margin-bottom:var(--s5);max-width:54ch}
+.opp-list{display:grid;gap:12px}
+.opp-card{display:grid;grid-template-columns:48px 1fr auto;gap:20px;align-items:center;padding:22px 24px;background:#fff;border:1.5px solid var(--line);border-radius:var(--r-lg);transition:border-color var(--dur-base),box-shadow var(--dur-base)}
+.opp-card:hover{border-color:var(--line-strong);box-shadow:0 14px 30px -20px rgba(0,0,0,.15)}
+.opp-rank{width:40px;height:40px;border-radius:50%;background:var(--lime);color:var(--ink);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;font-size:1.15rem}
+.opp-body h4{font-family:var(--font-display);font-weight:700;font-size:var(--fs-h4);letter-spacing:-.01em;margin-bottom:3px}
+.opp-body p{color:var(--ink-2);font-size:var(--fs-body);margin:0;line-height:1.5}
+.opp-value{font-family:var(--font-display);font-weight:700;font-size:1.3rem;color:var(--lime-ink);text-align:right;white-space:nowrap;letter-spacing:-.02em}
+.opp-value .unit{display:block;font-size:.7rem;color:var(--ink-3);font-weight:500;letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+@media(max-width:560px){.opp-card{grid-template-columns:40px 1fr;grid-template-rows:auto auto;gap:6px 16px}.opp-value{grid-column:2;text-align:left}}
+
+.peer-callout{background:var(--box);border:1.5px solid var(--line);border-radius:var(--r-lg);padding:24px;margin-bottom:var(--s7);display:flex;gap:18px;align-items:flex-start}
+.peer-callout .ic{flex-shrink:0;width:40px;height:40px;border-radius:var(--r-md);background:var(--lime-soft);color:var(--lime-ink);display:flex;align-items:center;justify-content:center;font-size:18px}
+.peer-callout .pb-body{flex:1}
+.peer-callout .pb-body .pb-lbl{font-size:var(--fs-eyebrow);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin-bottom:6px}
+.peer-callout .pb-body .pb-txt{font-size:var(--fs-body);color:var(--ink);line-height:1.6}
+.peer-callout .pb-body .pb-txt b{font-weight:700}
+
+.results-bridge{text-align:center;background:#fff;border:1.5px solid var(--line-strong);border-radius:var(--r-xl);padding:clamp(28px,4vw,40px);margin-bottom:var(--s4)}
+.results-bridge h3{font-size:var(--fs-h2);margin-bottom:var(--s4)}
+.results-bridge p{color:var(--ink-2);font-size:var(--fs-body-lg);max-width:48ch;margin:0 auto var(--s6)}
+
+footer{text-align:center;padding:30px 22px;color:var(--ink-3);font-size:var(--fs-sm);border-top:1px solid var(--line);margin-top:auto}
+</style>
+</head>
+<body>
+
+<!-- brand mark, reused via <use> -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="mark-a" viewBox="0 0 120 120">
+      <path d="M 4 110 L 52 8 L 68 8 L 116 110 L 96 110 L 60 30 L 24 110 Z" fill="currentColor"/>
+      <rect x="42" y="84" width="8" height="14" fill="#A3FF12"/>
+      <rect x="56" y="78" width="8" height="20" fill="#A3FF12"/>
+      <rect x="70" y="70" width="8" height="28" fill="#A3FF12"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ================= TOP BAR ================= -->
+<div class="bar">
+  <div class="bar-inner">
+    <a class="logo" href="/"><svg class="logo-mark" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><use href="#mark-a"/></svg>Amplify<span class="eyebrow">Revenue Leak Diagnostic</span></a>
+    <a class="btn btn-primary btn-sm nav-cta" href="#assessment">Start the Diagnostic</a>
+  </div>
+</div>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow-pill reveal">● Free Diagnostic · 3 minutes</span>
+    <h1 class="reveal">Find Your Brokerage's<br>Revenue <span class="leak">Leaks.</span></h1>
+    <p class="lede reveal">A short, honest diagnostic for broker-owners running 5–50 agents. Eleven questions. No fluff. You'll see exactly where leads, commissions, and agent hours are leaking — and which one is costing you the most.</p>
+    <div class="truth reveal">
+      <div class="small">The shift most owners never hear:</div>
+      <div class="big">Your brokerage doesn't have an AI problem. <b>It has a leakage problem.</b></div>
+    </div>
+    <div class="hero-cta reveal">
+      <a class="btn btn-primary btn-lg" href="#assessment">Start the Diagnostic <span class="arrow">→</span></a>
+      <span class="meta-chips">
+        <span class="meta-chip"><span class="dot"></span>No call required</span>
+        <span class="meta-chip"><span class="dot"></span>Results in 3 minutes</span>
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= THE REAL PROBLEM ================= -->
+<section class="band">
+  <div class="wrap">
+    <div class="col-narrow">
+      <span class="kicker reveal">The real problem</span>
+      <p class="reveal" style="margin-top:var(--s3)">Most brokerages aren't struggling because they lack leads. They're struggling because they <span class="ink">can't fully capitalize on the leads they already have.</span></p>
+      <div class="beats reveal">
+        <span>A lead sits untouched for 30 minutes.</span>
+        <span>An agent forgets a follow-up.</span>
+        <span>Data gets entered twice.</span>
+        <span>A coordinator spends hours chasing information that already exists somewhere else.</span>
+      </div>
+      <p class="reveal">Individually, these don't feel expensive.</p>
+      <div class="tally reveal">Collectively, they're costing brokerages <span class="big">tens or hundreds of thousands per year.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ASSESSMENT FORM ================= -->
+<section id="assessment">
+  <div class="assess-wrap">
+    <div class="assess-intro reveal">
+      <span class="kicker">The diagnostic</span>
+      <h2>Eleven questions. Real numbers.</h2>
+      <p>Answer honestly — best guesses are fine. We'll quantify the leak in dollars, hours, and ranked opportunities.</p>
+    </div>
+
+    <form class="q-form" id="qForm" novalidate>
+
+      <!-- SECTION 1 — LEAD ENGINE -->
+      <div class="q-section reveal" data-section="lead">
+        <div class="q-section-head">
+          <div class="q-num">1</div>
+          <h3>Lead engine<span class="q-sub">Volume, speed, deal economics</span></h3>
+        </div>
+
+        <div class="q-group">
+          <label class="q-label" for="q-monthlyLeads">How many leads does your brokerage receive per month?</label>
+          <div class="q-hint">Inbound inquiries, referrals, lead-gen platforms, sphere — total across all sources.</div>
+          <div class="num-wrap">
+            <input class="num-input" type="number" id="q-monthlyLeads" inputmode="numeric" min="0" step="1" placeholder="50">
+            <span class="num-suffix">leads / mo</span>
+          </div>
+        </div>
+
+        <div class="q-group">
+          <label class="q-label">What's your typical lead response time?</label>
+          <div class="q-hint">Honest average across the team — not your best agent on a good day.</div>
+          <div class="radio-grid" data-q="responseTime">
+            <label class="radio-card"><input type="radio" name="responseTime" value="under5"><span class="rc-tick"></span><span>Under 5 minutes</span></label>
+            <label class="radio-card"><input type="radio" name="responseTime" value="under60"><span class="rc-tick"></span><span>5–60 minutes</span></label>
+            <label class="radio-card"><input type="radio" name="responseTime" value="under24"><span class="rc-tick"></span><span>1–24 hours</span></label>
+            <label class="radio-card"><input type="radio" name="responseTime" value="over24"><span class="rc-tick"></span><span>Over 24 hours</span></label>
+          </div>
+        </div>
+
+        <div class="q-group">
+          <label class="q-label" for="q-avgCommission">Average commission per closed transaction (brokerage share, after agent splits)</label>
+          <div class="q-hint">What the brokerage nets per deal, not the agent's gross.</div>
+          <div class="num-wrap">
+            <span class="num-prefix">$</span>
+            <input class="num-input" type="number" id="q-avgCommission" inputmode="numeric" min="0" step="100" placeholder="2,500">
+            <span class="num-suffix">per deal</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2 — FOLLOW-UP -->
+      <div class="q-section reveal" data-section="followup">
+        <div class="q-section-head">
+          <div class="q-num">2</div>
+          <h3>Follow-up depth<span class="q-sub">How leads are nurtured after first contact</span></h3>
+        </div>
+
+        <div class="q-group">
+          <label class="q-label">What % of leads receive 5+ follow-up touches before being marked dead?</label>
+          <div class="q-hint">Industry benchmark: 80% of closes require 5+ follow-ups. Most agents stop at 2.</div>
+          <div class="radio-grid" data-q="followupDepth">
+            <label class="radio-card"><input type="radio" name="followupDepth" value="under25"><span class="rc-tick"></span><span>Less than 25%</span></label>
+            <label class="radio-card"><input type="radio" name="followupDepth" value="25to50"><span class="rc-tick"></span><span>25–50%</span></label>
+            <label class="radio-card"><input type="radio" name="followupDepth" value="50to75"><span class="rc-tick"></span><span>50–75%</span></label>
+            <label class="radio-card"><input type="radio" name="followupDepth" value="over75"><span class="rc-tick"></span><span>More than 75%</span></label>
+          </div>
+        </div>
+
+        <div class="q-group">
+          <label class="q-label">Who owns lead follow-up?</label>
+          <div class="radio-grid" data-q="followupOwner">
+            <label class="radio-card"><input type="radio" name="followupOwner" value="isa"><span class="rc-tick"></span><span>Dedicated ISA or coordinator</span></label>
+            <label class="radio-card"><input type="radio" name="followupOwner" value="agents"><span class="rc-tick"></span><span>Each agent independently</span></label>
+            <label class="radio-card"><input type="radio" name="followupOwner" value="split"><span class="rc-tick"></span><span>Split — some leads, some agents</span></label>
+            <label class="radio-card"><input type="radio" name="followupOwner" value="nobody"><span class="rc-tick"></span><span>Nobody consistently</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3 — TOOL STACK -->
+      <div class="q-section reveal" data-section="tools">
+        <div class="q-section-head">
+          <div class="q-num">3</div>
+          <h3>Tool stack fragmentation<span class="q-sub">Software, handoffs, manual work</span></h3>
+        </div>
+
+        <div class="q-group">
+          <label class="q-label">How many separate software tools do your agents touch in a typical week?</label>
+          <div class="q-hint">CRM, MLS, transaction management, email, marketing, comms, e-sign, dialer, etc.</div>
+          <div class="radio-grid" data-q="toolCount">
+            <label class="radio-card"><input type="radio" name="toolCount" value="few"><span class="rc-tick"></span><span>1–4 tools</span></label>
+            <label class="radio-card"><input type="radio" name="toolCount" value="some"><span class="rc-tick"></span><span>5–9 tools</span></label>
+            <label class="radio-card"><input type="radio" name="toolCount" value="many"><span class="rc-tick"></span><span>10–15 tools</span></label>
+            <label class="radio-card"><input type="radio" name="toolCount" value="tons"><span class="rc-tick"></span><span>More than 15</span></label>
+          </div>
+        </div>
+
+        <div class="q-group">
+          <label class="q-label">How many manual handoffs between systems does each agent do per week?</label>
+          <div class="q-hint">Copying data between CRM and MLS, re-keying contact info, manual transaction updates, etc.</div>
+          <div class="radio-grid" data-q="handoffs">
+            <label class="radio-card"><input type="radio" name="handoffs" value="under5"><span class="rc-tick"></span><span>Less than 5</span></label>
+            <label class="radio-card"><input type="radio" name="handoffs" value="5to15"><span class="rc-tick"></span><span>5–15</span></label>
+            <label class="radio-card"><input type="radio" name="handoffs" value="15to30"><span class="rc-tick"></span><span>15–30</span></label>
+            <label class="radio-card"><input type="radio" name="handoffs" value="over30"><span class="rc-tick"></span><span>More than 30</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 4 — TRANSACTION LOAD -->
+      <div class="q-section reveal" data-section="transactions">
+        <div class="q-section-head">
+          <div class="q-num">4</div>
+          <h3>Transaction coordination<span class="q-sub">Deals in flight and deadline integrity</span></h3>
+        </div>
+
+        <div class="q-group">
+          <label class="q-label" for="q-transactionsInFlight">Average number of transactions in flight at any given time</label>
+          <div class="q-hint">Under contract through close — across the entire brokerage.</div>
+          <div class="num-wrap">
+            <input class="num-input" type="number" id="q-transactionsInFlight" inputmode="numeric" min="0" step="1" placeholder="20">
+            <span class="num-suffix">deals</span>
+          </div>
+        </div>
+
+        <div class="q-group">
+          <label class="q-label">How often do transaction deadlines get missed or scramble at the wire?</label>
+          <div class="q-hint">Inspection windows, financing dates, contingency removals, repair deadlines.</div>
+          <div class="radio-grid" data-q="missedDeadlines">
+            <label class="radio-card"><input type="radio" name="missedDeadlines" value="never"><span class="rc-tick"></span><span>Almost never</span></label>
+            <label class="radio-card"><input type="radio" name="missedDeadlines" value="monthly"><span class="rc-tick"></span><span>A few times a month</span></label>
+            <label class="radio-card"><input type="radio" name="missedDeadlines" value="weekly"><span class="rc-tick"></span><span>Most weeks</span></label>
+            <label class="radio-card"><input type="radio" name="missedDeadlines" value="multiple"><span class="rc-tick"></span><span>Multiple times per week</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 5 — BROKER-OWNER LOAD -->
+      <div class="q-section reveal" data-section="broker">
+        <div class="q-section-head">
+          <div class="q-num">5</div>
+          <h3>Broker-owner load<span class="q-sub">Your own time and the recruiting tradeoff</span></h3>
+        </div>
+
+        <div class="q-group">
+          <label class="q-label" for="q-agentCount">How many agents are at your brokerage?</label>
+          <div class="num-wrap">
+            <input class="num-input" type="number" id="q-agentCount" inputmode="numeric" min="1" step="1" placeholder="15">
+            <span class="num-suffix">agents</span>
+          </div>
+        </div>
+
+        <div class="q-group">
+          <label class="q-label">How many hours per week do you (the broker) spend on day-to-day operations vs. recruiting and growth?</label>
+          <div class="q-hint">Ops = solving agent problems, fixing transactions, managing systems. Not strategic work.</div>
+          <div class="radio-grid" data-q="brokerOps">
+            <label class="radio-card"><input type="radio" name="brokerOps" value="under10"><span class="rc-tick"></span><span>Less than 10 hrs</span></label>
+            <label class="radio-card"><input type="radio" name="brokerOps" value="10to20"><span class="rc-tick"></span><span>10–20 hrs</span></label>
+            <label class="radio-card"><input type="radio" name="brokerOps" value="20to30"><span class="rc-tick"></span><span>20–30 hrs</span></label>
+            <label class="radio-card"><input type="radio" name="brokerOps" value="over30"><span class="rc-tick"></span><span>More than 30 hrs</span></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="calc-cta-wrap">
+        <div class="calc-err" id="calcErr">Please complete every question before calculating.</div>
+        <button type="button" class="btn btn-primary btn-xl" id="calcBtn">Calculate My Revenue Leak <span class="arrow">→</span></button>
+        <div class="helper">Takes 2 seconds. Email required to see the full report.</div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- ================= RESULTS (hidden until calculated) ================= -->
+<div class="results-wrap" id="results">
+  <div class="results-anchor" id="resultsAnchor"></div>
+
+  <section class="band">
+    <div class="wrap">
+
+      <div class="results-head reveal">
+        <span class="kicker">Your diagnostic</span>
+        <h2 id="r-title">Here's what's leaking.</h2>
+        <p id="r-subtitle">Based on your inputs, here's a conservative read of where your brokerage is losing money and time each year.</p>
+        <a class="recalc" href="#assessment">Recalculate with different numbers</a>
+      </div>
+
+      <div class="leak-headline reveal">
+        <div class="label">Estimated annual revenue leak</div>
+        <div class="number" id="r-leakTotal">$0</div>
+        <div class="sub" id="r-leakSub"><b>The combined cost</b> of slow follow-up, manual handoffs, missed deadlines, and broker time stuck in ops.</div>
+      </div>
+
+      <div class="stat-row reveal">
+        <div class="stat">
+          <div class="lbl">Weekly hours lost</div>
+          <div class="val"><span id="r-hours">0</span><span class="unit">hrs / wk</span></div>
+          <div class="desc">Brokerage-wide time consumed by manual work that shouldn't require human effort.</div>
+        </div>
+        <div class="stat">
+          <div class="lbl">Deals at risk / yr</div>
+          <div class="val" id="r-deals">0</div>
+          <div class="desc">Transactions you'd likely close with industry-best response, follow-up, and coordination.</div>
+        </div>
+        <div class="stat">
+          <div class="lbl">Broker hours / wk recoverable</div>
+          <div class="val"><span id="r-brokerHrs">0</span><span class="unit">hrs / wk</span></div>
+          <div class="desc">Time currently stuck in ops that could shift to recruiting, growth, or strategic work.</div>
+        </div>
+      </div>
+
+      <div class="opp-section reveal">
+        <h3>Where to fix first</h3>
+        <p class="opp-intro">Ranked by estimated annual impact. These are the levers most brokerages your size can move within 60 days.</p>
+        <div class="opp-list" id="r-opps"></div>
+      </div>
+
+      <div class="peer-callout reveal">
+        <div class="ic">⌖</div>
+        <div class="pb-body">
+          <div class="pb-lbl">Peer benchmark</div>
+          <div class="pb-txt" id="r-peer">Calculating peer benchmark…</div>
+        </div>
+      </div>
+
+      <div class="results-bridge reveal">
+        <h3>This is the surface.</h3>
+        <p>The diagnostic above is directional. The full Revenue Leak Assessment™ — a 90-minute session with our team — quantifies these leaks across your actual systems, gives you a written report, and a 90-day execution roadmap.</p>
+        <div class="hero-cta" style="justify-content:center;margin-top:var(--s5)">
+          <a class="btn btn-primary btn-lg js-reserve" href="/assessment">Reserve the Full Assessment — $999 <span class="arrow">→</span></a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<!-- ================= WHAT YOU RECEIVE ================= -->
+<section>
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="kicker">Inside the full assessment</span>
+      <h2>Five deliverables. Zero fluff.</h2>
+    </div>
+    <div class="cards">
+      <div class="card reveal">
+        <div class="ic">◷</div>
+        <h3>Revenue Leak Report</h3>
+        <p>A breakdown of where money is being lost across your operation, in dollars.</p>
+      </div>
+      <div class="card reveal">
+        <div class="ic">◴</div>
+        <h3>Agent Capacity Analysis</h3>
+        <p>How many productive hours are being consumed by manual work, and how to free them.</p>
+      </div>
+      <div class="card reveal">
+        <div class="ic">★</div>
+        <h3>Opportunity Scorecard</h3>
+        <p>The highest-impact improvements, ranked by ROI.</p>
+      </div>
+      <div class="card reveal">
+        <div class="ic">→</div>
+        <h3>90-Day Execution Roadmap</h3>
+        <p>What to fix first. What to ignore. What can wait.</p>
+      </div>
+      <div class="card reveal">
+        <div class="ic">$</div>
+        <h3>ROI Forecast</h3>
+        <p>The potential revenue recovery and time savings available inside your brokerage.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WHY MOST AI PROJECTS FAIL ================= -->
+<section class="band">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="kicker">Why most AI projects fail</span>
+      <h2>They start with technology. We start with economics.</h2>
+    </div>
+    <div class="versus">
+      <div class="vs-card them reveal">
+        <div class="tag">Everyone else asks</div>
+        <div class="ask">"What AI should we implement?"</div>
+      </div>
+      <div class="vs-card us reveal">
+        <div class="tag">We ask</div>
+        <div class="ask">"What is this inefficiency costing you?"</div>
+      </div>
+    </div>
+    <div class="fail-close reveal">
+      Only after we understand the cost do we recommend a solution.
+      <span class="sub">Technology is the tool. Profit is the goal.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WHO THIS IS FOR ================= -->
+<section>
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker">Who this is for</span>
+      <h2>Built for growth-focused broker owners.</h2>
+    </div>
+    <ul class="checks reveal">
+      <li>Independent brokerages with 5–50 agents</li>
+      <li>Broker-owners involved in day-to-day operations</li>
+      <li>Teams investing in lead generation</li>
+      <li>Organizations running 5–15 disconnected systems</li>
+    </ul>
+    <p class="caveat reveal">If you're already running a highly optimized operation with <b>documented workflows and measurable KPIs</b>, this assessment may not be necessary. Most brokerages aren't there yet.</p>
+  </div>
+</section>
+
+<!-- ================= GUARANTEE ================= -->
+<section class="band">
+  <div class="wrap">
+    <div class="guarantee reveal">
+      <span class="kicker">The guarantee</span>
+      <h2 style="margin-top:var(--s3)">If we can't find it, you don't pay.</h2>
+      <p>If we cannot identify at least one of the following, we'll refund your assessment fee:</p>
+      <ul class="or">
+        <li>10 hours/week of recoverable capacity</li>
+        <li class="word">or</li>
+        <li>one meaningful revenue leak</li>
+      </ul>
+      <div class="simple">Simple.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= INVESTMENT ================= -->
+<section class="invest">
+  <div class="wrap">
+    <span class="kicker reveal">The investment</span>
+    <div class="price-card reveal" style="margin-top:var(--s5)">
+      <div class="name">Revenue Leak Assessment™</div>
+      <div class="price">$999</div>
+      <ul class="incl">
+        <li><b>One</b> session</li>
+        <li><b>One</b> report</li>
+        <li><b>One</b> roadmap</li>
+      </ul>
+      <p class="clarity">A clear understanding of where your brokerage is losing money — and exactly what to do about it.</p>
+      <a class="btn btn-primary btn-lg js-reserve" href="/assessment">Reserve My Assessment <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTRARIAN CLOSE ================= -->
+<section class="final band">
+  <div class="wrap">
+    <span class="kicker reveal">The contrarian close</span>
+    <h2 class="reveal">Most Brokerages Don't Need More Leads. They Need To Stop <span class="leak">Losing</span> The Ones They Already Have.</h2>
+    <p class="reveal">The fastest path to growth isn't always adding more. Sometimes it's fixing what's already broken.</p>
+    <div class="beats reveal">
+      <span class="hit">Find the leaks first.</span>
+      <span>Then decide what to build.</span>
+    </div>
+    <div class="hero-cta reveal" style="justify-content:center;margin-top:var(--s7)">
+      <a class="btn btn-primary btn-lg js-reserve" href="/assessment">Reserve Your Revenue Leak Assessment <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+<footer>© 2026 Amplify Brands · Find the leaks first. Then decide what to build.</footer>
+
+<!-- ================= EMAIL GATE MODAL ================= -->
+<div class="modal-overlay" id="emailModal" role="dialog" aria-modal="true" aria-labelledby="emailModalTitle">
+  <div class="modal">
+    <span class="badge">● Your report is ready</span>
+    <h3 id="emailModalTitle">See your <span class="leak">leak number</span>.</h3>
+    <p>Drop your email to unlock the full diagnostic — your annual leak in dollars, hours recoverable per week, and your ranked top-three opportunities.</p>
+    <div class="email-field">
+      <input class="email-input" type="email" id="emailInput" placeholder="you@brokerage.com" autocomplete="email" required>
+      <div class="email-err" id="emailErr">Please enter a valid email address.</div>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-ghost" id="emailCancel">Cancel</button>
+      <button type="button" class="btn btn-primary" id="emailSubmit">Show My Results <span class="arrow">→</span></button>
+    </div>
+    <p class="privacy">We'll be in touch with the next steps. No spam, no list-rental, unsubscribe with one click.</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  /* ▼▼▼  CONFIGURATION  ▼▼▼ ----------------------------------------------- */
+  var BOOKING_URL    = 'https://buy.polar.sh/polar_cl_oWX2pOJ3EmKyNX7xh1Y0Li7G7Op71DdWGlJZm4YFKNw';
+  var EMAIL_ENDPOINT = 'https://formspree.io/f/xzdwjbbo';   /* Formspree (delivers to jeff@amplifybrands.io) — swap to a dedicated "Brokerage Assessment" form when ready */
+  /* ▲▲▲ ------------------------------------------------------------------- */
+
+  /* ===== Calculation constants ===== */
+  var PEAK_CLOSE_RATE      = 0.05;   // industry-best close rate from inbound leads (5%)
+  var MIN_PER_HANDOFF      = 4;      // minutes per manual handoff
+  var WEEKS_WORKED         = 50;     // working weeks per year
+  var AGENT_LOADED_RATE    = 50;     // $/hr loaded cost for agent time
+  var BROKER_STRATEGIC_RATE= 125;    // $/hr opportunity cost on broker strategic time
+  var BROKER_BASELINE_OPS  = 5;      // hrs/wk of unavoidable ops baseline
+  var DEAL_RISK_PER_MISS   = 0.05;   // probability per missed deadline a deal slips
+  var MISS_PER_MONTH       = { never:0, monthly:2, weekly:4, multiple:12 };
+  var SPEED_FACTOR         = { under5:1.0, under60:0.55, under24:0.30, over24:0.15 };
+  var FU_DEPTH_FACTOR      = { under25:0.40, '25to50':0.60, '50to75':0.80, over75:1.0 };
+  var FU_OWNER_FACTOR      = { isa:1.0, agents:0.85, split:0.80, nobody:0.55 };
+  var HANDOFFS_MID         = { under5:2, '5to15':10, '15to30':22, over30:35 };
+  var TOOL_FRICTION_BONUS  = { few:1.0, some:1.1, many:1.3, tons:1.5 };
+  var BROKER_OPS_MID       = { under10:7.5, '10to20':15, '20to30':25, over30:35 };
+
+  /* ===== State ===== */
+  var state = {
+    monthlyLeads:null, responseTime:null, avgCommission:null,
+    followupDepth:null, followupOwner:null,
+    toolCount:null, handoffs:null,
+    transactionsInFlight:null, missedDeadlines:null,
+    agentCount:null, brokerOps:null
+  };
+  var leakResult = null;
+  var userEmail = '';
+
+  /* ===== Helpers ===== */
+  function fmt$(n){
+    if(!isFinite(n)||n<0) n = 0;
+    n = Math.round(n);
+    return '$' + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  }
+  function fmtNum(n){
+    if(!isFinite(n)||n<0) n = 0;
+    return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  }
+  function num(id){
+    var v = parseFloat(document.getElementById(id).value);
+    return isFinite(v) && v >= 0 ? v : null;
+  }
+
+  /* ===== Radio card binding ===== */
+  document.querySelectorAll('.radio-card').forEach(function(card){
+    card.addEventListener('click', function(){
+      var input = card.querySelector('input');
+      if(!input) return;
+      var name = input.name;
+      document.querySelectorAll('input[name="'+name+'"]').forEach(function(i){
+        i.checked = false;
+        i.closest('.radio-card').classList.remove('checked');
+      });
+      input.checked = true;
+      card.classList.add('checked');
+      state[name] = input.value;
+      checkSectionComplete();
+    });
+    card.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); card.click(); }
+    });
+    card.setAttribute('tabindex','0');
+  });
+
+  /* ===== Numeric input binding ===== */
+  ['q-monthlyLeads','q-avgCommission','q-transactionsInFlight','q-agentCount'].forEach(function(id){
+    var el = document.getElementById(id);
+    el.addEventListener('input', function(){
+      var map = { 'q-monthlyLeads':'monthlyLeads', 'q-avgCommission':'avgCommission', 'q-transactionsInFlight':'transactionsInFlight', 'q-agentCount':'agentCount' };
+      state[map[id]] = num(id);
+      checkSectionComplete();
+    });
+  });
+
+  /* ===== Section completion indicator ===== */
+  function checkSectionComplete(){
+    var map = {
+      lead: ['monthlyLeads','responseTime','avgCommission'],
+      followup: ['followupDepth','followupOwner'],
+      tools: ['toolCount','handoffs'],
+      transactions: ['transactionsInFlight','missedDeadlines'],
+      broker: ['agentCount','brokerOps']
+    };
+    document.querySelectorAll('.q-section').forEach(function(sec){
+      var key = sec.getAttribute('data-section');
+      var keys = map[key]; if(!keys) return;
+      var done = keys.every(function(k){ return state[k] !== null && state[k] !== ''; });
+      sec.classList.toggle('complete', done);
+    });
+  }
+
+  /* ===== Validation ===== */
+  function validate(){
+    var required = ['monthlyLeads','responseTime','avgCommission','followupDepth','followupOwner','toolCount','handoffs','transactionsInFlight','missedDeadlines','agentCount','brokerOps'];
+    for(var i=0;i<required.length;i++){
+      if(state[required[i]] === null || state[required[i]] === '') return false;
+    }
+    if(state.monthlyLeads <= 0 || state.avgCommission <= 0 || state.agentCount <= 0) return false;
+    return true;
+  }
+
+  /* ===== Calculation ===== */
+  function calculate(){
+    var s = state;
+
+    // 1) Lead-flow leak — speed × follow-up depth × follow-up owner
+    var speedF = SPEED_FACTOR[s.responseTime];
+    var depthF = FU_DEPTH_FACTOR[s.followupDepth];
+    var ownerF = FU_OWNER_FACTOR[s.followupOwner];
+    var fuF    = (depthF + ownerF) / 2;
+    var effF   = speedF * fuF;                                 // 0..1, 1 = peak performance
+    var annualLeads = s.monthlyLeads * 12;
+    var lostDeals   = annualLeads * PEAK_CLOSE_RATE * (1 - effF);
+    var dealFlowLeak = lostDeals * s.avgCommission;
+
+    // 2) Manual-work leak — handoffs × tool friction × agents
+    var handoffsWk  = HANDOFFS_MID[s.handoffs];
+    var friction    = TOOL_FRICTION_BONUS[s.toolCount];
+    var hrsPerAgent = (handoffsWk * MIN_PER_HANDOFF / 60) * friction;
+    var weeklyHrsLost = hrsPerAgent * s.agentCount;
+    var manualLeak    = weeklyHrsLost * WEEKS_WORKED * AGENT_LOADED_RATE;
+
+    // 3) Transaction-risk leak — missed deadlines × deal probability
+    var missesYr      = (MISS_PER_MONTH[s.missedDeadlines] || 0) * 12;
+    var dealsAtRisk   = missesYr * DEAL_RISK_PER_MISS;
+    var txRiskLeak    = dealsAtRisk * s.avgCommission;
+
+    // 4) Broker time leak — strategic time stuck in ops
+    var brokerOpsHrs  = BROKER_OPS_MID[s.brokerOps];
+    var brokerRecovHr = Math.max(0, brokerOpsHrs - BROKER_BASELINE_OPS);
+    var brokerLeak    = brokerRecovHr * WEEKS_WORKED * BROKER_STRATEGIC_RATE;
+
+    var total = dealFlowLeak + manualLeak + txRiskLeak + brokerLeak;
+
+    var opportunities = [
+      {
+        key:'dealflow', value:dealFlowLeak,
+        title:'Tighten lead response & follow-up',
+        desc:'Fast initial contact plus structured 5+ touch nurture is where most brokerages your size leave the biggest dollars on the table.'
+      },
+      {
+        key:'manual', value:manualLeak,
+        title:'Eliminate manual handoffs between tools',
+        desc:'Cutting cross-system data entry recovers agent hours every week without changing your stack.'
+      },
+      {
+        key:'txrisk', value:txRiskLeak,
+        title:'Stabilise transaction deadlines',
+        desc:'Centralised deadline tracking with proactive alerts prevents deals from slipping at the wire.'
+      },
+      {
+        key:'broker', value:brokerLeak,
+        title:'Shift broker time from ops to growth',
+        desc:'Every broker hour pulled out of operations is an hour available for recruiting, training, and strategy.'
+      }
+    ].sort(function(a,b){ return b.value - a.value; });
+
+    var topOpps = opportunities.slice(0, 3).filter(function(o){ return o.value > 0; });
+
+    return {
+      total: total,
+      weeklyHrsLost: weeklyHrsLost,
+      brokerRecoverableHrs: brokerRecovHr,
+      lostDeals: lostDeals,
+      dealsAtRisk: dealsAtRisk,
+      opportunities: topOpps,
+      allOpps: opportunities,
+      effF: effF,
+      annualLeads: annualLeads
+    };
+  }
+
+  /* ===== Render results ===== */
+  function renderResults(r){
+    document.getElementById('r-leakTotal').textContent  = fmt$(r.total);
+    document.getElementById('r-hours').textContent      = fmtNum(r.weeklyHrsLost);
+    document.getElementById('r-deals').textContent      = fmtNum(Math.max(r.lostDeals, r.dealsAtRisk));
+    document.getElementById('r-brokerHrs').textContent  = fmtNum(r.brokerRecoverableHrs);
+
+    var oppHtml = r.opportunities.map(function(o,i){
+      return ''
+        + '<div class="opp-card reveal in">'
+        + '  <div class="opp-rank">'+(i+1)+'</div>'
+        + '  <div class="opp-body"><h4>'+o.title+'</h4><p>'+o.desc+'</p></div>'
+        + '  <div class="opp-value">'+fmt$(o.value)+'<span class="unit">per year</span></div>'
+        + '</div>';
+    }).join('');
+    document.getElementById('r-opps').innerHTML = oppHtml || '<p class="muted">No material leaks detected — your brokerage appears highly optimised already.</p>';
+
+    var peerTxt = buildPeer(r, state);
+    document.getElementById('r-peer').innerHTML = peerTxt;
+  }
+
+  function buildPeer(r, s){
+    // Lightweight benchmark line based on tier of inputs.
+    var bracket = s.agentCount < 10 ? '5–10' : s.agentCount < 25 ? '10–25' : s.agentCount < 50 ? '25–50' : '50+';
+    var tier = r.total > 250000 ? 'top quartile of leak exposure' : r.total > 100000 ? 'above average' : r.total > 40000 ? 'roughly average' : 'lower than typical';
+    var line = 'Brokerages with <b>'+bracket+' agents</b> typically run an annual leak in the $50K–$300K range. Your estimate of <b>'+fmt$(r.total)+'</b> places you in the <b>'+tier+'</b> for your size class.';
+    return line;
+  }
+
+  /* ===== Update reserve links with email ===== */
+  function updateReserveLinks(){
+    var url = BOOKING_URL;
+    if(userEmail){
+      var sep = url.indexOf('?') === -1 ? '?' : '&';
+      url = url + sep + 'customer_email=' + encodeURIComponent(userEmail);
+    }
+    document.querySelectorAll('.js-reserve').forEach(function(a){
+      a.setAttribute('href', url);
+      a.setAttribute('target', '_blank');
+      a.setAttribute('rel', 'noopener');
+    });
+  }
+
+  /* ===== Calculate button handler ===== */
+  document.getElementById('calcBtn').addEventListener('click', function(){
+    var err = document.getElementById('calcErr');
+    if(!validate()){
+      err.classList.add('show');
+      // scroll first incomplete section into view
+      var first = document.querySelector('.q-section:not(.complete)');
+      if(first) first.scrollIntoView({ behavior:'smooth', block:'start' });
+      return;
+    }
+    err.classList.remove('show');
+    leakResult = calculate();
+    openEmailModal();
+  });
+
+  /* ===== Email modal ===== */
+  var modal = document.getElementById('emailModal');
+  var emailInput = document.getElementById('emailInput');
+  var emailErr = document.getElementById('emailErr');
+
+  function openEmailModal(){
+    modal.classList.add('open');
+    setTimeout(function(){ emailInput.focus(); }, 50);
+    document.body.style.overflow = 'hidden';
+  }
+  function closeEmailModal(){
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('emailCancel').addEventListener('click', closeEmailModal);
+  modal.addEventListener('click', function(e){ if(e.target === modal) closeEmailModal(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && modal.classList.contains('open')) closeEmailModal(); });
+
+  function validEmail(e){
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((e||'').trim());
+  }
+  emailInput.addEventListener('input', function(){ emailErr.classList.remove('show'); });
+  emailInput.addEventListener('keydown', function(e){ if(e.key === 'Enter') document.getElementById('emailSubmit').click(); });
+
+  document.getElementById('emailSubmit').addEventListener('click', function(){
+    var v = emailInput.value.trim();
+    if(!validEmail(v)){
+      emailErr.classList.add('show');
+      emailInput.focus();
+      return;
+    }
+    userEmail = v;
+    // Optional capture
+    if(EMAIL_ENDPOINT){
+      try{
+        fetch(EMAIL_ENDPOINT, {
+          method:'POST',
+          headers:{ 'Content-Type':'application/json' },
+          body: JSON.stringify({ email:userEmail, payload:state, result:leakResult, ts:new Date().toISOString(), _subject:'New Brokerage Revenue Leak Assessment — ' + userEmail })
+        }).catch(function(){});
+      }catch(e){}
+    }
+    updateReserveLinks();
+    renderResults(leakResult);
+    document.getElementById('results').classList.add('shown');
+    closeEmailModal();
+    // Reveal results elements + smooth scroll
+    setTimeout(function(){
+      document.querySelectorAll('#results .reveal').forEach(function(el){ el.classList.add('in'); });
+      document.getElementById('resultsAnchor').scrollIntoView({ behavior:'smooth', block:'start' });
+    }, 50);
+  });
+
+  /* ===== Initial wire ===== */
+  updateReserveLinks();
+
+  /* ===== Reveal on scroll ===== */
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var els = document.querySelectorAll('.reveal');
+  if (reduce || !('IntersectionObserver' in window)) {
+    els.forEach(function(el){ el.classList.add('in'); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    els.forEach(function(el){ io.observe(el); });
+  }
+})();
+</script>
+</body>
+</html>
