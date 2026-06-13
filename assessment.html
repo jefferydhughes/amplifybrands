@@ -120,6 +120,8 @@ select.field{appearance:none;-webkit-appearance:none;cursor:pointer;background-i
 
 footer{text-align:center;padding:26px 22px;color:var(--ink-3);font-size:var(--fs-sm);border-top:1px solid var(--line)}
 </style>
+<!-- Vercel Web Analytics -->
+<script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 
@@ -489,6 +491,7 @@ footer{text-align:center;padding:26px 22px;color:var(--ink-3);font-size:var(--fs
       budget: collectGroup(form.querySelector('[data-group="budget"]')),
       business_details: val('business_details'),
       country: val('country'),
+      _source: 'assessment.html (' + location.host + location.pathname + ')',
       _subject: 'New AI Assessment — ' + (name || 'Unknown') + ' (' + (val('industry')||'—') + ')'
     };
   }

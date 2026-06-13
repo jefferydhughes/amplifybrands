@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Tools Assessment — Operator Worksheet — Amplify Brands</title>
+<meta name="description" content="Operator worksheet for running a live brokerage AI Leakage Audit. Capture processes, quantify time leakage, map to Audit / Optimize / Automate, export a client report.">
+<meta name="robots" content="noindex">
+
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#FFFFFF">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===================================================================
+   AMPLIFY BRANDS — AI TOOLS ASSESSMENT (operator worksheet)
+   Shares the design language of /brokerage-assessment + /assessment.
+   =================================================================== */
+:root{
+  --bg:#FFFFFF;
+  --ink:#0B0B0B; --ink-2:#52525B; --ink-3:#A1A1AA;
+  --line:#E4E4E7; --line-strong:#D4D4D8;
+  --box:#F4F4F5; --box-hover:#ECECEE;
+  --lime:#A3FF12; --lime-600:#8FE000; --lime-ink:#3F6B00;
+  --lime-soft:rgba(163,255,18,.16); --lime-glow:rgba(163,255,18,.45);
+  --violet:#6B5BFF;
+  --loss:#D92D20; --loss-soft:rgba(217,45,32,.08);
+  --font-display:'Space Grotesk',ui-sans-serif,system-ui,sans-serif;
+  --font-body:'Inter',ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --fs-h1:clamp(1.7rem,4vw,2.5rem); --fs-h2:clamp(1.35rem,3vw,1.8rem); --fs-h3:1.3rem; --fs-h4:1.12rem;
+  --fs-body-lg:1.1rem; --fs-body:1rem; --fs-sm:.875rem; --fs-eyebrow:.72rem;
+  --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:24px; --r-pill:999px;
+  --s2:.5rem;--s3:.75rem;--s4:1rem;--s5:1.5rem;--s6:2rem;--s7:3rem;
+  --container:980px;
+  --dur-fast:120ms; --dur-base:220ms;
+  --ease-snap:cubic-bezier(.2,.7,.2,1); --ease-out:cubic-bezier(.16,1,.3,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:var(--fs-body);line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;min-height:100vh}
+::selection{background:var(--lime);color:var(--ink)}
+h1,h2,h3,h4,.display{font-family:var(--font-display);font-weight:700;line-height:1.1;letter-spacing:-.02em}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:var(--container);margin:0 auto;padding:0 22px}
+.muted{color:var(--ink-2)}
+.accent{color:var(--lime-ink)}
+
+/* ---- top bar ---- */
+.bar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.bar-inner{max-width:var(--container);margin:0 auto;padding:12px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:9px;font-family:var(--font-display);font-weight:700;font-size:1.05rem;letter-spacing:-.02em;color:var(--ink)}
+.logo .logo-mark{height:24px;width:auto;display:block;flex-shrink:0;color:var(--ink);filter:drop-shadow(0 0 8px var(--lime-glow))}
+.logo .eyebrow{font-family:var(--font-body);font-weight:600;font-size:var(--fs-eyebrow);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);border-left:1px solid var(--line-strong);padding-left:12px;margin-left:4px}
+@media(max-width:620px){.logo .eyebrow{display:none}}
+.bar-actions{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.save-state{font-size:var(--fs-sm);color:var(--ink-3);font-weight:500;display:inline-flex;align-items:center;gap:6px}
+.save-state .dot{width:7px;height:7px;border-radius:50%;background:var(--lime-600)}
+
+/* ---- buttons ---- */
+.btn{font-family:var(--font-body);font-weight:600;font-size:var(--fs-body);border:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:var(--r-md);transition:transform var(--dur-fast) var(--ease-snap),box-shadow var(--dur-base),background var(--dur-base),color var(--dur-base);line-height:1}
+.btn:active{transform:translateY(1px) scale(.985)}
+.btn-primary{background:var(--lime);color:var(--ink)}
+.btn-primary:hover{box-shadow:0 0 0 1px var(--lime-600),0 10px 30px var(--lime-soft);background:var(--lime-600)}
+.btn-ghost{background:transparent;color:var(--ink-2);border:1.5px solid var(--line-strong)}
+.btn-ghost:hover{color:var(--ink);border-color:var(--ink)}
+.btn-sm{padding:9px 15px;font-size:var(--fs-sm)}
+.btn-danger{background:transparent;color:var(--loss);border:1.5px solid rgba(217,45,32,.3)}
+.btn-danger:hover{background:var(--loss-soft);border-color:var(--loss)}
+
+/* ---- sticky tally ---- */
+.tally{position:sticky;top:53px;z-index:40;background:#0B0B0B;color:#fff;border-bottom:1px solid #1f1f1f}
+.tally-inner{max-width:var(--container);margin:0 auto;padding:12px 22px;display:flex;gap:26px;align-items:center;flex-wrap:wrap}
+.tally .t-item{display:flex;flex-direction:column;line-height:1.1}
+.tally .t-lbl{font-size:var(--fs-eyebrow);letter-spacing:.14em;text-transform:uppercase;color:#9a9a9a;font-weight:600;margin-bottom:4px}
+.tally .t-val{font-family:var(--font-display);font-weight:700;font-size:1.5rem;letter-spacing:-.02em}
+.tally .t-val.lime{color:var(--lime)}
+.tally .t-hint{margin-left:auto;font-size:var(--fs-sm);color:#7a7a7a;max-width:30ch;text-align:right}
+@media(max-width:680px){.tally .t-hint{display:none}.tally-inner{gap:18px}}
+
+/* ---- layout ---- */
+main{padding:var(--s7) 0 5rem}
+.intro{margin-bottom:var(--s6)}
+.intro .kick{font-weight:600;font-size:var(--fs-eyebrow);letter-spacing:.16em;text-transform:uppercase;color:var(--lime-ink)}
+.intro h1{font-size:var(--fs-h1);margin:var(--s3) 0 var(--s3)}
+.intro p{color:var(--ink-2);font-size:var(--fs-body-lg);max-width:64ch}
+
+.block{background:#fff;border:1.5px solid var(--line);border-radius:var(--r-lg);padding:clamp(20px,3vw,30px);margin-bottom:var(--s5)}
+.block-head{display:flex;align-items:center;gap:13px;margin-bottom:var(--s5);padding-bottom:var(--s4);border-bottom:1px solid var(--line)}
+.block-num{flex-shrink:0;width:34px;height:34px;border-radius:var(--r-md);background:var(--box);color:var(--ink-2);font-family:var(--font-display);font-weight:700;display:flex;align-items:center;justify-content:center}
+.block-head h2{font-size:var(--fs-h3)}
+.block-head .bh-sub{display:block;margin-top:2px;font-family:var(--font-body);font-weight:400;font-size:var(--fs-sm);color:var(--ink-3);letter-spacing:0}
+
+/* ---- fields ---- */
+.grid{display:grid;gap:var(--s4)}
+.grid.two{grid-template-columns:1fr 1fr}
+.grid.three{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:680px){.grid.two,.grid.three{grid-template-columns:1fr}}
+.f{display:flex;flex-direction:column;gap:6px}
+.f label{font-weight:600;font-size:var(--fs-sm);color:var(--ink)}
+.f .hint{font-size:var(--fs-sm);color:var(--ink-3);font-weight:400}
+.field{width:100%;background:var(--box);border:1.5px solid var(--line);color:var(--ink);font-family:var(--font-body);font-size:var(--fs-body);padding:11px 14px;border-radius:var(--r-md);transition:border-color var(--dur-base),box-shadow var(--dur-base),background var(--dur-base)}
+.field::placeholder{color:var(--ink-3)}
+.field:focus{outline:none;border-color:var(--lime-600);background:#fff;box-shadow:0 0 0 3px var(--lime-soft)}
+textarea.field{min-height:64px;resize:vertical;line-height:1.5}
+select.field{appearance:none;-webkit-appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%2352525B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:40px}
+
+/* ---- process card ---- */
+.proc{border:1.5px solid var(--line);border-radius:var(--r-lg);padding:20px;margin-bottom:var(--s4);background:#fff;transition:border-color var(--dur-base),box-shadow var(--dur-base)}
+.proc.flag{border-color:var(--lime-600);box-shadow:0 0 0 1px var(--lime-600) inset}
+.proc-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+.proc-title{flex:1;font-family:var(--font-display);font-weight:700;font-size:var(--fs-h4);background:transparent;border:none;color:var(--ink);padding:4px 0;letter-spacing:-.01em;width:100%}
+.proc-title:focus{outline:none;box-shadow:0 2px 0 var(--lime-600)}
+.proc-remove{flex-shrink:0;background:transparent;border:none;color:var(--ink-3);cursor:pointer;font-size:1.3rem;line-height:1;padding:2px 6px;border-radius:6px;transition:color var(--dur-base),background var(--dur-base)}
+.proc-remove:hover{color:var(--loss);background:var(--loss-soft)}
+.proc-metrics{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:14px}
+@media(max-width:680px){.proc-metrics{grid-template-columns:1fr 1fr}}
+.metric label{font-size:var(--fs-eyebrow);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:600;display:block;margin-bottom:5px}
+.metric .field{font-family:var(--font-display);font-weight:600}
+.aoa{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+@media(max-width:760px){.aoa{grid-template-columns:1fr}}
+.aoa .f label{font-size:var(--fs-sm)}
+.aoa .a-tag{display:inline-block;font-size:var(--fs-eyebrow);font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:var(--r-pill);margin-right:6px}
+.a-tag.aud{background:var(--loss-soft);color:var(--loss)}
+.a-tag.opt{background:rgba(107,91,255,.1);color:var(--violet)}
+.a-tag.aut{background:var(--lime-soft);color:var(--lime-ink)}
+.proc-foot{display:flex;align-items:center;gap:16px;margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.chk{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-weight:600;font-size:var(--fs-sm);user-select:none}
+.chk input{width:18px;height:18px;accent-color:var(--lime-600);cursor:pointer}
+.proc-foot .when{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:var(--fs-sm);color:var(--ink-2)}
+.add-row{display:flex;justify-content:center;margin-top:var(--s4)}
+
+/* ---- offer block ---- */
+.offer{background:linear-gradient(180deg,#fff,var(--lime-soft));border:1.5px solid var(--lime-600)}
+.pitch{background:var(--box);border:1px solid var(--line);border-radius:var(--r-md);padding:16px 18px;margin-top:var(--s4);font-size:var(--fs-body);color:var(--ink-2);line-height:1.6}
+.pitch b{color:var(--ink)}
+.pitch .num{font-family:var(--font-display);font-weight:700;color:var(--lime-ink)}
+
+/* ---- footer note ---- */
+.note{color:var(--ink-3);font-size:var(--fs-sm);max-width:70ch;margin-top:var(--s5);line-height:1.6}
+
+/* ===================================================================
+   CLIENT REPORT (export view)
+   =================================================================== */
+#report{display:none}
+body.report-mode #app{display:none}
+body.report-mode #report{display:block}
+.rpt{max-width:880px;margin:0 auto;padding:40px 28px 80px}
+.rpt-bar{display:flex;align-items:center;gap:10px;margin-bottom:28px;padding-bottom:18px;border-bottom:2px solid var(--ink)}
+.rpt-bar .logo-mark{height:30px;color:var(--ink)}
+.rpt-bar .rb-name{font-family:var(--font-display);font-weight:700;font-size:1.2rem}
+.rpt-bar .rb-meta{margin-left:auto;text-align:right;font-size:var(--fs-sm);color:var(--ink-2)}
+.rpt h1{font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:10px}
+.rpt .rpt-sub{color:var(--ink-2);font-size:var(--fs-body-lg);margin-bottom:28px;max-width:60ch}
+.rpt-headline{border:2px solid var(--lime-600);background:var(--lime-soft);border-radius:var(--r-xl);padding:30px;text-align:center;margin-bottom:26px}
+.rpt-headline .lbl{font-size:var(--fs-eyebrow);letter-spacing:.16em;text-transform:uppercase;color:var(--lime-ink);font-weight:700;margin-bottom:10px}
+.rpt-headline .big{font-family:var(--font-display);font-weight:700;font-size:clamp(2.6rem,8vw,4.4rem);letter-spacing:-.03em;line-height:1}
+.rpt-headline .sm{color:var(--ink-2);margin-top:8px}
+.rpt-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:30px}
+@media(max-width:620px){.rpt-stats{grid-template-columns:1fr}}
+.rpt-stat{border:1.5px solid var(--line);border-radius:var(--r-lg);padding:18px}
+.rpt-stat .v{font-family:var(--font-display);font-weight:700;font-size:1.7rem;letter-spacing:-.02em}
+.rpt-stat .l{font-size:var(--fs-sm);color:var(--ink-2);margin-top:4px}
+.rpt h2{font-size:var(--fs-h2);margin:30px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+table.rpt-table{width:100%;border-collapse:collapse;font-size:var(--fs-sm)}
+table.rpt-table th{text-align:left;font-family:var(--font-body);font-weight:700;color:var(--ink-2);font-size:var(--fs-eyebrow);letter-spacing:.08em;text-transform:uppercase;padding:9px 10px;border-bottom:2px solid var(--line-strong)}
+table.rpt-table td{padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+table.rpt-table td.r{text-align:right;font-family:var(--font-display);font-weight:600;white-space:nowrap}
+table.rpt-table tr.tot td{font-family:var(--font-display);font-weight:700;border-top:2px solid var(--ink);border-bottom:none}
+.rpt-opp{border:1.5px solid var(--line);border-left:4px solid var(--lime-600);border-radius:var(--r-md);padding:16px 18px;margin-bottom:12px}
+.rpt-opp h4{font-size:var(--fs-h4);margin-bottom:4px}
+.rpt-opp .meta{font-size:var(--fs-sm);color:var(--ink-2)}
+.rpt-opp .meta b{color:var(--lime-ink)}
+.rpt-next{border:2px solid var(--ink);border-radius:var(--r-xl);padding:26px;margin-top:30px;background:#fff}
+.rpt-next h3{font-size:var(--fs-h3);margin-bottom:10px}
+.rpt-next p{color:var(--ink-2);margin-bottom:8px}
+.rpt-next .price{font-family:var(--font-display);font-weight:700;font-size:1.4rem;color:var(--ink)}
+.rpt-foot{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);font-size:var(--fs-sm);color:var(--ink-3);text-align:center}
+.rpt-actions{position:sticky;bottom:0;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:14px 22px;display:flex;gap:10px;justify-content:center;z-index:10}
+
+@media print{
+  .bar,.tally,.rpt-actions,.no-print{display:none!important}
+  body{background:#fff}
+  body.report-mode #report{display:block}
+  .rpt{padding:0;max-width:100%}
+  .rpt-opp,.rpt-next,.rpt-headline,.rpt-stat,table.rpt-table tr{break-inside:avoid}
+  @page{margin:14mm}
+}
+</style>
+<!-- Vercel Web Analytics -->
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="mark-a" viewBox="0 0 120 120">
+      <path d="M 4 110 L 52 8 L 68 8 L 116 110 L 96 110 L 60 30 L 24 110 Z" fill="currentColor"/>
+      <rect x="42" y="84" width="8" height="14" fill="#A3FF12"/>
+      <rect x="56" y="78" width="8" height="20" fill="#A3FF12"/>
+      <rect x="70" y="70" width="8" height="28" fill="#A3FF12"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ===== APP (operator view) ===== -->
+<div id="app">
+
+  <div class="bar">
+    <div class="bar-inner">
+      <span class="logo"><svg class="logo-mark" viewBox="0 0 120 120" aria-hidden="true"><use href="#mark-a"/></svg>Amplify<span class="eyebrow">AI Tools Assessment</span></span>
+      <div class="bar-actions">
+        <span class="save-state" id="saveState"><span class="dot"></span>Saved locally</span>
+        <button class="btn btn-ghost btn-sm" id="btnJson" title="Download a JSON backup of this client">Export data</button>
+        <button class="btn btn-danger btn-sm" id="btnReset" title="Clear everything and start a new client">New client</button>
+        <button class="btn btn-primary btn-sm" id="btnReport">Generate report →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="tally">
+    <div class="tally-inner">
+      <div class="t-item"><span class="t-lbl">Manual hours / week</span><span class="t-val" id="tHours">0</span></div>
+      <div class="t-item"><span class="t-lbl">Annualized cost</span><span class="t-val lime" id="tCost">$0</span></div>
+      <div class="t-item"><span class="t-lbl">Automations found</span><span class="t-val" id="tAuto">0</span></div>
+      <div class="t-hint">Live tally. Numbers are what you and the client agree on — best guesses are fine.</div>
+    </div>
+  </div>
+
+  <main>
+    <div class="wrap">
+
+      <div class="intro">
+        <span class="kick">Operator worksheet · run this live on the call</span>
+        <h1>AI Tools Assessment</h1>
+        <p>Walk the broker through each process. Capture how it's done today, the hours it eats, and the pain. For each one, fill the <b>Audit / Optimize / Automate</b> columns and flag what you'll build first. The number at the top is your pitch — when they see it, the close is just <i>"want me to build these for you?"</i></p>
+      </div>
+
+      <!-- 1. CLIENT SNAPSHOT -->
+      <section class="block">
+        <div class="block-head"><div class="block-num">1</div><h2>Brokerage snapshot<span class="bh-sub">Pull most of this from the intake form before the call</span></h2></div>
+        <div class="grid two">
+          <div class="f"><label>Brokerage</label><input class="field" data-client="brokerage" placeholder="Cascade Realty Group"></div>
+          <div class="f"><label>Broker / owner</label><input class="field" data-client="owner" placeholder="Dana Whitfield"></div>
+        </div>
+        <div class="grid three" style="margin-top:var(--s4)">
+          <div class="f"><label>Date</label><input class="field" type="date" data-client="date"></div>
+          <div class="f"><label># Agents</label><input class="field" type="number" min="0" data-client="agents" placeholder="18"></div>
+          <div class="f"><label>Monthly leads</label><input class="field" type="number" min="0" data-client="leads" placeholder="60"></div>
+        </div>
+        <div class="grid two" style="margin-top:var(--s4)">
+          <div class="f"><label>CRM &amp; core tools</label><input class="field" data-client="tools" placeholder="Follow Up Boss, Dotloop, Mailchimp, Canva…"></div>
+          <div class="f"><label>Lead sources</label><input class="field" data-client="sources" placeholder="Zillow, referrals, open houses, FB ads"></div>
+        </div>
+        <div class="f" style="margin-top:var(--s4)"><label>Their #1 goal / biggest frustration <span class="hint">(in their words — this is your anchor for the whole call)</span></label><textarea class="field" data-client="goal" placeholder="“We pay for leads we never call back. I’m drowning in transaction admin and can’t recruit.”"></textarea></div>
+      </section>
+
+      <!-- 2. PROCESS INVENTORY -->
+      <section class="block">
+        <div class="block-head"><div class="block-num">2</div><h2>Process inventory &amp; leakage<span class="bh-sub">One card per workflow. Probe how it really works, not the ideal.</span></h2></div>
+        <p class="muted" style="font-size:var(--fs-sm);margin:-6px 0 18px"><span class="a-tag aud">Audit</span> how it's done today &nbsp; <span class="a-tag opt">Optimize</span> cut steps &nbsp; <span class="a-tag aut">Automate</span> the Claude skill / scheduled task you'll ship</p>
+        <div id="procList"></div>
+        <div class="add-row"><button class="btn btn-ghost" id="btnAdd">+ Add a process</button></div>
+      </section>
+
+      <!-- 3. WHAT WE BUILD FIRST + OFFER -->
+      <section class="block offer">
+        <div class="block-head"><div class="block-num">3</div><h2>What we build first &amp; the offer<span class="bh-sub">Ship one automation on day one so they feel progress immediately</span></h2></div>
+        <div class="grid two">
+          <div class="f"><label>First automation to ship (day one)</label><input class="field" data-offer="firstBuild" placeholder="Speed-to-lead auto-responder + second-touch sequence"></div>
+          <div class="f"><label>AI Concierge — monthly price</label><input class="field" data-offer="price" placeholder="$1,500 / mo"></div>
+        </div>
+        <div class="f" style="margin-top:var(--s4)"><label>Scope / cadence notes</label><textarea class="field" data-offer="notes" placeholder="Two 45-min done-with-you calls/mo · Voxer async (reply within 12 business hrs) · shared Notion hub with everything we build"></textarea></div>
+        <div class="pitch" id="pitchLine">Fill the worksheet and the live pitch line appears here.</div>
+      </section>
+
+      <p class="note">This worksheet saves to this browser automatically — close the tab and your notes are still here. It is operator-only (<code>noindex</code>); the client never sees it. Hit <b>Generate report</b> for the clean, client-facing version you hand over and print to PDF. Numbers are directional working estimates agreed with the client, not guarantees.</p>
+
+    </div>
+  </main>
+</div>
+
+<!-- ===== CLIENT REPORT (export view) ===== -->
+<div id="report">
+  <div class="rpt" id="rptBody"><!-- built by JS --></div>
+  <div class="rpt-actions no-print">
+    <button class="btn btn-ghost" id="btnEdit">← Back to worksheet</button>
+    <button class="btn btn-primary" id="btnPrint">Print / Save as PDF</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var STORE_KEY = 'amplify_ai_tools_assessment_v1';
+  var WEEKS = 50; // working weeks/yr
+
+  /* Seed brokerage processes. rate = $/hr loaded cost for whoever does it. */
+  var SEED = [
+    {name:'Lead intake & speed-to-lead', rate:50, today:'How fast does a new lead get a first AND second touch? Who responds? What happens after hours?'},
+    {name:'Lead follow-up & nurture', rate:50, today:'How many touches before a lead is dropped? Who owns the long nurture? Where do leads go cold?'},
+    {name:'CRM hygiene & data entry', rate:40, today:'Who keeps the CRM clean? Double entry between systems? Stages updated or guesswork?'},
+    {name:'Listing prep, descriptions & marketing', rate:50, today:'Hours per listing on descriptions, flyers, MLS entry, social. Who does it, blank page or template?'},
+    {name:'Social content & recaps', rate:45, today:'Posting cadence, who writes it, time per post, just-sold / recap workflow.'},
+    {name:'Transaction coordination & deadlines', rate:55, today:'Who tracks contingencies, inspection, financing dates? How often do things scramble at the wire?'},
+    {name:'Comps / CMA / pricing prep', rate:55, today:'Time to pull comps and build a CMA before a listing appt. Manual or templated?'},
+    {name:'Agent onboarding & recruiting admin', rate:60, today:'Steps to onboard a new agent, paperwork, setup. Recruiting follow-up cadence.'},
+    {name:'Reporting & pipeline review (broker)', rate:125, today:'How the broker builds pipeline/production reports. Manual pulls from where?'},
+    {name:'Broker inbox / admin / scheduling', rate:125, today:'Where the broker’s own hours go that aren’t recruiting or growth.'}
+  ];
+
+  var state = load() || { client:{}, processes:seedProcesses(), offer:{} };
+
+  function seedProcesses(){
+    return SEED.map(function(s,i){
+      return { id:'p'+i, name:s.name, rate:s.rate, today:'', todayHint:s.today,
+               owner:'', hrs:'', pain:'', audit:'', optimize:'', automate:'', buildFirst:false, when:'' };
+    });
+  }
+  function uid(){ return 'p'+Date.now().toString(36)+Math.floor(Math.random()*1000); }
+
+  function load(){
+    try{ var raw=localStorage.getItem(STORE_KEY); if(!raw) return null; var o=JSON.parse(raw);
+      if(o && o.processes){ // re-attach hints from seed by name
+        o.processes.forEach(function(p){ var m=SEED.filter(function(s){return s.name===p.name;})[0]; if(m) p.todayHint=m.today; });
+        return o; }
+    }catch(e){} return null;
+  }
+  var saveTimer=null;
+  function save(){
+    try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){}
+    var s=document.getElementById('saveState'); if(s){ s.innerHTML='<span class="dot"></span>Saved locally'; }
+  }
+  function queueSave(){
+    var s=document.getElementById('saveState'); if(s){ s.innerHTML='<span class="dot" style="background:#A1A1AA"></span>Saving…'; }
+    clearTimeout(saveTimer); saveTimer=setTimeout(save, 400);
+  }
+
+  /* ---------- formatting ---------- */
+  function money(n){ n=Math.round(+n||0); return '$'+n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,','); }
+  function numf(n){ n=Math.round(+n||0); return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,','); }
+  function esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function procAnnual(p){ var h=+p.hrs||0, r=+p.rate||0; return h*r*WEEKS; }
+
+  /* ---------- render process list ---------- */
+  var procList = document.getElementById('procList');
+  function renderProcs(){
+    procList.innerHTML='';
+    state.processes.forEach(function(p){ procList.appendChild(procCard(p)); });
+  }
+  function procCard(p){
+    var el=document.createElement('div');
+    el.className='proc'+(p.buildFirst?' flag':'');
+    el.setAttribute('data-pid',p.id);
+    el.innerHTML =
+      '<div class="proc-top">'
+      + '<input class="proc-title" data-field="name" value="'+esc(p.name)+'" placeholder="Process name">'
+      + '<button class="proc-remove" data-act="remove" title="Remove">×</button>'
+      + '</div>'
+      + '<div class="f" style="margin-bottom:12px"><textarea class="field" data-field="today" placeholder="'+esc(p.todayHint||'How is this done today? Who, how long, where it breaks.')+'">'+esc(p.today)+'</textarea></div>'
+      + '<div class="proc-metrics">'
+        + '<div class="metric"><label>Owner</label><input class="field" data-field="owner" value="'+esc(p.owner)+'" placeholder="ISA / agents / TC"></div>'
+        + '<div class="metric"><label>Hrs / week</label><input class="field" type="number" min="0" step="0.5" data-field="hrs" value="'+esc(p.hrs)+'" placeholder="6"></div>'
+        + '<div class="metric"><label>$ / hr</label><input class="field" type="number" min="0" step="5" data-field="rate" value="'+esc(p.rate)+'"></div>'
+        + '<div class="metric"><label>Pain</label><select class="field" data-field="pain">'
+            + opt('',p.pain,'—') + opt('low',p.pain,'Low') + opt('med',p.pain,'Medium') + opt('high',p.pain,'High')
+          + '</select></div>'
+      + '</div>'
+      + '<div class="aoa">'
+        + '<div class="f"><label><span class="a-tag aud">Audit</span> what\'s broken</label><textarea class="field" data-field="audit" placeholder="Manual, slow, inconsistent, no owner…">'+esc(p.audit)+'</textarea></div>'
+        + '<div class="f"><label><span class="a-tag opt">Optimize</span> cut steps</label><textarea class="field" data-field="optimize" placeholder="Steps to delete or standardize first">'+esc(p.optimize)+'</textarea></div>'
+        + '<div class="f"><label><span class="a-tag aut">Automate</span> what to build</label><textarea class="field" data-field="automate" placeholder="Claude skill / scheduled task / agent">'+esc(p.automate)+'</textarea></div>'
+      + '</div>'
+      + '<div class="proc-foot">'
+        + '<label class="chk"><input type="checkbox" data-field="buildFirst" '+(p.buildFirst?'checked':'')+'> Build this first</label>'
+        + '<span class="when">Ship: <select class="field btn-sm" style="padding:7px 28px 7px 10px" data-field="when">'
+            + opt('',p.when,'—') + opt('day1',p.when,'Day one') + opt('week1',p.when,'Week one') + opt('month1',p.when,'Month one') + opt('later',p.when,'Later')
+          + '</select></span>'
+      + '</div>';
+    return el;
+  }
+  function opt(val,cur,label){ return '<option value="'+val+'"'+(val===cur?' selected':'')+'>'+label+'</option>'; }
+
+  /* ---------- event delegation ---------- */
+  function findProc(id){ for(var i=0;i<state.processes.length;i++){ if(state.processes[i].id===id) return state.processes[i]; } return null; }
+
+  document.addEventListener('input', function(e){
+    var t=e.target;
+    if(t.dataset.client!=null){ state.client[t.dataset.client]=t.value; queueSave(); updatePitch(); return; }
+    if(t.dataset.offer!=null){ state.offer[t.dataset.offer]=t.value; queueSave(); updatePitch(); return; }
+    if(t.dataset.field){ var card=t.closest('.proc'); if(!card) return; var p=findProc(card.getAttribute('data-pid')); if(!p) return;
+      var f=t.dataset.field; p[f]= (f==='buildFirst')? t.checked : t.value;
+      if(f==='hrs'||f==='rate'||f==='automate'){ recalc(); }
+      queueSave();
+    }
+  });
+  document.addEventListener('change', function(e){
+    var t=e.target;
+    if(t.dataset.field){ var card=t.closest('.proc'); if(!card) return; var p=findProc(card.getAttribute('data-pid')); if(!p) return;
+      var f=t.dataset.field; p[f]= (f==='buildFirst')? t.checked : t.value;
+      if(f==='buildFirst'){ card.classList.toggle('flag', t.checked); recalc(); }
+      if(f==='automate'){ recalc(); }
+      queueSave();
+    }
+  });
+  document.addEventListener('click', function(e){
+    var rm=e.target.closest('[data-act="remove"]'); if(rm){ var card=rm.closest('.proc'); var id=card.getAttribute('data-pid');
+      state.processes=state.processes.filter(function(p){return p.id!==id;}); card.remove(); recalc(); save(); }
+  });
+
+  document.getElementById('btnAdd').addEventListener('click', function(){
+    var p={ id:uid(), name:'', rate:50, today:'', todayHint:'How is this done today? Who, how long, where it breaks.', owner:'', hrs:'', pain:'', audit:'', optimize:'', automate:'', buildFirst:false, when:'' };
+    state.processes.push(p); procList.appendChild(procCard(p)); save();
+    var cards=procList.querySelectorAll('.proc'); cards[cards.length-1].querySelector('.proc-title').focus();
+  });
+
+  /* ---------- tally + pitch ---------- */
+  function totals(){
+    var hrs=0,cost=0,auto=0;
+    state.processes.forEach(function(p){ hrs+= +p.hrs||0; cost+=procAnnual(p); if((p.automate||'').trim()) auto++; });
+    return {hrs:hrs, cost:cost, auto:auto};
+  }
+  function recalc(){
+    var t=totals();
+    document.getElementById('tHours').textContent=numf(t.hrs);
+    document.getElementById('tCost').textContent=money(t.cost);
+    document.getElementById('tAuto').textContent=numf(t.auto);
+    updatePitch();
+  }
+  function updatePitch(){
+    var t=totals(); var el=document.getElementById('pitchLine');
+    var first=(state.offer.firstBuild||'').trim();
+    var price=(state.offer.price||'').trim();
+    if(t.cost<=0 && !first){ el.innerHTML='Fill the worksheet and the live pitch line appears here.'; return; }
+    el.innerHTML = 'Here\'s what\'s leaking: <span class="num">'+money(t.cost)+'</span> a year and <span class="num">'+numf(t.hrs)+' hours a week</span> to work AI can handle. '
+      + (first? 'We start by building <b>'+esc(first)+'</b> — you\'ll feel it day one. ' : '')
+      + (price? 'That\'s the AI Concierge: <b>'+esc(price)+'</b>, two done-with-you calls a month. ' : '')
+      + 'Want me to build these for you?';
+  }
+
+  /* ---------- report ---------- */
+  function buildReport(){
+    var t=totals();
+    var c=state.client;
+    var procs=state.processes.filter(function(p){ return (p.name||'').trim() && (+p.hrs>0 || (p.automate||'').trim() || (p.audit||'').trim()); });
+    var ranked=procs.slice().sort(function(a,b){ return procAnnual(b)-procAnnual(a); });
+    var builds=procs.filter(function(p){return p.buildFirst;});
+    if(!builds.length) builds=ranked.slice(0,3);
+
+    var dateStr=c.date||new Date().toISOString().slice(0,10);
+    var brand=esc(c.brokerage||'Your brokerage');
+
+    var rows=ranked.map(function(p){
+      var painLbl={low:'Low',med:'Medium',high:'High'}[p.pain]||'—';
+      return '<tr><td><b>'+esc(p.name)+'</b></td><td>'+esc(p.owner||'—')+'</td><td class="r">'+(p.hrs?numf(p.hrs):'—')+'</td><td class="r">'+(procAnnual(p)?money(procAnnual(p)):'—')+'</td><td>'+painLbl+'</td></tr>';
+    }).join('');
+
+    var oppHtml=builds.map(function(p,i){
+      var whenLbl={day1:'Day one',week1:'Week one',month1:'Month one',later:'Later'}[p.when]||'Roadmap';
+      return '<div class="rpt-opp"><h4>'+(i+1)+'. '+esc(p.name)+'</h4>'
+        + '<div class="meta">'+(p.automate?('<b>Build:</b> '+esc(p.automate)+' · '):'')+'<b>'+whenLbl+'</b>'
+        + (procAnnual(p)?(' · est. '+money(procAnnual(p))+'/yr + '+numf(p.hrs)+' hrs/wk back'):'')+'</div></div>';
+    }).join('');
+
+    var first=(state.offer.firstBuild||'').trim();
+    var price=(state.offer.price||'').trim();
+    var notes=(state.offer.notes||'').trim();
+
+    var html =
+      '<div class="rpt-bar"><svg class="logo-mark" viewBox="0 0 120 120" aria-hidden="true"><use href="#mark-a"/></svg>'
+      + '<span class="rb-name">Amplify Brands</span>'
+      + '<span class="rb-meta">AI Leakage Audit<br>'+esc(dateStr)+'</span></div>'
+      + '<h1>Where '+brand+' is leaking time &amp; money</h1>'
+      + '<p class="rpt-sub">A working read from our session, based on the numbers we walked through together. Directional, conservative, and meant to point at what to fix first.</p>'
+      + '<div class="rpt-headline"><div class="lbl">Estimated annual leak to manual work</div><div class="big">'+money(t.cost)+'</div><div class="sm">across '+numf(t.hrs)+' hours a week of work AI can take off your team\'s plate</div></div>'
+      + '<div class="rpt-stats">'
+        + '<div class="rpt-stat"><div class="v">'+numf(t.hrs)+' hrs</div><div class="l">Manual hours / week identified</div></div>'
+        + '<div class="rpt-stat"><div class="v">'+money(t.cost)+'</div><div class="l">Annualized cost of that work</div></div>'
+        + '<div class="rpt-stat"><div class="v">'+numf(t.auto)+'</div><div class="l">Automations identified</div></div>'
+      + '</div>'
+      + '<h2>The leak, by process</h2>'
+      + '<table class="rpt-table"><thead><tr><th>Process</th><th>Owner</th><th>Hrs/wk</th><th>Annual</th><th>Pain</th></tr></thead><tbody>'
+      + rows
+      + '<tr class="tot"><td>Total</td><td></td><td class="r">'+numf(t.hrs)+'</td><td class="r">'+money(t.cost)+'</td><td></td></tr>'
+      + '</tbody></table>'
+      + '<h2>What we build first</h2>'
+      + (oppHtml||'<p class="muted">Flag the build-first processes on the worksheet to populate this.</p>')
+      + '<div class="rpt-next"><h3>Your next step</h3>'
+        + (first?'<p>We start by building <b>'+esc(first)+'</b> — something you feel in the first week.</p>':'')
+        + (notes?'<p>'+esc(notes)+'</p>':'<p>Two 45-minute done-with-you calls a month. We Audit, Optimize, and Automate one process at a time — and you keep everything we build.</p>')
+        + (price?'<p class="price">AI Concierge — '+esc(price)+'</p>':'')
+      + '</div>'
+      + '<div class="rpt-foot">Amplify Brands · Less busywork. More business. · Figures are directional working estimates agreed during the session, not guarantees.</div>';
+
+    document.getElementById('rptBody').innerHTML=html;
+  }
+
+  /* ---------- actions ---------- */
+  document.getElementById('btnReport').addEventListener('click', function(){ buildReport(); document.body.classList.add('report-mode'); window.scrollTo(0,0); });
+  document.getElementById('btnEdit').addEventListener('click', function(){ document.body.classList.remove('report-mode'); window.scrollTo(0,0); });
+  document.getElementById('btnPrint').addEventListener('click', function(){ window.print(); });
+  document.getElementById('btnReset').addEventListener('click', function(){
+    if(!confirm('Clear this worksheet and start a new client? Export your data first if you want a copy.')) return;
+    state={ client:{}, processes:seedProcesses(), offer:{} };
+    try{ localStorage.removeItem(STORE_KEY); }catch(e){}
+    hydrate(); save();
+  });
+  document.getElementById('btnJson').addEventListener('click', function(){
+    var name=(state.client.brokerage||'client').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+    var blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+    var a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+    a.download='ai-leakage-audit-'+(name||'client')+'.json'; document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },100);
+  });
+
+  /* ---------- hydrate static fields from state ---------- */
+  function hydrate(){
+    document.querySelectorAll('[data-client]').forEach(function(el){ var v=state.client[el.dataset.client]; if(v!=null) el.value=v; });
+    document.querySelectorAll('[data-offer]').forEach(function(el){ var v=state.offer[el.dataset.offer]; if(v!=null) el.value=v; });
+    renderProcs(); recalc();
+  }
+  hydrate();
+})();
+</script>
+</body>
+</html>

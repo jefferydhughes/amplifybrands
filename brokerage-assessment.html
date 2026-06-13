@@ -300,6 +300,8 @@ section{padding:var(--section-y) 0}
 
 footer{text-align:center;padding:30px 22px;color:var(--ink-3);font-size:var(--fs-sm);border-top:1px solid var(--line);margin-top:auto}
 </style>
+<!-- Vercel Web Analytics -->
+<script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 
@@ -1020,7 +1022,7 @@ footer{text-align:center;padding:30px 22px;color:var(--ink-3);font-size:var(--fs
         fetch(EMAIL_ENDPOINT, {
           method:'POST',
           headers:{ 'Content-Type':'application/json' },
-          body: JSON.stringify({ email:userEmail, payload:state, result:leakResult, ts:new Date().toISOString(), _subject:'New Brokerage Revenue Leak Assessment — ' + userEmail })
+          body: JSON.stringify({ email:userEmail, payload:state, result:leakResult, ts:new Date().toISOString(), _source:'brokerage-assessment.html (' + location.host + location.pathname + ')', _subject:'New Brokerage Revenue Leak Assessment — ' + userEmail })
         }).catch(function(){});
       }catch(e){}
     }
