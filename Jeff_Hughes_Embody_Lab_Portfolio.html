@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jeff Hughes — Online Education Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf7f2;
+    --text: #2a2620;
+    --text-soft: #5c5449;
+    --accent: #a67c52;
+    --accent-soft: #d4c4ae;
+    --rule: #e6dfd3;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.7;
+    margin: 0;
+    padding: 0;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 80px 40px 100px;
+  }
+
+  header {
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 56px;
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 500;
+    font-size: 44px;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+    margin: 0 0 12px;
+    color: var(--text);
+  }
+
+  .subtitle {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 22px;
+    color: var(--text-soft);
+    margin: 0 0 20px;
+    line-height: 1.4;
+  }
+
+  .meta {
+    font-size: 14px;
+    color: var(--text-soft);
+    letter-spacing: 0.3px;
+  }
+
+  .intro {
+    font-size: 17px;
+    line-height: 1.75;
+    margin-bottom: 64px;
+    color: var(--text);
+  }
+
+  h2 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 1.25;
+    letter-spacing: -0.2px;
+    margin: 64px 0 8px;
+    color: var(--text);
+  }
+
+  .section-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  h3 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 17px;
+    letter-spacing: -0.1px;
+    margin: 36px 0 8px;
+    color: var(--text);
+  }
+
+  h3 .role {
+    font-weight: 400;
+    color: var(--text-soft);
+    font-style: italic;
+  }
+
+  p {
+    margin: 0 0 18px;
+    color: var(--text);
+  }
+
+  ul {
+    padding-left: 0;
+    list-style: none;
+    margin: 0 0 24px;
+  }
+
+  ul li {
+    position: relative;
+    padding-left: 22px;
+    margin-bottom: 14px;
+    line-height: 1.65;
+  }
+
+  ul li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 12px;
+    width: 10px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  ul li strong {
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent-soft);
+    transition: border-color 0.2s;
+  }
+
+  a:hover {
+    border-bottom-color: var(--accent);
+  }
+
+  .course-list {
+    background: transparent;
+    border-left: 2px solid var(--accent-soft);
+    padding: 4px 0 4px 24px;
+    margin: 16px 0 24px;
+  }
+
+  .course-list p {
+    margin: 6px 0;
+    font-size: 15px;
+    color: var(--text);
+  }
+
+  .course-list p strong {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.5px;
+    font-size: 13px;
+    margin-right: 10px;
+  }
+
+  .closing {
+    margin-top: 72px;
+    padding-top: 40px;
+    border-top: 1px solid var(--rule);
+    font-size: 16px;
+    color: var(--text);
+  }
+
+  .signature {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 22px;
+    font-style: italic;
+    color: var(--text);
+    margin-top: 24px;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 48px 0;
+  }
+
+  @media (max-width: 640px) {
+    .container { padding: 48px 24px 60px; }
+    h1 { font-size: 34px; }
+    h2 { font-size: 24px; }
+    .subtitle { font-size: 19px; }
+    .intro { font-size: 16px; }
+  }
+
+  @media print {
+    body { background: white; }
+    .container { padding: 40px; max-width: 100%; }
+    a { color: var(--text); border-bottom: none; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <h1>Jeff Hughes</h1>
+    <p class="subtitle">Building and marketing online education at scale</p>
+    <p class="meta">Prepared for The Embody Lab &nbsp;·&nbsp; Application Portfolio</p>
+  </header>
+
+  <p class="intro">
+    Sean, thank you for the note. Below is a focused summary of my online education work, organized around the two dimensions the hiring team flagged: <strong>marketing</strong> and <strong>strategy</strong>. Everything here is direct execution — programs I built, campaigns I wrote and shipped, funnels I ran. Not work I oversaw.
+  </p>
+
+  <!-- Section 1 -->
+  <div class="section-label">01 · Scale</div>
+  <h2>Building the marketing engine for a global online education brand</h2>
+
+  <h3>Skill Samurai <span class="role">— Founder &amp; CEO</span></h3>
+  <p>
+    An enrichment education brand I built from zero to a multinational operation serving over <strong>250,000 students across seven countries</strong>. Through the growth phase I personally owned every layer of the marketing function.
+  </p>
+
+  <ul>
+    <li><strong>The full acquisition stack.</strong> Google Ads, Meta ads, PR campaigns, influencer strategy, and long-form content marketing — every channel measured against booked trials and enrolled students, not vanity metrics.</li>
+    <li><strong>Segmented funnels for structurally different audiences.</strong> B2B franchise buyers lived on LinkedIn. B2C mom-of-student buyers lived on Facebook. Same brand, entirely different messaging architectures, creative, and conversion mechanics. I built and ran both concurrently — the same discipline required when one platform serves clinicians, coaches, and consumers on structurally different intents.</li>
+    <li><strong>Influencer program built at ground level.</strong> Recruited 36 influential mom bloggers through a wine-and-cheese info-night model — free enrollment for their child, plus a ticket to give away. Low CAC, exceptionally high referral quality.</li>
+    <li><strong>Book as a top-of-funnel asset.</strong> Wrote <em>Raising Smarter Kids with AI</em> as a marketing anchor, then hired a publicist. Multiple television appearances as a subject-matter expert followed. The same earned-media lever leading practitioners in healing and education already use — a playbook I've run end-to-end.</li>
+    <li><strong>International localization.</strong> Marketing sites, ad creative, and messaging built market-by-market — not translated as an afterthought.</li>
+    <li><strong>COVID pivot.</strong> Moved the entire global operation from in-person to online delivery and developed new interactive tutoring techniques inside the platform to hold engagement and retention.</li>
+  </ul>
+
+  <p style="font-size: 15px; color: var(--text-soft); margin-top: 8px;">
+    Representative advertising archive: <a href="https://youtube.com/playlist?list=PLjptONALSzdcMad8TqazfR5B_GRYEvtza" target="_blank">campaign playlist</a>
+  </p>
+
+  <hr class="divider">
+
+  <!-- Section 2 -->
+  <div class="section-label">02 · Cohort &amp; Certificate Programs</div>
+  <h2>Designing and launching online cohort programs end-to-end</h2>
+
+  <h3>Kingswood University Online MBA</h3>
+  <p>
+    As Head of the Business Department, I designed and launched Kingswood's online MBA program end-to-end. The first cohort launched <strong>May 2026</strong>. I set the program outcomes, wrote the course outlines, hired the faculty and instructional designers, and led the go-to-market. Cohort model, live faculty sessions, asynchronous supplements, launch marketing — the closest structural analog in my history to a live online certificate program.
+  </p>
+
+  <h3>Skill Samurai University</h3>
+  <p>
+    A 40-hour online training program I designed to certify new franchisees. Delivered to cohorts across multiple countries with assessment, retention mechanics, and gamification built in. The playbook we used to keep completion rates high across international cohorts — including time-zone-friendly cadence and community-based accountability — translates directly to any 60-hour live online certificate.
+  </p>
+
+  <h3>Virtual private school <span class="role">— client engagement</span></h3>
+  <p>
+    Full-funnel build for a client launching a virtual K–12 school. Landing pages, ad copy, evergreen webinars, booking pages, curriculum architecture, and the website itself. Shipped end-to-end.
+  </p>
+
+  <hr class="divider">
+
+  <!-- Section 3 -->
+  <div class="section-label">03 · Discipline</div>
+  <h2>Teaching the online education marketing stack</h2>
+
+  <p>
+    I teach the marketing discipline online, which keeps my thinking current and testable against real students. Courses I've built and delivered at Kingswood since August 2025:
+  </p>
+
+  <div class="course-list">
+    <p><strong>BUS 115</strong> Personal Branding</p>
+    <p><strong>BUS 125</strong> Digital Marketing &amp; E-Commerce</p>
+    <p><strong>BUS 120</strong> Market Research</p>
+    <p><strong>BUS 210</strong> Advertising</p>
+    <p><strong>BUS 220</strong> Integrated Marketing Communications</p>
+    <p><strong>BUS 110</strong> Business Entrepreneurship</p>
+    <p><strong>BUS 420</strong> Social Innovation</p>
+  </div>
+
+  <p style="font-size: 15px; color: var(--text-soft); margin-top: 8px;">
+    Sample course outline (Social Innovation): <a href="https://docs.google.com/document/d/1DUDcnvXTiyBUPPXGECpIJB4E11dhMu07/edit?usp=sharing&ouid=109736223403819022418&rtpof=true&sd=true" target="_blank">detailed outline document</a>
+  </p>
+
+  <hr class="divider">
+
+  <!-- Section 4 -->
+  <div class="section-label">04 · Portfolio Marketing</div>
+  <h2>Marketing multiple programs from one operating base</h2>
+
+  <p>
+    Running a wide portfolio from a small operating base is a discipline I've practiced for years — different offers, different audiences, shared brand, one team.
+  </p>
+
+  <ul>
+    <li><strong>Elements gap-year program.</strong> Designed the offering, wrote the marketing copy and video ads, and personally recruited students through discovery conversations.</li>
+    <li><strong>The Monetization Method.</strong> My own book, course, and community for mission-driven leaders monetizing existing expertise. Runs on a portfolio model similar to a modern online education business — front-end book, mid-tier course, higher-tier community.</li>
+    <li><strong>Franchise B2B sales engine.</strong> Built the LinkedIn-anchored acquisition funnel for franchise buyers alongside the parent-facing B2C funnel. The same operating philosophy required when a single organization must serve clinicians, coaches, and consumers as structurally distinct audiences.</li>
+  </ul>
+
+  <p style="font-size: 15px; color: var(--text-soft); margin-top: 8px;">
+    Parent-facing webinar sample: <a href="https://youtu.be/J4tSd04cUd8" target="_blank">live webinar recording</a>
+  </p>
+
+  <hr class="divider">
+
+  <!-- Section 5 -->
+  <div class="section-label">05 · Current</div>
+  <h2>Where the thinking is now</h2>
+
+  <h3>Kitsune LMS</h3>
+  <p>
+    Currently building a new learning management system for a <strong>Fall 2026 launch</strong>. Core differentiator: an AI assistant that adapts learning paths to individual student behavior and retains memory of student progress across courses. Gamification, leaderboards, automated communication, and cohort management built in. Delivered at scale across 20+ operating locations.
+  </p>
+
+  <div class="closing">
+    <p>
+      Happy to expand on any of this — the ad archive, the funnel builds, the launch playbooks, the cohort mechanics. Whatever helps the team make the call.
+    </p>
+    <p class="signature">— Jeff</p>
+  </div>
+
+</div>
+</body>
+</html>

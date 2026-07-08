@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amplify · "Your Competitor Isn't Better Than You" — IG Carousel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0B0B;
+    --ink:#F5F5F5;
+    --lime:#A3FF12;
+    --lime-hi:#C6FF6B;
+    --coral:#FF5C5C;
+    --g1:#A1A1A1;
+    --g2:#5E5E5E;
+    --g3:#242424;
+    --g4:#1C1C1C;
+    --display:'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+    --body:'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    --mono:'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{background:#000;color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;}
+  .page{
+    display:flex;flex-direction:column;align-items:center;gap:40px;
+    padding:56px 24px 96px;
+  }
+  .page h1.docttl{font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:.18em;color:var(--g2);text-transform:uppercase;text-align:center}
+  .label{font-family:var(--mono);font-size:12px;letter-spacing:.16em;color:var(--g2);text-transform:uppercase;margin-bottom:-22px}
+
+  /* ---- the square ---- */
+  .slide{
+    position:relative;
+    width:1080px;height:1080px;
+    background:var(--bg);
+    overflow:hidden;
+    isolation:isolate;
+  }
+  /* subtle film grain + corner glow so the black isn't dead-flat */
+  .slide::before{
+    content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(120% 90% at 50% -10%, rgba(255,255,255,.035), transparent 60%);
+  }
+  .slide .grain{
+    position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.05;mix-blend-mode:screen;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* chrome: shared top/bottom rails */
+  .frame{position:absolute;inset:0;z-index:3;padding:92px;display:flex;flex-direction:column;}
+  .top{display:flex;justify-content:space-between;align-items:flex-start}
+  .eyebrow{font-family:var(--mono);font-size:18px;letter-spacing:.34em;color:var(--g1);text-transform:uppercase}
+  .body-mid{flex:1;display:flex;flex-direction:column;justify-content:center}
+  .bottom{display:flex;justify-content:space-between;align-items:flex-end}
+  .wordmark{font-family:var(--mono);font-size:18px;letter-spacing:.42em;color:var(--g2);text-transform:uppercase}
+  .wordmark .on{color:var(--ink)}
+
+  /* progress: 5 ticks */
+  .ticks{display:flex;gap:9px;align-items:center}
+  .tick{width:30px;height:4px;border-radius:2px;background:var(--g3)}
+  .tick.done{background:var(--g2)}
+  .tick.now{background:var(--ink);width:44px}
+  .tick.lit{background:var(--lime);box-shadow:0 0 14px rgba(163,255,18,.55)}
+
+  /* the persistent hero: 3 ascending pulse bars (dormant -> ignite) */
+  .pulse{display:flex;align-items:flex-end;gap:6px;height:40px}
+  .pulse i{display:block;width:9px;border-radius:2px;background:var(--g2)}
+  .pulse i:nth-child(1){height:18px}
+  .pulse i:nth-child(2){height:27px}
+  .pulse i:nth-child(3){height:40px}
+  .pulse.lit i{background:var(--lime);box-shadow:0 0 16px rgba(163,255,18,.5)}
+  .pulse.half i:nth-child(3){background:var(--lime);box-shadow:0 0 16px rgba(163,255,18,.5)}
+
+  /* headline system */
+  .h{font-family:var(--display);font-weight:700;line-height:.96;letter-spacing:-.022em;color:var(--ink)}
+  .xl{font-size:138px}
+  .lg{font-size:118px}
+  .md{font-size:96px}
+  .dim{color:var(--g2)}
+  .lime{color:var(--lime)}
+  .coral{color:var(--coral)}
+  .strike{position:relative;display:inline-block}
+  .strike::after{content:"";position:absolute;left:-2%;right:-2%;top:54%;height:8px;background:var(--coral);transform:rotate(-3deg);border-radius:4px}
+  .sub{font-family:var(--body);font-weight:400;font-size:30px;line-height:1.45;color:var(--g1);max-width:760px;margin-top:42px}
+  .kicker{font-family:var(--display);font-weight:500;font-size:40px;color:var(--g1);margin-bottom:34px}
+
+  /* slide 4 split */
+  .split{display:flex;flex-direction:column;gap:0;justify-content:center;height:100%}
+  .split .row{padding:6px 0}
+  .split .grind{font-family:var(--display);font-weight:600;font-size:88px;line-height:1.0;letter-spacing:-.02em;color:var(--g2)}
+  .split .grind .doing{color:#3d3d3d;font-weight:500}
+  .rule{display:flex;align-items:center;gap:24px;margin:54px 0}
+  .rule .ln{height:1px;flex:1;background:var(--g3)}
+  .rule .vs{font-family:var(--mono);font-size:18px;letter-spacing:.3em;color:var(--g2)}
+  .split .win{font-family:var(--display);font-weight:700;font-size:100px;line-height:.98;letter-spacing:-.022em;color:var(--lime)}
+
+  /* slide 5 close */
+  .logo-a{width:120px;height:120px;display:block}
+  .tagline{font-family:var(--display);font-weight:500;font-size:36px;color:var(--g1);letter-spacing:-.01em}
+  .brandrow{display:flex;align-items:center;gap:30px;margin-top:64px}
+  .brandname{font-family:var(--display);font-weight:700;font-size:60px;letter-spacing:-.02em;color:var(--ink)}
+  .pillrow{display:flex;align-items:center;gap:14px;margin-top:14px}
+  .pill{font-family:var(--mono);font-size:20px;letter-spacing:.12em;color:var(--lime);border:1px solid rgba(163,255,18,.35);border-radius:999px;padding:9px 20px}
+</style>
+</head>
+<body>
+<div class="page">
+  <h1 class="docttl">Amplify · Instagram Carousel · "Your Competitor Isn't Better Than You" · 1080×1080 · 5 slides</h1>
+
+  <!-- ============ SLIDE 1 ============ -->
+  <div class="label">01 — Hook</div>
+  <section class="slide" id="slide-1">
+    <div class="grain"></div>
+    <div class="frame">
+      <div class="top">
+        <div class="eyebrow">Real talk</div>
+        <div class="pulse"><i></i><i></i><i></i></div>
+      </div>
+      <div class="body-mid">
+        <div class="h xl">Your<br>competitor<br>isn’t <span class="strike">better</span><br>than you.</div>
+      </div>
+      <div class="bottom">
+        <div class="wordmark"><span class="on">Amplify</span></div>
+        <div class="ticks"><span class="tick now"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 2 ============ -->
+  <div class="label">02</div>
+  <section class="slide" id="slide-2">
+    <div class="grain"></div>
+    <div class="frame">
+      <div class="top">
+        <div class="eyebrow">And honestly</div>
+        <div class="pulse"><i></i><i></i><i></i></div>
+      </div>
+      <div class="body-mid">
+        <div class="h xl">They don’t<br>work<br>harder.</div>
+        <div class="sub">Same hours. Same hustle. Same grind as you.</div>
+      </div>
+      <div class="bottom">
+        <div class="wordmark"><span class="on">Amplify</span></div>
+        <div class="ticks"><span class="tick done"></span><span class="tick now"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 3 ============ -->
+  <div class="label">03 — The reveal</div>
+  <section class="slide" id="slide-3">
+    <div class="grain"></div>
+    <div class="frame">
+      <div class="top">
+        <div class="eyebrow">Here’s the difference</div>
+        <div class="pulse half"><i></i><i></i><i></i></div>
+      </div>
+      <div class="body-mid">
+        <div class="h lg">They’re just not<br><span class="coral">manually</span><br>doing<br>everything.</div>
+      </div>
+      <div class="bottom">
+        <div class="wordmark"><span class="on">Amplify</span></div>
+        <div class="ticks"><span class="tick done"></span><span class="tick done"></span><span class="tick now"></span><span class="tick"></span><span class="tick"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 4 ============ -->
+  <div class="label">04 — The contrast (lime arrives)</div>
+  <section class="slide" id="slide-4">
+    <div class="grain"></div>
+    <div class="frame">
+      <div class="top">
+        <div class="eyebrow">Same minute, different work</div>
+        <div class="pulse lit"><i></i><i></i><i></i></div>
+      </div>
+      <div class="body-mid">
+        <div class="split">
+          <div class="row">
+            <div class="grind">While you’re<br><span class="doing">updating records…</span></div>
+          </div>
+          <div class="rule"><span class="ln"></span><span class="vs">MEANWHILE</span><span class="ln"></span></div>
+          <div class="row">
+            <div class="win">They’re talking<br>to prospects.</div>
+          </div>
+        </div>
+      </div>
+      <div class="bottom">
+        <div class="wordmark"><span class="on">Amplify</span></div>
+        <div class="ticks"><span class="tick done"></span><span class="tick done"></span><span class="tick done"></span><span class="tick now"></span><span class="tick"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 5 ============ -->
+  <div class="label">05 — Payoff + brand</div>
+  <section class="slide" id="slide-5">
+    <div class="grain"></div>
+    <div class="frame">
+      <div class="top">
+        <div class="eyebrow">The takeaway</div>
+        <div class="pulse lit"><i></i><i></i><i></i></div>
+      </div>
+      <div class="body-mid">
+        <div class="kicker">The gap isn’t talent.</div>
+        <div class="h xl">It’s<br><span class="lime">leverage.</span></div>
+        <div class="brandrow">
+          <svg class="logo-a" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Amplify Pulse A">
+            <path d="M 4 110 L 52 8 L 68 8 L 116 110 L 96 110 L 60 30 L 24 110 Z" fill="#F5F5F5"/>
+            <rect x="42" y="84" width="8" height="14" fill="#A3FF12"/>
+            <rect x="56" y="78" width="8" height="20" fill="#A3FF12"/>
+            <rect x="70" y="70" width="8" height="28" fill="#A3FF12"/>
+          </svg>
+          <div>
+            <div class="brandname">Amplify</div>
+            <div class="pillrow"><span class="pill">Stupidly Easy AI</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="bottom">
+        <div class="wordmark"><span class="on">Amplify</span></div>
+        <div class="ticks"><span class="tick done"></span><span class="tick done"></span><span class="tick done"></span><span class="tick done"></span><span class="tick lit"></span></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>
