@@ -27,7 +27,10 @@ amplifybrands/
 │   └── AI-Playbook.md   # Master playbook. Source for offers & marketing concepts.
 │
 │  ── THE SITE (deploys to Vercel from this root) ──
-├── index.html           # The website. HTML + CSS + JS, all inline, one file.
+├── index.html           # A/B test chooser: links to Option A and Option B.
+├── option-a.html        # Homepage A: franchise founder content, updated copy (/option-a).
+├── option-b.html        # Homepage B: same layout, original Codex copy (/option-b).
+├── index-legacy.html    # The previous homepage (AI services), kept for reference (/index-legacy).
 ├── site.webmanifest     # PWA manifest (name, theme color, app icons).
 ├── vercel.json          # Static config: clean URLs + security headers.
 ├── assets/              # Favicons, app icons, OG image. Served at /assets/*.
@@ -55,7 +58,7 @@ amplifybrands/
 
 ## Preview the site locally
 
-Just open `index.html` in a browser — no server needed. If you'd rather serve it:
+Just open `index.html` (the chooser) or `option-a.html` / `option-b.html` in a browser — no server needed. If you'd rather serve it:
 
 ```bash
 # Python
@@ -79,7 +82,7 @@ This is a static site — **no framework, no build step** — so setup is short.
 
 Every push to `main` auto-deploys to production. Pull requests get their own preview URLs.
 
-> **Why assets live at `/assets/`:** `index.html` and `site.webmanifest` reference icons and the OG image by absolute path (`/assets/og-image.png`, etc.). Vercel serves the repo root, so those paths resolve. If you move a file out of `assets/`, update the reference in both files or you'll get broken icons and dead social previews.
+> **Why assets live at `/assets/`:** `index-legacy.html` and `site.webmanifest` reference icons and the OG image by absolute path (`/assets/og-image.png`, etc.). Vercel serves the repo root, so those paths resolve. If you move a file out of `assets/`, update the reference in both files or you'll get broken icons and dead social previews.
 
 ---
 
